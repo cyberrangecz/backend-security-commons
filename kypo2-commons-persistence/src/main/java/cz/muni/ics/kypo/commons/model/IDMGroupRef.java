@@ -26,7 +26,39 @@ public class IDMGroupRef {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "IDM_GROUP_ROLE", joinColumns = @JoinColumn(name = "IDM_GROUP_REF_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
-    private Set<Role> roleTypes;
+    private Set<Role> roles;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public long getIdmGroupRef() {
+        return idmGroupRef;
+    }
+
+    public void setIdmGroupRef(long idmGroupRef) {
+        this.idmGroupRef = idmGroupRef;
+    }
+
+    public List<UserRef> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserRef> users) {
+        this.users = users;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -38,7 +70,7 @@ public class IDMGroupRef {
         if (idmGroupRef != that.idmGroupRef) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (users != null ? !users.equals(that.users) : that.users != null) return false;
-        return roleTypes != null ? roleTypes.equals(that.roleTypes) : that.roleTypes == null;
+        return roles != null ? roles.equals(that.roles) : that.roles == null;
     }
 
     @Override
@@ -46,7 +78,7 @@ public class IDMGroupRef {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (int) (idmGroupRef ^ (idmGroupRef >>> 32));
         result = 31 * result + (users != null ? users.hashCode() : 0);
-        result = 31 * result + (roleTypes != null ? roleTypes.hashCode() : 0);
+        result = 31 * result + (roles != null ? roles.hashCode() : 0);
         return result;
     }
 }

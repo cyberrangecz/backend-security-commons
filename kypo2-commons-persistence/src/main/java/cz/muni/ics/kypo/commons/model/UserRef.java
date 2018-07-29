@@ -13,7 +13,7 @@ public class UserRef {
     private Long id;
 
     @Column(name = "USER_ID", unique = true, nullable = false)
-    private long idmUserRef;
+    private long idmUserId;
 
     public Long getId() {
         return id;
@@ -24,11 +24,11 @@ public class UserRef {
     }
 
     public long getIdmUserRef() {
-        return idmUserRef;
+        return idmUserId;
     }
 
     public void setIdmUserRef(long idmUserRef) {
-        this.idmUserRef = idmUserRef;
+        this.idmUserId = idmUserRef;
     }
 
     @Override
@@ -38,14 +38,14 @@ public class UserRef {
 
         UserRef userRef = (UserRef) o;
 
-        if (idmUserRef != userRef.idmUserRef) return false;
+        if (idmUserId != userRef.idmUserId) return false;
         return id != null ? id.equals(userRef.id) : userRef.id == null;
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (int) (idmUserRef ^ (idmUserRef >>> 32));
+        result = 31 * result + (int) (idmUserId ^ (idmUserId >>> 32));
         return result;
     }
 }

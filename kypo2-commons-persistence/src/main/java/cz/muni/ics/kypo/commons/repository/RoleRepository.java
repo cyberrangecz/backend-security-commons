@@ -10,7 +10,8 @@ import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<Role, Long>, QuerydslPredicateExecutor<Role> {
 
-    Optional<Role> findById(Long aLong);
+    Optional<Role> findByRoleType(String roleType);
 
-    List<Role> findAll();
+
+
 }
