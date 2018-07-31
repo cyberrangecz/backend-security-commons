@@ -1,11 +1,11 @@
 CREATE TABLE idm_group_ref (
    id             BIGSERIAL NOT NULL,
-   group_id       BIGSERIAL NOT NULL UNIQUE,
+   group_id       int8 NOT NULL UNIQUE,
    PRIMARY KEY (id));
 
 CREATE TABLE user_ref (
    id             BIGSERIAL NOT NULL,
-   user_id       BIGSERIAL NOT NULL UNIQUE,
+   user_id       int8 NOT NULL UNIQUE,
    PRIMARY KEY (id));
 
 CREATE TABLE role (

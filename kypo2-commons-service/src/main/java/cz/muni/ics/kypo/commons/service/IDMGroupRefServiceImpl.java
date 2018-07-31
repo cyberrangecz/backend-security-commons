@@ -33,7 +33,7 @@ public class IDMGroupRefServiceImpl implements IDMGroupRefService {
     public Optional<IDMGroupRef> findByIdmGroupId(long id) {
         LOG.info("Find by idm group id {}.", id);
         try {
-            return idmGroupRefRepository.findByIdmGroupRef(id);
+            return idmGroupRefRepository.findByIdmGroupId(id);
         } catch (HibernateException ex) {
             LOG.error("Error while loading idm group ref by group id");
             throw new CommonsServiceException("Error while loading idm group ref by group id " + ex.getMessage());

@@ -7,7 +7,7 @@
     <groupId>cz.muni.ics.kypo</groupId>
     <artifactId>kypo2-commons</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>${project.version}</version>
     <modules>
         <module>kypo2-commons-persistence</module>
         <module>kypo2-commons-service</module>
@@ -22,10 +22,10 @@
     </parent>
 
     <repositories>
-        <cz.muni.ics.kypo.commons.persistence.repository>
+        <repository>
             <id>spring-releases</id>
             <url>https://repo.spring.io/libs-release</url>
-        </cz.muni.ics.kypo.commons.persistence.repository>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
@@ -36,6 +36,7 @@
 
     <properties>
         <project.version>1.0.0</project.version>
+        <project-groupId.name>cz.muni.ics.kypo</project-groupId.name>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

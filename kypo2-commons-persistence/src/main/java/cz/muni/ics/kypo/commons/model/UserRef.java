@@ -1,11 +1,11 @@
 package cz.muni.ics.kypo.commons.model;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+@Entity
+@Table(name = "USER_REF")
 public class UserRef {
 
     @Id
@@ -23,11 +23,11 @@ public class UserRef {
         this.id = id;
     }
 
-    public long getIdmUserRef() {
+    public long getIdmUserId() {
         return idmUserId;
     }
 
-    public void setIdmUserRef(long idmUserRef) {
+    public void setIdmUserId(long idmUserRef) {
         this.idmUserId = idmUserRef;
     }
 

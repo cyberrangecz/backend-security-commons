@@ -23,9 +23,9 @@ public class UserRefServiceImpl implements UserRefService {
     @Override
     public UserRef create(UserRef userRef) {
         Assert.notNull(userRef, "Input user ref cannot be null.");
-        Assert.notNull(userRef.getIdmUserRef(), "Id of user cannot be null.");
+        Assert.notNull(userRef.getIdmUserId(), "Id of user cannot be null.");
         UserRef createdRef = userRefRepository.save(userRef);
-        LOG.info("Reference for user with id " + createdRef.getIdmUserRef() + " created.");
+        LOG.info("Reference for user with id " + createdRef.getIdmUserId() + " created.");
         return createdRef;
     }
 
