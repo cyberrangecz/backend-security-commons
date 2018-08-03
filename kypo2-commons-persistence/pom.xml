@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>kypo2-commons</artifactId>
+        <artifactId>kypo2-security-commons</artifactId>
         <groupId>cz.muni.ics.kypo</groupId>
         <version>${project.version}</version>
     </parent>
