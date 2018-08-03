@@ -4,7 +4,6 @@ package cz.muni.ics.kypo.commons.repository;
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.model.Role;
-import cz.muni.ics.kypo.commons.model.RoleType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,17 +39,17 @@ public class RoleRepositoryTest {
     @Test
     public void findByRoleType() throws Exception {
         Role role = new Role();
-        role.setRoleType(RoleType.ADMINISTRATOR.name());
+        role.setRoleType("ADMINISTRATOR");
         this.entityManager.persist(role);
-        Optional<Role> optionalRole = this.roleRepository.findByRoleType(RoleType.ADMINISTRATOR.name());
+        Optional<Role> optionalRole = this.roleRepository.findByRoleType("ADMINISTRATOR");
         Role r = optionalRole.orElseThrow(() -> new Exception("Role shoul be found"));
         assertEquals(role, r);
-        assertEquals(RoleType.ADMINISTRATOR.name(), r.getRoleType());
+        assertEquals("ADMINISTRATOR", r.getRoleType());
     }
 
     @Test
     public void findByRoleTypeNotFound() {
-        assertFalse(this.roleRepository.findByRoleType(RoleType.ADMINISTRATOR.name()).isPresent());
+        assertFalse(this.roleRepository.findByRoleType("ADMINISTRATOR").isPresent());
     }
 
 }

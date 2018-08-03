@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({PersistenceConfig.class})
+//@Import({PersistenceConfig.class})
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.service"})
 public class ServiceConfig {
 }

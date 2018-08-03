@@ -24,8 +24,8 @@ public class RoleEntityTest {
     @Autowired
     private TestEntityManager entityManager;
 
-    private String roleType1 = RoleType.ADMINISTRATOR.name();
-    private String roleType2 = RoleType.USER.name();
+    private String roleType1 = "ADMINISTRATOR";
+    private String roleType2 = "USER";
 
     @SpringBootApplication
     static class TestConfiguration {

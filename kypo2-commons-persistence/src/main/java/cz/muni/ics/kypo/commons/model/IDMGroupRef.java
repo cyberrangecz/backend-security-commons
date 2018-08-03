@@ -22,12 +22,12 @@ public class IDMGroupRef {
     @Column(name = "GROUP_ID", unique = true, nullable = false)
     private long idmGroupId;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "USER_IDM_GROUP", joinColumns = {@JoinColumn(name = "IDM_GROUP_REF_ID")},
             inverseJoinColumns = {@JoinColumn(name = "USER_REF_ID")})
     private List<UserRef> users = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "IDM_GROUP_ROLE", joinColumns = @JoinColumn(name = "IDM_GROUP_REF_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
     private Set<Role> roles = new HashSet<>();;
 

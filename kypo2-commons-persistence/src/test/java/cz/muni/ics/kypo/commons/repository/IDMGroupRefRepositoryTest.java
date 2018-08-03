@@ -3,7 +3,6 @@ package cz.muni.ics.kypo.commons.repository;
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.model.Role;
-import cz.muni.ics.kypo.commons.model.RoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,13 +51,13 @@ public class IDMGroupRefRepositoryTest {
     @Before
     public void init() {
         adminRole = new Role();
-        adminRole.setRoleType(RoleType.ADMINISTRATOR.name());
+        adminRole.setRoleType("ADMINISTRATOR");
 
         userRole = new Role();
-        userRole.setRoleType(RoleType.USER.name());
+        userRole.setRoleType("RoleTypeTest.USER");
 
         guestRole = new Role();
-        guestRole.setRoleType(RoleType.GUEST.name());
+        guestRole.setRoleType("GUEST");
 
         groupRef = new IDMGroupRef();
         groupRef.setIdmGroupId(1L);
@@ -88,7 +87,7 @@ public class IDMGroupRefRepositoryTest {
         groupRef.addRole(adminRole);
         entityManager.persistFlushFind(groupRef);
 
-        List<IDMGroupRef> groups = groupRefRepository.findAllByRoleType(RoleType.ADMINISTRATOR.name());
+        List<IDMGroupRef> groups = groupRefRepository.findAllByRoleType("ADMINISTRATOR");
         assertEquals(1, groups.size());
         assertEquals(this.groupRef.getIdmGroupId(), groups.get(0).getIdmGroupId());
     }

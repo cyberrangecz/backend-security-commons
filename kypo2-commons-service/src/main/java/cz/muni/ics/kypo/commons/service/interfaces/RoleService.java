@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.commons.service;
+package cz.muni.ics.kypo.commons.service.interfaces;
 
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.model.Role;
@@ -17,10 +17,10 @@ public interface RoleService {
     Role create(Role role);
 
     /**
-     * Deletes given role
-     * @param role to be deleted
+     * Deletes role with given role type
+     * @param roleType to be deleted
      */
-    void delete(Role role);
+    void delete(String roleType);
 
     /**
      * Returns role by id
@@ -29,7 +29,7 @@ public interface RoleService {
      * @return role with given id
      * @throws CommonsServiceException if role could not be found
      */
-    Role getById(Long id) throws CommonsServiceException;
+    Role getById(long id) throws CommonsServiceException;
 
     /**
      * Return role by role type

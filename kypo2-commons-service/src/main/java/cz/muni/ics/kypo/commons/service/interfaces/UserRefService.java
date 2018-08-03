@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.commons.service;
+package cz.muni.ics.kypo.commons.service.interfaces;
 
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
@@ -18,10 +18,10 @@ public interface UserRefService {
     UserRef create(UserRef userRef);
 
     /**
-     * Deletes given user ref
-     * @param userRef to be deleted
+     * Deletes given user ref with given login
+     * @param userLogin login of user to be deleted
      */
-    void delete(UserRef userRef);
+    void delete(String userLogin);
 
     /**
      * Returns user ref by id
@@ -33,13 +33,13 @@ public interface UserRefService {
     UserRef getById(Long id) throws CommonsServiceException;
 
     /**
-     * Return user ref by user id
+     * Return user ref by user login
      *
-     * @param id of user
-     * @return user ref with given user id
-     * @throws CommonsServiceException when role with given role type could not be found
+     * @param login of user
+     * @return user ref with given user login
+     * @throws CommonsServiceException when user with given login could not be found
      */
-    UserRef getByIdmUserId(Long id) throws CommonsServiceException;
+    UserRef getByLogin(String login) throws CommonsServiceException;
 
     /**
      * Returns all user refs
@@ -47,4 +47,13 @@ public interface UserRefService {
      * @return all user refs
      */
     Page<UserRef> getAllUserRef(Predicate predicate, Pageable pageable);
+
+    /**
+     * Return user ref by user login with groups references
+     *
+     * @param userLogin login of user
+     * @return user ref with groups ref by given user login
+     * @throws CommonsServiceException when user with given login could not be found
+     */
+    UserRef getUserWithGroupsRef(String userLogin) throws CommonsServiceException;
 }

@@ -33,17 +33,17 @@ public class UserRefRepositoryTest {
 
     @Test
     public void findByIDMUserId() throws Exception {
-        Long expectedId = 1L;
+        String expectedLogin = "User1";
         UserRef userRef = new UserRef();
-        userRef.setIdmUserId(1L);
+        userRef.setLogin("User1");
         this.entityManager.persist(userRef);
-        Optional<UserRef> userRefOptional = this.userRefRepository.findByIdmUserId(expectedId);
+        Optional<UserRef> userRefOptional = this.userRefRepository.findByLogin(expectedLogin);
         UserRef g = userRefOptional.orElseThrow(() -> new Exception("Group should be found"));
         assertEquals(userRef, g);
     }
 
     @Test
     public void findByGroupIdNotFound() {
-        assertFalse(this.userRefRepository.findByIdmUserId(1L).isPresent());
+        assertFalse(this.userRefRepository.findByLogin("User1").isPresent());
     }
 }

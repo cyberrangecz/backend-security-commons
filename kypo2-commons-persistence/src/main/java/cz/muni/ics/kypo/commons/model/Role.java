@@ -1,5 +1,7 @@
 package cz.muni.ics.kypo.commons.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -9,6 +11,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Role {
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @JsonIgnoreProperties({"id"})
     private Long id;
 
     @Column(name = "ROLE_TYPE", unique = true, nullable = false)

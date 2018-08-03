@@ -38,7 +38,7 @@ public class UserRefEntityTest {
     @Test
     public void saveShouldPersistData() {
         UserRef userRef = new UserRef();
-        userRef.setIdmUserId(1L);
+        userRef.setLogin("User1");
         this.entityManager.persistAndFlush(userRef);
     }
 }

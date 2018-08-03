@@ -5,7 +5,7 @@ CREATE TABLE idm_group_ref (
 
 CREATE TABLE user_ref (
    id             BIGSERIAL NOT NULL,
-   user_id       int8 NOT NULL UNIQUE,
+   user_login     varchar(255) NOT NULL UNIQUE,
    PRIMARY KEY (id));
 
 CREATE TABLE role (

@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface UserRefRepository extends JpaRepository<UserRef, Long>, QuerydslPredicateExecutor<UserRef> {
 
-    Optional<UserRef> findByIdmUserId(Long aLong);
+    Optional<UserRef> findByLogin(String login);
 }
