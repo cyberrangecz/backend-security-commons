@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cz.muni.ics.kypo</groupId>
-    <artifactId>kypo2-commons</artifactId>
+    <artifactId>kypo2-security-commons</artifactId>
     <packaging>pom</packaging>
     <version>${project.version}</version>
     <modules>
