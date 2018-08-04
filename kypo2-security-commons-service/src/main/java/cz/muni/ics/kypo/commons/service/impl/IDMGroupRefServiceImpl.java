@@ -66,7 +66,7 @@ public class IDMGroupRefServiceImpl implements IDMGroupRefService {
     @Override
     public IDMGroupRef update(IDMGroupRef idmGroupRef) {
         Assert.notNull(idmGroupRef, "Input idm group ref must not be null");
-        IDMGroupRef updatedRef = idmGroupRefRepository.saveAndFlush(idmGroupRef);
+        IDMGroupRef updatedRef = idmGroupRefRepository.save(idmGroupRef);
         LOG.info("IDMGroupRef with id: " + updatedRef.getId() + "updated");
         return updatedRef;
     }
@@ -86,7 +86,7 @@ public class IDMGroupRefServiceImpl implements IDMGroupRefService {
 
         IDMGroupRef idmGroupRef = this.getIDMGroupRefWithRoles(groupRefId);
         idmGroupRef.addRole(role);
-        IDMGroupRef ref = idmGroupRefRepository.saveAndFlush(idmGroupRef);
+        IDMGroupRef ref = idmGroupRefRepository.save(idmGroupRef);
         LOG.info("Roles have been assigned to group.");
         return ref;
     }
@@ -104,7 +104,7 @@ public class IDMGroupRefServiceImpl implements IDMGroupRefService {
             }
         }
         idmGroupRef.setUsers(usersRefsInGroup);
-        idmGroupRef = idmGroupRefRepository.saveAndFlush(idmGroupRef);
+        idmGroupRef = idmGroupRefRepository.save(idmGroupRef);
         LOG.info("Users have been added to group.");
         return idmGroupRef;
     }
@@ -122,7 +122,7 @@ public class IDMGroupRefServiceImpl implements IDMGroupRefService {
             }
         }
         idmGroupRef.setUsers(usersRefsInGroup);
-        idmGroupRef = idmGroupRefRepository.saveAndFlush(idmGroupRef);
+        idmGroupRef = idmGroupRefRepository.save(idmGroupRef);
         LOG.info("Users have been removed from group.");
         return idmGroupRef;
     }
