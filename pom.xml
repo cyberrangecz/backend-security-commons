@@ -9,10 +9,12 @@
     <packaging>pom</packaging>
     <version>${project.version}</version>
     <modules>
-        <module>kypo2-commons-persistence</module>
-        <module>kypo2-commons-service</module>
-        <module>kypo2-commons-facade</module>
-        <module>kypo2-commons-rest</module>
+        <module>kypo2-security-commons-persistence</module>
+        <module>kypo2-security-commons-service</module>
+        <module>kypo2-security-commons-facade</module>
+        <module>kypo2-security-commons-security</module>
+        <module>kypo2-security-commons-rest</module>
+        <module>kypo2-security-commons-facade</module>
     </modules>
 
     <parent>
