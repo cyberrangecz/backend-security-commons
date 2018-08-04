@@ -15,6 +15,20 @@ import java.util.List;
 public interface IDMGroupRefFacade {
 
     /**
+     * Creates given group ref in database.
+     * @param newGroupRefDTO group ref to be created
+     * @throws CommonsServiceException
+     */
+    IDMGroupRefDTO create(NewGroupRefDTO newGroupRefDTO);
+
+    /**
+     * Deletes given group ref from database.
+     * @param groupRefId group ref to be deleted
+     * @throws CommonsServiceException
+     */
+    void delete(Long groupRefId);
+
+    /**
      * Gets IDMGroupRef with given group id from database.
      * @param id of the IDMGroup whose reference should be loaded
      * @return IDMGroup with given groupId
@@ -29,20 +43,6 @@ public interface IDMGroupRefFacade {
      */
     public PageResultResource<IDMGroupRefDTO> findAll(Predicate predicate, Pageable pageable);
 
-    /**
-     * Creates given group ref in database.
-     * @param newGroupRefDTO group ref to be created
-     * @throws CommonsServiceException
-     */
-    IDMGroupRefDTO create(NewGroupRefDTO newGroupRefDTO);
-
-
-    /**
-     * Deletes given group ref from database.
-     * @param groupRefId group ref to be deleted
-     * @throws CommonsServiceException
-     */
-    void delete(Long groupRefId);
 
     /**
      * Assign role to group.

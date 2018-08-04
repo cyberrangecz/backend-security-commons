@@ -72,8 +72,8 @@ public class IDMGroupRefServiceImpl implements IDMGroupRefService {
     }
 
     @Override
-    public void delete(IDMGroupRef idmGroupRef) {
-        Assert.notNull(idmGroupRef, "Input idm group ref must not be null");
+    public void delete(long id) {
+        IDMGroupRef idmGroupRef = this.getByIdmGroupId(id);
         idmGroupRefRepository.delete(idmGroupRef);
         LOG.info("IDMGroupRef with id: " + idmGroupRef.getId() + " deleted." );
     }

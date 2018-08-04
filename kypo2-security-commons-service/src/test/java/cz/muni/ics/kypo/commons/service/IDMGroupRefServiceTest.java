@@ -157,12 +157,12 @@ public class IDMGroupRefServiceTest {
 
     @Test
     public void testUpdateIDMGroupRef() {
-        given(groupRefRepository.saveAndFlush(groupRef2)).willReturn(groupRef2);
+        given(groupRefRepository.save(groupRef2)).willReturn(groupRef2);
         IDMGroupRef g = groupRefService.update(groupRef2);
         assertEquals(groupRef2.getIdmGroupId(), g.getIdmGroupId());
         assertEquals(groupRef2.getId(), g.getId());
 
-        then(groupRefRepository).should().saveAndFlush(groupRef2);
+        then(groupRefRepository).should().save(groupRef2);
     }
 
     @Test
@@ -174,29 +174,24 @@ public class IDMGroupRefServiceTest {
 
     @Test
     public void testDeleteIDMGroupRef() {
-        groupRefService.delete(groupRef1);
+        given(groupRefRepository.findByIdmGroupId(1L)).willReturn(Optional.of(groupRef1));
+        groupRefService.delete(1L);
         then(groupRefRepository).should().delete(groupRef1);
     }
 
-    @Test
-    public void testDeleteIDMGroupRefWithNullEntity() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Input idm group ref must not be null");
-        groupRefService.delete(null);
-    }
 
     @Test
     public void testAssignRoleToGroup() {
         given(roleRepository.findByRoleType(anyString())).willReturn(Optional.of(role1));
         given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.of(groupRef1));
         groupRef1.addRole(role1);
-        given(groupRefRepository.saveAndFlush(groupRef1)).willReturn(groupRef1);
+        given(groupRefRepository.save(groupRef1)).willReturn(groupRef1);
         IDMGroupRef groupRef = groupRefService.assignRoleToGroup(groupRef1.getId(), "ADMINISTRATOR");
 
         assertEquals(1, groupRef.getRoles().size());
         assertTrue(groupRef.getRoles().contains(role1));
 
-        then(groupRefRepository).should().saveAndFlush(groupRef1);
+        then(groupRefRepository).should().save(groupRef1);
     }
 
     @Test
@@ -230,13 +225,13 @@ public class IDMGroupRefServiceTest {
         given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.of(groupRef1));
         given(userRefRepository.findByLogin(userRef1.getLogin())).willReturn(Optional.of(userRef1));
         groupRef1.addUser(userRef1);
-        given(groupRefRepository.saveAndFlush(groupRef1)).willReturn(groupRef1);
+        given(groupRefRepository.save(groupRef1)).willReturn(groupRef1);
         IDMGroupRef groupRef = groupRefService.addUsersToGroupRef(groupRef1.getId(), Collections.singletonList("user1"));
 
         assertEquals(1, groupRef.getUsers().size());
         assertTrue(groupRef.getUsers().contains(userRef1));
 
-        then(groupRefRepository).should().saveAndFlush(groupRef1);
+        then(groupRefRepository).should().save(groupRef1);
     }
 
     @Test
@@ -271,13 +266,13 @@ public class IDMGroupRefServiceTest {
         given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.of(groupRef1));
         given(userRefRepository.findByLogin(userRef1.getLogin())).willReturn(Optional.of(userRef1));
         groupRef1.removeUser(userRef1);
-        given(groupRefRepository.saveAndFlush(groupRef1)).willReturn(groupRef1);
+        given(groupRefRepository.save(groupRef1)).willReturn(groupRef1);
         IDMGroupRef groupRef = groupRefService.removeUsersFromGroupRef(groupRef1.getId(), Collections.singletonList("user1"));
 
         assertEquals(1, groupRef.getUsers().size());
         assertTrue(groupRef.getUsers().contains(userRef2));
 
-        then(groupRefRepository).should().saveAndFlush(groupRef1);
+        then(groupRefRepository).should().save(groupRef1);
     }
 
     @Test

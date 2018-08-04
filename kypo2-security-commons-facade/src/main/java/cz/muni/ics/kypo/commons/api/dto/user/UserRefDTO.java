@@ -26,8 +26,21 @@ public class UserRefDTO {
         this.login = login;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserRefDTO that = (UserRefDTO) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        return login != null ? login.equals(that.login) : that.login == null;
     }
 
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (login != null ? login.hashCode() : 0);
+        return result;
+    }
 }

@@ -15,9 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Service
+@Transactional
 public class IDMGroupRefFacadeImpl implements IDMGroupRefFacade {
 
     private static final Logger LOG = LoggerFactory.getLogger(RoleFacadeImpl.class);
@@ -29,6 +32,20 @@ public class IDMGroupRefFacadeImpl implements IDMGroupRefFacade {
     public IDMGroupRefFacadeImpl(IDMGroupRefService groupRefService, BeanMapping beanMapping) {
         this.groupRefService = groupRefService;
         this.beanMapping = beanMapping;
+    }
+
+    @Override
+    public IDMGroupRefDTO create(NewGroupRefDTO newGroupRefDTO) {
+        LOG.info("Creating IDMGroupRef with group id: " + newGroupRefDTO.getIdmGroupId());
+        IDMGroupRef groupRef = groupRefService.create(beanMapping.mapTo(newGroupRefDTO, IDMGroupRef.class));
+        System.out.println(groupRef);
+        return beanMapping.mapTo(groupRef, IDMGroupRefDTO.class);
+    }
+
+    @Override
+    public void delete(Long idmGroupId) {
+        groupRefService.delete(groupRefService.getByIdmGroupId(idmGroupId));
+
     }
 
     @Override
@@ -53,19 +70,6 @@ public class IDMGroupRefFacadeImpl implements IDMGroupRefFacade {
             LOG.error("Error while loading groups.");
             throw new CommonsFacadeException(ex.getMessage());
         }
-    }
-
-    @Override
-    public IDMGroupRefDTO create(NewGroupRefDTO newGroupRefDTO) {
-        LOG.info("Creating IDMGroupRef with group id: " + newGroupRefDTO.getIdmGroupId());
-        IDMGroupRef groupRef = groupRefService.create(beanMapping.mapTo(newGroupRefDTO, IDMGroupRef.class));
-        return beanMapping.mapTo(groupRef, IDMGroupRefDTO.class);
-    }
-
-    @Override
-    public void delete(Long idmGroupId) {
-        groupRefService.delete(groupRefService.getByIdmGroupId(idmGroupId));
-
     }
 
     @Override

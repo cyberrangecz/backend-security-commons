@@ -45,10 +45,10 @@ public interface IDMGroupRefService {
 
     /**
      * Deletes given group ref from database.
-     * @param idmGroupRef group ref to be deleted
+     * @param id group id of group ref to be deleted
      * @throws CommonsServiceException
      */
-    void delete(IDMGroupRef idmGroupRef);
+    void delete(long id);
 
     /**
      * Assign role to group.
