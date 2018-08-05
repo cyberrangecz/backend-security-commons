@@ -119,7 +119,7 @@ public class IDMGroupRefFacadeTest {
     public void testDeleteIDMGroupRef() {
         given(groupRefService.getByIdmGroupId(anyLong())).willReturn(groupRef1);
         groupRefFacade.delete(1L);
-        then(groupRefService).should().delete(groupRef1);
+        then(groupRefService).should().delete(1L);
     }
 
     @Test

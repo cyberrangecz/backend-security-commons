@@ -44,8 +44,7 @@ public class IDMGroupRefFacadeImpl implements IDMGroupRefFacade {
 
     @Override
     public void delete(Long idmGroupId) {
-        groupRefService.delete(groupRefService.getByIdmGroupId(idmGroupId));
-
+        groupRefService.delete(idmGroupId);
     }
 
     @Override
