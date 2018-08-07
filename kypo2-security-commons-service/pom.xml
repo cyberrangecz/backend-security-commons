@@ -3,14 +3,21 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>kypo2-security-commons</artifactId>
         <groupId>cz.muni.ics.kypo</groupId>
+        <artifactId>kypo2-security-commons</artifactId>
         <version>${project.version}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>kypo2-security-commons-service</artifactId>
     <packaging>jar</packaging>
+
+    <properties>
+        <swagger-codegen.version>2.3.1</swagger-codegen.version>
+        <swagger-codegen-cli.version>2.3.1</swagger-codegen-cli.version>
+        <swagger-codegen-plugin.version>2.2.3</swagger-codegen-plugin.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>cz.muni.ics.kypo</groupId>
@@ -18,10 +25,59 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
+            <groupId>cz.muni.ics.kypo</groupId>
+            <artifactId>kypo2-security-commons-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- spring web dependencies are necessary for swagger codegen classes -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <version>${swagger-codegen.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -33,5 +89,44 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <!--
+            <plugin>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>${swagger-codegen-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/swagger-client/user-groups/api-docs.json</inputSpec>
+                            <language>java</language>
+                            <apiPackage>cz.muni.ics.kypo.user.groups.api</apiPackage>
+                            <modelPackage>cz.muni.ics.kypo.user.groups.model</modelPackage>
+                            <invokerPackage>cz.muni.ics.kypo.user.groups.util</invokerPackage>
+                            <configOptions>
+                                <dateLibrary>java8</dateLibrary>
+                            </configOptions>
+                            <library>resttemplate</library>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+             -->
+        </plugins>
+    </build>
 
 </project>

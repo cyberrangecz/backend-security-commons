@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.bohnman.squiggly.Squiggly;
 import com.github.bohnman.squiggly.util.SquigglyUtils;
 import com.querydsl.core.types.Predicate;
+import cz.muni.ics.kypo.commons.ApiEndpointsSecurityCommons;
 import cz.muni.ics.kypo.commons.api.PageResultResource;
 import cz.muni.ics.kypo.commons.api.dto.role.NewRoleDTO;
 import cz.muni.ics.kypo.commons.api.dto.role.RoleDTO;
@@ -27,10 +28,21 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import static cz.muni.ics.kypo.commons.ApiEndpointsSecurityCommons.ROLES_URL;
-
+@Api(value = ApiEndpointsSecurityCommons.ROLES_URL,
+        consumes = "application/json",
+        authorizations = {
+                @Authorization(value = "sampleoauth",
+                        scopes = {
+                                @AuthorizationScope(
+                                        scope = "HTTP operations on roles resource",
+                                        description = "allows operations on roles resource."
+                                )
+                        }
+                )
+        }
+)
 @RestController
 @RequestMapping(path = ROLES_URL)
-@Api(value = "Endpoint for roles")
 public class RoleController {
 
     private static Logger LOG = LoggerFactory.getLogger(RoleController.class);
@@ -72,7 +84,7 @@ public class RoleController {
         try {
             RoleDTO r = roleFacade.create(newRoleDTO);
             Squiggly.init(objectMapper, fields);
-            return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, r), HttpStatus.OK);
+            return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, r), HttpStatus.CREATED);
         } catch (CommonsFacadeException ex) {
             throw new ResourceNotCreatedException(ex.getLocalizedMessage());
         }
@@ -98,7 +110,7 @@ public class RoleController {
             @ApiResponse(code = 404, message = "The requested resource was not found.")
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getRoleByRoleType(@ApiParam(name = "Role type") @RequestParam String roleType,
+    public ResponseEntity<Object> getRoleByRoleType(@ApiParam(name = "Role type") @RequestParam("roleType") String roleType,
                                                     @ApiParam(value = "Fields which should be returned in REST API response", required = false)
                                                     @RequestParam(value = "fields", required = false) String fields) {
         LOG.debug("findRoleByRoleType({},{})", roleType, fields);
@@ -131,7 +143,7 @@ public class RoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The requested resource was not found.")
     })
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllRoles(@QuerydslPredicate(root = Role.class) Predicate predicate, Pageable pageable,
                                               @RequestParam MultiValueMap<String, String> parameters,
                                               @ApiParam(value = "Fields which should be returned in REST API response", required = false)

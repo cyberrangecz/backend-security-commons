@@ -1,14 +1,10 @@
 package cz.muni.ics.kypo.commons.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import cz.muni.ics.kypo.commons.mapping.RolesWrapper;
-import cz.muni.ics.kypo.commons.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.model.Role;
-import cz.muni.ics.kypo.commons.model.UserRef;
-import cz.muni.ics.kypo.commons.repository.IDMGroupRefRepository;
 import cz.muni.ics.kypo.commons.repository.RoleRepository;
-import cz.muni.ics.kypo.commons.repository.UserRefRepository;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +17,6 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Component
 @PropertySource("file:${path-to-config-file}")

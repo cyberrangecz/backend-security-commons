@@ -12,6 +12,7 @@ import cz.muni.ics.kypo.commons.api.dto.user.UserRefDTO;
 import cz.muni.ics.kypo.commons.exception.CommonsFacadeException;
 import cz.muni.ics.kypo.commons.exceptions.ResourceNotCreatedException;
 import cz.muni.ics.kypo.commons.exceptions.ResourceNotFoundException;
+import cz.muni.ics.kypo.commons.exceptions.ResourceNotModifiedException;
 import cz.muni.ics.kypo.commons.facade.interfaces.UserRefFacade;
 import cz.muni.ics.kypo.commons.model.UserRef;
 import io.swagger.annotations.*;
@@ -72,7 +73,7 @@ public class UserRefController {
         try {
             UserRefDTO uR = userRefFacade.create(userRefDTO);
             Squiggly.init(objectMapper, fields);
-            return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, uR), HttpStatus.OK);
+            return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, uR), HttpStatus.CREATED);
         } catch (CommonsFacadeException ex) {
             throw new ResourceNotCreatedException(ex.getLocalizedMessage());
         }
@@ -98,7 +99,7 @@ public class UserRefController {
             @ApiResponse(code = 404, message = "The requested resource was not found.")
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getUserRefByUserLogin(@ApiParam(name = "Login of user") @RequestParam String userLogin,
+    public ResponseEntity<Object> getUserRefByUserLogin(@ApiParam(name = "Login of user") @RequestParam("userLogin") String userLogin,
                                                     @ApiParam(value = "Fields which should be returned in REST API response", required = false)
                                                     @RequestParam(value = "fields", required = false) String fields) {
         LOG.debug("getUserRefByLogin({},{})", userLogin, fields);
@@ -131,7 +132,7 @@ public class UserRefController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The requested resource was not found.")
     })
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllUserRef(@QuerydslPredicate(root = UserRef.class) Predicate predicate, Pageable pageable,
                                                 @RequestParam MultiValueMap<String, String> parameters,
                                                 @ApiParam(value = "Fields which should be returned in REST API response", required = false)
@@ -143,6 +144,36 @@ public class UserRefController {
             return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, userRefResource), HttpStatus.OK);
         } catch (CommonsFacadeException ex) {
             throw new ResourceNotFoundException(ex.getLocalizedMessage());
+        }
+    }
+
+    @ApiOperation(httpMethod = "DELETE",
+            value = "Delete user reference.",
+            response = RoleDTO.class,
+            nickname = "deleteUserRef",
+            produces = "application/json",
+            authorizations = {
+                    @Authorization(value = "sampleoauth",
+                            scopes = {
+                                    @AuthorizationScope(
+                                            scope = "delete user reference",
+                                            description = "allows deleting user reference."
+                                    )
+                            }
+                    )
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The requested resource was not found.")
+    })
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> deleteGroupReference(@ApiParam(name = "User login whose user reference should be deleted.") @RequestParam("userLogin") String userLogin) {
+        LOG.debug("Deleting user reference ({})", userLogin);
+        try {
+            userRefFacade.delete(userLogin);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (CommonsFacadeException ex) {
+            throw new ResourceNotModifiedException(ex.getLocalizedMessage());
         }
     }
 }

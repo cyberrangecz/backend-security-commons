@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.bohnman.squiggly.Squiggly;
 import com.github.bohnman.squiggly.util.SquigglyUtils;
 import com.querydsl.core.types.Predicate;
+import cz.muni.ics.kypo.commons.ApiEndpointsSecurityCommons;
 import cz.muni.ics.kypo.commons.api.PageResultResource;
 import cz.muni.ics.kypo.commons.api.dto.group.IDMGroupRefDTO;
 import cz.muni.ics.kypo.commons.api.dto.group.NewGroupRefDTO;
@@ -24,6 +25,7 @@ import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +33,21 @@ import java.util.List;
 
 import static cz.muni.ics.kypo.commons.ApiEndpointsSecurityCommons.GROUPS_REF_URL;
 
+@Api(value = ApiEndpointsSecurityCommons.GROUPS_REF_URL,
+        consumes = "application/json",
+        authorizations = {
+                @Authorization(value = "sampleoauth",
+                        scopes = {
+                                @AuthorizationScope(
+                                        scope = "HTTP operations on groups references resource",
+                                        description = "allows operations on groups references resource."
+                                )
+                        }
+                )
+        }
+)
 @RestController
-@RequestMapping(path = GROUPS_REF_URL)
-@Api(value = "Endpoint for Groups references")
+@RequestMapping(path = ApiEndpointsSecurityCommons.GROUPS_REF_URL)
 public class GroupsRefController {
 
     private static Logger LOG = LoggerFactory.getLogger(GroupsRefController.class);
@@ -75,7 +89,7 @@ public class GroupsRefController {
         try {
             IDMGroupRefDTO gR = groupFacade.create(groupRefDTO);
             Squiggly.init(objectMapper, fields);
-            return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, gR), HttpStatus.OK);
+            return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, gR), HttpStatus.CREATED);
         } catch (CommonsFacadeException ex) {
             throw new ResourceNotCreatedException(ex.getLocalizedMessage());
         }
@@ -104,6 +118,7 @@ public class GroupsRefController {
     public ResponseEntity<Object> findGroupRefByGroupId(@ApiParam(name = "IDMGroup Id") @PathVariable long groupId,
                                                           @ApiParam(value = "Fields which should be returned in REST API response", required = false)
                                                           @RequestParam(value = "fields", required = false) String fields) {
+
         LOG.debug("findGroupRefByGroupId({},{})", groupId, fields);
         try {
             IDMGroupRefDTO gR = groupFacade.getByIdmGroupId(groupId);
@@ -196,11 +211,11 @@ public class GroupsRefController {
             }
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "The requested resource was not found.")
+            @ApiResponse(code = 304, message = "The requested resource was not modified.")
     })
-    @GetMapping(value = "/{groupId}/assignRole", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{groupId}/assignRole", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> assignRoleToGroupRef(@ApiParam(name = "IDMGroup Id") @PathVariable long groupId,
-                                                        @ApiParam(value = "Role type of role which should be assigned to group.") String roleType,
+                                                        @ApiParam(value = "Role type of role which should be assigned to group.") @RequestParam("roleType") String roleType,
                                                         @ApiParam(value = "Fields which should be returned in REST API response", required = false)
                                                         @RequestParam(value = "fields", required = false) String fields) {
         LOG.debug("assignRoleToGroupRef({},{},{})", groupId, roleType, fields);
@@ -209,7 +224,7 @@ public class GroupsRefController {
             Squiggly.init(objectMapper, fields);
             return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, gR), HttpStatus.OK);
         } catch (CommonsFacadeException ex) {
-            throw new ResourceNotFoundException(ex.getLocalizedMessage());
+            throw new ResourceNotModifiedException(ex.getLocalizedMessage());
         }
     }
 
@@ -232,9 +247,9 @@ public class GroupsRefController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The requested resource was not found.")
     })
-    @GetMapping(value = "/{groupId}/addUsers", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{groupId}/addUsers", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addUsersToGroupRef(@ApiParam(name = "IDMGroup Id") @PathVariable long groupId,
-                                                       @ApiParam(value = "List of users logins which should be added to group.") List<String> userLogins,
+                                                       @ApiParam(value = "List of users logins which should be added to group.") @RequestBody List<String> userLogins,
                                                        @ApiParam(value = "Fields which should be returned in REST API response", required = false)
                                                        @RequestParam(value = "fields", required = false) String fields) {
         LOG.debug("assignRoleToGroupRef({},{},{})", groupId, userLogins, fields);
@@ -243,11 +258,11 @@ public class GroupsRefController {
             Squiggly.init(objectMapper, fields);
             return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, gR), HttpStatus.OK);
         } catch (CommonsFacadeException ex) {
-            throw new ResourceNotFoundException(ex.getLocalizedMessage());
+            throw new ResourceNotModifiedException(ex.getLocalizedMessage());
         }
     }
 
-    @ApiOperation(httpMethod = "",
+    @ApiOperation(httpMethod = "PUT",
             value = "Remove users from group reference.",
             response = IDMGroupRefDTO.class,
             nickname = "removeUsersFromGroupRef",
@@ -266,9 +281,9 @@ public class GroupsRefController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The requested resource was not found.")
     })
-    @GetMapping(value = "/{groupId}/removeUsers", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{groupId}/removeUsers", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> removeUsersFromGroupRef(@ApiParam(name = "IDMGroup Id") @PathVariable long groupId,
-                                                     @ApiParam(value = "List of users logins which should be removed from group.") List<String> userLogins,
+                                                     @ApiParam(value = "List of users logins which should be removed from group.") @RequestBody List<String> userLogins,
                                                      @ApiParam(value = "Fields which should be returned in REST API response", required = false)
                                                      @RequestParam(value = "fields", required = false) String fields) {
         LOG.debug("assignRoleToGroupRef({},{},{})", groupId, userLogins, fields);
@@ -277,7 +292,7 @@ public class GroupsRefController {
             Squiggly.init(objectMapper, fields);
             return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, gR), HttpStatus.OK);
         } catch (CommonsFacadeException ex) {
-            throw new ResourceNotFoundException(ex.getLocalizedMessage());
+            throw new ResourceNotModifiedException(ex.getLocalizedMessage());
         }
     }
 }

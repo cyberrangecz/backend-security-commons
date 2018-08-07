@@ -42,9 +42,9 @@ import org.springframework.web.util.UrlPathHelper;
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
-public class CustomRestExceptionHandlerTraining extends ResponseEntityExceptionHandler {
+public class CustomRestExceptionHandlerCommons extends ResponseEntityExceptionHandler {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CustomRestExceptionHandlerTraining.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CustomRestExceptionHandlerCommons.class);
   protected static final UrlPathHelper URLHELPER = new UrlPathHelper();
 
   // 400
