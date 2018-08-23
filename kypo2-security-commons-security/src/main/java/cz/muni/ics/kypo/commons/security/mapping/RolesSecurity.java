@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.commons.security;
+package cz.muni.ics.kypo.commons.security.mapping;
 
 public class RolesSecurity {
 

@@ -109,34 +109,6 @@ public class RoleControllerTest {
     }
 
     @Test
-    public void testCreateRole() throws Exception {
-        String valueAs = convertObjectToJsonBytes(roleDTO);
-        given(objectMapper.writeValueAsString(any(Object.class))).willReturn(valueAs);
-        given(roleFacade.create(any(NewRoleDTO.class))).willReturn(roleDTO);
-        mockMvc.perform(
-                post(ApiEndpointsSecurityCommons.ROLES_URL)
-                        .content(convertObjectToJsonBytes(newRoleDTO))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(content().string(convertObjectToJsonBytes(convertObjectToJsonBytes(roleDTO))));
-
-    }
-
-    @Test
-    public void testCreateRoleWithFacadeException() throws Exception {
-        willThrow(CommonsFacadeException.class).given(roleFacade).create(any(NewRoleDTO.class));
-        Exception exception = mockMvc.perform(
-                post(ApiEndpointsSecurityCommons.ROLES_URL)
-                        .content(convertObjectToJsonBytes(newRoleDTO))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotAcceptable())
-                .andReturn().getResolvedException();
-
-        assertEquals(ResourceNotCreatedException.class, exception.getClass());
-    }
-
-    @Test
     public void testFindRoleByRoleType() throws Exception {
         String valueAs = convertObjectToJsonBytes(roleDTO);
         given(objectMapper.writeValueAsString(any(Object.class))).willReturn(valueAs);
@@ -170,25 +142,6 @@ public class RoleControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(convertObjectToJsonBytes(convertObjectToJsonBytes(rolePageResultResource))));
 
-    }
-
-    @Test
-    public void deleteRole() throws Exception {
-        mockMvc.perform(delete(ApiEndpointsSecurityCommons.ROLES_URL)
-                .param("roleType", "ADMINISTRATOR")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void deleteRoleFacadeException() throws Exception {
-        willThrow(CommonsFacadeException.class).given(roleFacade).delete(anyString());
-        Exception exception = mockMvc.perform(delete(ApiEndpointsSecurityCommons.ROLES_URL)
-                .param("roleType", "GUEST")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotModified())
-                .andReturn().getResolvedException();
-        assertEquals(ResourceNotModifiedException.class, exception.getClass());
     }
 
     private static String convertObjectToJsonBytes(Object object) throws IOException {

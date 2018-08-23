@@ -5,7 +5,6 @@ import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
 import cz.muni.ics.kypo.commons.model.Role;
 import cz.muni.ics.kypo.commons.repository.RoleRepository;
 import cz.muni.ics.kypo.commons.service.interfaces.RoleService;
-import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,23 +24,6 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
-    }
-
-    @Override
-    public Role create(Role role) {
-        Assert.notNull(role, "Input role must not be null");
-        Assert.notNull(role.getRoleType(), "Role type of input role must not be null");
-
-        Role r = roleRepository.save(role);
-        LOG.info(r + " was created.");
-        return r;
-    }
-
-    @Override
-    public void delete(String roleType) {
-        Role role = this.getByRoleType(roleType);
-        roleRepository.delete(role);
-        LOG.info("Role with role type: " + role.getRoleType() + " was successfully deleted.");
     }
 
     @Override

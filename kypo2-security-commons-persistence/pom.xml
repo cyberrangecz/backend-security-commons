@@ -5,7 +5,7 @@
     <parent>
         <groupId>cz.muni.ics.kypo</groupId>
         <artifactId>kypo2-security-commons</artifactId>
-        <version>${project.version}</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -113,7 +113,7 @@
                 <configuration>
                     <sqlMigrationSeparator>__</sqlMigrationSeparator>
                     <locations>
-                        <location>filesystem:src/main/resources/db/migration/training</location>
+                        <location>filesystem:src/main/resources/db/migration</location>
                     </locations>
                     <url>${jdbc.url}</url>
                     <user>${jdbc.username}</user>

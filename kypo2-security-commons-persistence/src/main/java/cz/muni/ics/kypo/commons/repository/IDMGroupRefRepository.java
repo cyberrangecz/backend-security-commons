@@ -2,8 +2,6 @@ package cz.muni.ics.kypo.commons.repository;
 
 import cz.muni.ics.kypo.commons.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.model.Role;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;

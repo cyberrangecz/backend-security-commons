@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@PropertySource("file:${path-to-config-file}")
+@PropertySource("file:${path.to.config.file}")
 public class StartUpRunner implements ApplicationRunner {
     private static Logger LOGGER = LoggerFactory.getLogger(StartUpRunner.class);
 
-    @Value("${path.to.file.with.initial.users.and.services}")
+    @Value("${path.to.file.with.initial.roles}")
     private String pathToFileWithInitialRoles;
 
     private RoleRepository roleRepository;

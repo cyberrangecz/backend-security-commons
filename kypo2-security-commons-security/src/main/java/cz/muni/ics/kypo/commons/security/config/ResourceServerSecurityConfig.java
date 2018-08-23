@@ -23,8 +23,8 @@ import java.util.Set;
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.security"})
-@PropertySource("file:${path-to-config-file}")
-public class ResourceServiceSecurityConfig extends ResourceServerConfigurerAdapter {
+@PropertySource("file:${path.to.config.file}")
+public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
 
     @Value("${kypo.idp.4oauth.introspectionURI}")
     private String introspectionURI;

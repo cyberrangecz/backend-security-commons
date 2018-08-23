@@ -4,10 +4,8 @@ import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
 import cz.muni.ics.kypo.commons.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.model.Role;
-import cz.muni.ics.kypo.commons.model.UserRef;
 import cz.muni.ics.kypo.commons.repository.IDMGroupRefRepository;
 import cz.muni.ics.kypo.commons.repository.RoleRepository;
-import cz.muni.ics.kypo.commons.repository.UserRefRepository;
 import cz.muni.ics.kypo.commons.service.interfaces.IDMGroupRefService;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,15 +22,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.junit.Assert.*;
@@ -56,14 +51,9 @@ public class IDMGroupRefServiceTest {
     @MockBean
     private RoleRepository roleRepository;
 
-    @MockBean
-    private UserRefRepository userRefRepository;
-
     private IDMGroupRef groupRef1, groupRef2;
 
     private Role role1, role2;
-
-    private UserRef userRef1, userRef2;
 
     private Pageable pageable;
     private Predicate predicate;
@@ -89,14 +79,6 @@ public class IDMGroupRefServiceTest {
         role2 = new Role();
         role2.setId(2L);
         role2.setRoleType("GUEST");
-
-        userRef1 = new UserRef();
-        userRef1.setId(1L);
-        userRef1.setLogin("user1");
-
-        userRef2 = new UserRef();
-        userRef2.setId(2L);
-        userRef2.setLogin("user2");
 
         pageable = PageRequest.of(0, 10);
     }
@@ -156,23 +138,6 @@ public class IDMGroupRefServiceTest {
     }
 
     @Test
-    public void testUpdateIDMGroupRef() {
-        given(groupRefRepository.save(groupRef2)).willReturn(groupRef2);
-        IDMGroupRef g = groupRefService.update(groupRef2);
-        assertEquals(groupRef2.getIdmGroupId(), g.getIdmGroupId());
-        assertEquals(groupRef2.getId(), g.getId());
-
-        then(groupRefRepository).should().save(groupRef2);
-    }
-
-    @Test
-    public void testUpdateIDMGroupRefWithNullEntity() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Input idm group ref must not be null");
-        groupRefService.update(null);
-    }
-
-    @Test
     public void testDeleteIDMGroupRef() {
         given(groupRefRepository.findByIdmGroupId(1L)).willReturn(Optional.of(groupRef1));
         groupRefService.delete(1L);
@@ -221,82 +186,17 @@ public class IDMGroupRefServiceTest {
     }
 
     @Test
-    public void testAddUsersToGroup() {
-        given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.of(groupRef1));
-        given(userRefRepository.findByLogin(userRef1.getLogin())).willReturn(Optional.of(userRef1));
-        groupRef1.addUser(userRef1);
-        given(groupRefRepository.save(groupRef1)).willReturn(groupRef1);
-        IDMGroupRef groupRef = groupRefService.addUsersToGroupRef(groupRef1.getId(), Collections.singletonList("user1"));
+    public void testGetRolesOfGroups() {
+        groupRef1.addRole(role1);
+        given(groupRefRepository.findByIdmGroupId(1L)).willReturn(Optional.of(groupRef1));
+        groupRef2.addRole(role2);
+        given(groupRefRepository.findByIdmGroupId(2L)).willReturn(Optional.of(groupRef2));
+        Set<Role> roles = groupRefService.getRolesOfGroups(Arrays.asList(1L, 2L));
 
-        assertEquals(1, groupRef.getUsers().size());
-        assertTrue(groupRef.getUsers().contains(userRef1));
-
-        then(groupRefRepository).should().save(groupRef1);
+        assertTrue(roles.contains(role1));
+        assertTrue(roles.contains(role2));
+        assertTrue(roles.size() == 2);
     }
 
-    @Test
-    public void testAddUsersToGroupWithEmptyListOfLogins() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Input list of users logins cannot be empty");
-        IDMGroupRef groupRef = groupRefService.addUsersToGroupRef(groupRef1.getIdmGroupId(), Arrays.asList());
-    }
 
-    @Test
-    public void testAddUsersToGroupWithGroupNotFound() {
-        thrown.expect(CommonsServiceException.class);
-        thrown.expectMessage("IDMGroupRef with idm group id " + groupRef1.getIdmGroupId() + " not found");
-
-        given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.empty());
-        IDMGroupRef groupRef = groupRefService.addUsersToGroupRef(groupRef1.getIdmGroupId(), Collections.singletonList("user1"));
-    }
-
-    @Test
-    public void testAddUsersToGroupWithNotFoundUser() {
-        thrown.expect(CommonsServiceException.class);
-        thrown.expectMessage("User with login " + userRef1.getLogin() + " not found.");
-        given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.of(groupRef1));
-        given(userRefRepository.findByLogin(userRef1.getLogin())).willReturn(Optional.empty());
-        IDMGroupRef groupRef = groupRefService.addUsersToGroupRef(groupRef1.getIdmGroupId(), Collections.singletonList("user1"));
-    }
-
-    @Test
-    public void testRemoveUsersFromGroup() {
-        groupRef1.addUser(userRef1);
-        groupRef1.addUser(userRef2);
-        given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.of(groupRef1));
-        given(userRefRepository.findByLogin(userRef1.getLogin())).willReturn(Optional.of(userRef1));
-        groupRef1.removeUser(userRef1);
-        given(groupRefRepository.save(groupRef1)).willReturn(groupRef1);
-        IDMGroupRef groupRef = groupRefService.removeUsersFromGroupRef(groupRef1.getId(), Collections.singletonList("user1"));
-
-        assertEquals(1, groupRef.getUsers().size());
-        assertTrue(groupRef.getUsers().contains(userRef2));
-
-        then(groupRefRepository).should().save(groupRef1);
-    }
-
-    @Test
-    public void testRemoveUsersFromGroupWithEmptyListOfLogins() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Input list of users logins cannot be empty");
-        IDMGroupRef groupRef = groupRefService.removeUsersFromGroupRef(groupRef1.getIdmGroupId(), Arrays.asList());
-    }
-
-    @Test
-    public void testRemoveUsersFromGroupWithGroupNotFound() {
-        thrown.expect(CommonsServiceException.class);
-        thrown.expectMessage("IDMGroupRef with idm group id " + groupRef1.getIdmGroupId() + " not found");
-
-        given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.empty());
-        IDMGroupRef groupRef = groupRefService.removeUsersFromGroupRef(groupRef1.getIdmGroupId(), Collections.singletonList("user1"));
-    }
-
-    @Test
-    public void testRemoveUsersFromGroupWithNotFoundUser() {
-        thrown.expect(CommonsServiceException.class);
-        thrown.expectMessage("User with login " + userRef1.getLogin() + " not found.");
-        given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.of(groupRef1));
-        given(userRefRepository.findByLogin(userRef1.getLogin())).willReturn(Optional.empty());
-        IDMGroupRef groupRef = groupRefService.removeUsersFromGroupRef(groupRef1.getIdmGroupId(), Collections.singletonList("user1"));
-    }
 }

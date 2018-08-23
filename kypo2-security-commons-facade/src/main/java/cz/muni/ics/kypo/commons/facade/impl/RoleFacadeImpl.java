@@ -34,18 +34,6 @@ public class RoleFacadeImpl implements RoleFacade {
     }
 
     @Override
-    public RoleDTO create(NewRoleDTO newRoleDTO) {
-        Role role = roleService.create(beanMapping.mapTo(newRoleDTO, Role.class));
-        return beanMapping.mapTo(role, RoleDTO.class);
-    }
-
-    @Override
-    public void delete(String roleType) {
-        roleService.delete(roleType);
-        LOG.info("Role with role type: " + roleType + " deleted.");
-    }
-
-    @Override
     public RoleDTO getById(long id) throws CommonsFacadeException {
         try {
             Role role = roleService.getById(id);

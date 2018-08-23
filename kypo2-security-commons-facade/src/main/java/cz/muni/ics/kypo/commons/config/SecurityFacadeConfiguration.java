@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@Import(ServiceConfig.class)
+@Import(SecurityServiceConfig.class)
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.facade", "cz.muni.ics.kypo.commons.mapping"})
-public class FacadeConfiguration {
+public class SecurityFacadeConfiguration {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FacadeConfiguration.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SecurityFacadeConfiguration.class);
 
     @Bean
     public ModelMapper modelMapper() {

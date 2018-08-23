@@ -2,19 +2,13 @@ package cz.muni.ics.kypo.commons.facade;
 
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.api.PageResultResource;
-import cz.muni.ics.kypo.commons.api.dto.group.IDMGroupRefDTO;
-import cz.muni.ics.kypo.commons.api.dto.group.NewGroupRefDTO;
 import cz.muni.ics.kypo.commons.api.dto.role.NewRoleDTO;
 import cz.muni.ics.kypo.commons.api.dto.role.RoleDTO;
+import cz.muni.ics.kypo.commons.config.FacadeTestConfiguration;
 import cz.muni.ics.kypo.commons.exception.CommonsFacadeException;
 import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
-import cz.muni.ics.kypo.commons.facade.interfaces.IDMGroupRefFacade;
 import cz.muni.ics.kypo.commons.facade.interfaces.RoleFacade;
-import cz.muni.ics.kypo.commons.mapping.BeanMapping;
-import cz.muni.ics.kypo.commons.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.model.Role;
-import cz.muni.ics.kypo.commons.model.UserRef;
-import cz.muni.ics.kypo.commons.service.interfaces.IDMGroupRefService;
 import cz.muni.ics.kypo.commons.service.interfaces.RoleService;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,20 +21,18 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -48,7 +40,8 @@ import static org.mockito.BDDMockito.then;
 @SpringBootTest
 @EntityScan(basePackages = {"cz.muni.ics.kypo.commons.model"})
 @EnableJpaRepositories(basePackages = {"cz.muni.ics.kypo.commons.repository"})
-@ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.facade",  "cz.muni.ics.kypo.commons.service"})
+@ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.facade",  "cz.muni.ics.kypo.commons.service", "cz.muni.ics.kypo.commons.mapping"})
+@Import(FacadeTestConfiguration.class)
 public class RoleFacadeTest  {
 
     @Rule
@@ -59,9 +52,6 @@ public class RoleFacadeTest  {
 
     @MockBean
     private RoleService roleService;
-
-    @MockBean
-    private BeanMapping beanMapping;
 
     private Role role1, role2;
     private NewRoleDTO newRoleDTO;
@@ -95,25 +85,8 @@ public class RoleFacadeTest  {
     }
 
     @Test
-    public void testCreateRole() {
-        given(beanMapping.mapTo(any(NewRoleDTO.class), eq(Role.class))).willReturn(role1);
-        given(roleService.create(any(Role.class))).willReturn(role1);
-        given(beanMapping.mapTo(role1, RoleDTO.class)).willReturn(roleDTO);
-        RoleDTO r = roleFacade.create(newRoleDTO);
-        assertEquals(roleDTO.getId(), r.getId());
-        assertEquals(roleDTO.getRoleType(), r.getRoleType());
-    }
-
-    @Test
-    public void testDeleteRole() {
-        roleFacade.delete("ADMINISTRATOR");
-        then(roleService).should().delete("ADMINISTRATOR");
-    }
-
-    @Test
     public void testGetById() {
         given(roleService.getById(1L)).willReturn(role1);
-        given(beanMapping.mapTo(any(Role.class), eq(RoleDTO.class))).willReturn(roleDTO);
         RoleDTO rDTO = roleFacade.getById(1L);
 
         assertEquals(roleDTO.getId(), rDTO.getId());
@@ -130,7 +103,6 @@ public class RoleFacadeTest  {
     @Test
     public void testGetByRoleType() {
         given(roleService.getByRoleType("ADMINISTRATOR")).willReturn(role1);
-        given(beanMapping.mapTo(any(Role.class), eq(RoleDTO.class))).willReturn(roleDTO);
         RoleDTO rDTO = roleFacade.getByRoleType("ADMINISTRATOR");
 
         assertEquals(roleDTO.getId(), rDTO.getId());
@@ -151,7 +123,6 @@ public class RoleFacadeTest  {
         pages.setContent(Arrays.asList(roleDTO));
 
         given(roleService.getAllRoles(predicate, pageable)).willReturn(rolesPage);
-        given(beanMapping.mapToPageResultDTO(rolesPage, RoleDTO.class)).willReturn(pages);
         PageResultResource<RoleDTO> pageResultResource = roleFacade.getAllRoles(predicate,pageable);
 
         assertEquals(1, pageResultResource.getContent().size());

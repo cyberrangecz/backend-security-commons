@@ -7,21 +7,6 @@ import org.springframework.data.domain.Pageable;
 import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
 
 public interface RoleService {
-
-    /**
-     * Creates given role
-     *
-     * @param role to be created
-     * @return created role
-     */
-    Role create(Role role);
-
-    /**
-     * Deletes role with given role type
-     * @param roleType to be deleted
-     */
-    void delete(String roleType);
-
     /**
      * Returns role by id
      *

@@ -5,11 +5,12 @@
     <parent>
         <groupId>cz.muni.ics.kypo</groupId>
         <artifactId>kypo2-security-commons</artifactId>
-        <version>${project.version}</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>kypo2-security-commons-service</artifactId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -22,12 +23,12 @@
         <dependency>
             <groupId>cz.muni.ics.kypo</groupId>
             <artifactId>kypo2-security-commons-persistence</artifactId>
-            <version>${project.version}</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>cz.muni.ics.kypo</groupId>
             <artifactId>kypo2-security-commons-security</artifactId>
-            <version>${project.version}</version>
+            <version>1.0.0</version>
         </dependency>
         <!-- spring web dependencies are necessary for swagger codegen classes -->
         <dependency>

@@ -4,13 +4,16 @@ import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.api.PageResultResource;
 import cz.muni.ics.kypo.commons.api.dto.group.IDMGroupRefDTO;
 import cz.muni.ics.kypo.commons.api.dto.group.NewGroupRefDTO;
+import cz.muni.ics.kypo.commons.api.dto.role.RoleDTO;
 import cz.muni.ics.kypo.commons.exception.CommonsFacadeException;
 import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
 import cz.muni.ics.kypo.commons.model.IDMGroupRef;
+import cz.muni.ics.kypo.commons.model.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IDMGroupRefFacade {
 
@@ -34,14 +37,14 @@ public interface IDMGroupRefFacade {
      * @return IDMGroup with given groupId
      * @throws CommonsServiceException
      */
-    public IDMGroupRefDTO getByIdmGroupId(long id) throws CommonsServiceException;
+    IDMGroupRefDTO getByIdmGroupId(long id) throws CommonsServiceException;
 
     /**
      * Find all IDMGroup ref.
      *
      * @return all a IDMGroups Ref
      */
-    public PageResultResource<IDMGroupRefDTO> findAll(Predicate predicate, Pageable pageable);
+    PageResultResource<IDMGroupRefDTO> findAll(Predicate predicate, Pageable pageable);
 
 
     /**
@@ -53,34 +56,10 @@ public interface IDMGroupRefFacade {
     IDMGroupRefDTO assignRoleToGroup(long groupRefId, String roleType) throws CommonsFacadeException;
 
     /**
-     * Add users to group.
-     * @param groupRefId id of group ref to assign users to
-     * @param userRefLogins list of user refs logins to be added to group
-     * @throws CommonsServiceException
+     * Returns set of roles of given groups
+     *
+     * @return roles
      */
-    IDMGroupRefDTO addUsersToGroupRef(long groupRefId, List<String> userRefLogins) throws CommonsFacadeException;
+    Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds) ;
 
-    /**
-     * Remove users from group.
-     * @param groupRefId id of group ref to assign users to
-     * @param userRefLogins list of user refs logins to be removed from group
-     * @throws CommonsServiceException
-     */
-    IDMGroupRefDTO removeUsersFromGroupRef(long groupRefId, List<String> userRefLogins) throws CommonsFacadeException;
-
-    /**
-     * Gets IDMGroupRef with given idm group id from database and with users ref as attribute.
-     * @param groupRefId of the IDMGroup whose reference should be loaded
-     * @return IDMGroup with given groupId
-     * @throws CommonsServiceException
-     */
-    IDMGroupRefDTO getIDMGroupRefWithUsers(long groupRefId) throws CommonsFacadeException;
-
-    /**
-     * Gets IDMGroupRef with given idm group id from database and with roles as attribute.
-     * @param groupRefId of the IDMGroup whose reference should be loaded
-     * @return IDMGroup with given groupId
-     * @throws CommonsServiceException
-     */
-    IDMGroupRefDTO getIDMGroupRefWithRoles(long groupRefId) throws CommonsFacadeException;
 }

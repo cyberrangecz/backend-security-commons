@@ -1,9 +1,6 @@
 package cz.muni.ics.kypo.commons.api.dto.group;
 
-import cz.muni.ics.kypo.commons.api.dto.user.UserRefDTO;
 import cz.muni.ics.kypo.commons.api.dto.role.RoleDTO;
-
-import java.util.List;
 import java.util.Set;
 
 public class IDMGroupRefDTO {
@@ -11,7 +8,6 @@ public class IDMGroupRefDTO {
     private Long id;
     private Long idmGroupId;
     private Set<RoleDTO> roles;
-    private List<UserRefDTO> users;
 
     public Long getId() {
         return id;
@@ -37,11 +33,4 @@ public class IDMGroupRefDTO {
         this.roles = roles;
     }
 
-    public List<UserRefDTO> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserRefDTO> users) {
-        this.users = users;
-    }
 }

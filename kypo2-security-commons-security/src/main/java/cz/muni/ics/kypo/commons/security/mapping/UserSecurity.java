@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.commons.security;
+package cz.muni.ics.kypo.commons.security.mapping;
 
 import java.util.Set;
 

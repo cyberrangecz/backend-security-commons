@@ -2,11 +2,8 @@ package cz.muni.ics.kypo.commons.service;
 
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
-import cz.muni.ics.kypo.commons.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.model.Role;
-import cz.muni.ics.kypo.commons.model.UserRef;
 import cz.muni.ics.kypo.commons.repository.RoleRepository;
-import cz.muni.ics.kypo.commons.service.interfaces.IDMGroupRefService;
 import cz.muni.ics.kypo.commons.service.interfaces.RoleService;
 import org.junit.Before;
 import org.junit.Rule;
@@ -73,23 +70,6 @@ public class RoleServiceTest {
 
 
         pageable = PageRequest.of(0, 10);
-    }
-
-    @Test
-    public void testCreateRole() {
-        given(roleRepository.save(role1)).willReturn(role1);
-        Role r = roleService.create(role1);
-        assertEquals(role1.getId(), r.getId());
-        assertEquals(role1.getRoleType(), r.getRoleType());
-        then(roleRepository).should().save(role1);
-    }
-
-
-    @Test
-    public void testDeleteRole() {
-        given(roleRepository.findByRoleType(anyString())).willReturn(Optional.of(role1));
-        roleService.delete(role1.getRoleType());
-        then(roleRepository).should().delete(role1);
     }
 
     @Test

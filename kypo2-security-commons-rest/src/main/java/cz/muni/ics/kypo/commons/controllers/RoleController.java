@@ -56,39 +56,6 @@ public class RoleController {
         this.objectMapper = objectMapper;
     }
 
-    @ApiOperation(httpMethod = "POST",
-            value = "Create role.",
-            response = RoleDTO.class,
-            nickname = "createRole",
-            produces = "application/json",
-            consumes = "application/json",
-            authorizations = {
-                    @Authorization(value = "sampleoauth",
-                            scopes = {
-                                    @AuthorizationScope(
-                                            scope = "create role",
-                                            description = "allows returning created role."
-                                    )
-                            }
-                    )
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "The requested resource was not found.")
-    })
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createRole(@ApiParam(name = "Role to be created") @RequestBody NewRoleDTO newRoleDTO,
-                                                       @ApiParam(value = "Fields which should be returned in REST API response", required = false)
-                                                       @RequestParam(value = "fields", required = false) String fields) {
-        LOG.info("Creating role({}, {})", newRoleDTO, fields);
-        try {
-            RoleDTO r = roleFacade.create(newRoleDTO);
-            Squiggly.init(objectMapper, fields);
-            return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, r), HttpStatus.CREATED);
-        } catch (CommonsFacadeException ex) {
-            throw new ResourceNotCreatedException(ex.getLocalizedMessage());
-        }
-    }
 
     @ApiOperation(httpMethod = "GET",
             value = "Get role by role type.",
@@ -158,33 +125,4 @@ public class RoleController {
         }
     }
 
-    @ApiOperation(httpMethod = "DELETE",
-            value = "Delete roles.",
-            response = RoleDTO.class,
-            nickname = "deleteRole",
-            produces = "application/json",
-            authorizations = {
-                    @Authorization(value = "sampleoauth",
-                            scopes = {
-                                    @AuthorizationScope(
-                                            scope = "delete roles",
-                                            description = "allows deleting role."
-                                    )
-                            }
-                    )
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "The requested resource was not found.")
-    })
-    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deleteGroupReference(@ApiParam(name = "Role type which should be deleted.") @RequestParam("roleType") String roleType) {
-        LOG.debug("Deleting role ({})", roleType);
-        try {
-            roleFacade.delete(roleType);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (CommonsFacadeException ex) {
-            throw new ResourceNotModifiedException(ex.getLocalizedMessage());
-        }
-    }
 }

@@ -4,35 +4,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
-@SpringBootApplication
-@EnableSpringDataWebSupport
-@Import({FacadeConfiguration.class, SwaggerConfig.class})
-public class WebConfigRestSecurityCommons extends SpringBootServletInitializer {
+@Configuration
+@Import({SecurityFacadeConfiguration.class, SwaggerConfig.class})
+public class WebConfigRestSecurityCommons {//extends SpringBootServletInitializer {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebConfigRestSecurityCommons.class);
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(WebConfigRestSecurityCommons.class);
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(WebConfigRestSecurityCommons.class, args);
-    }
-
-    // REST settings
 
     /**
      * Provides localized messages.

@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.rest.utils.datemath;
+package cz.muni.ics.kypo.commons.utils.converters;
 
 
 import java.time.ZoneId;

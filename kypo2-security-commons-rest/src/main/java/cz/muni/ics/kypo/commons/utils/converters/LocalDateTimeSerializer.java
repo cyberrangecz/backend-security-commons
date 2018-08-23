@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.rest.utils.converters;
+package cz.muni.ics.kypo.commons.utils.converters;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

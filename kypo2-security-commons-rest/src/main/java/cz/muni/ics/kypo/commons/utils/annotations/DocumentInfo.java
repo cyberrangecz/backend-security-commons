@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.rest.utils.annotations;
+package cz.muni.ics.kypo.commons.utils.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

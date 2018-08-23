@@ -5,14 +5,12 @@ import cz.muni.ics.kypo.commons.api.PageResultResource;
 import cz.muni.ics.kypo.commons.api.dto.group.IDMGroupRefDTO;
 import cz.muni.ics.kypo.commons.api.dto.group.NewGroupRefDTO;
 import cz.muni.ics.kypo.commons.api.dto.role.RoleDTO;
-import cz.muni.ics.kypo.commons.api.dto.user.UserRefDTO;
+import cz.muni.ics.kypo.commons.config.FacadeTestConfiguration;
 import cz.muni.ics.kypo.commons.exception.CommonsFacadeException;
 import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
 import cz.muni.ics.kypo.commons.facade.interfaces.IDMGroupRefFacade;
-import cz.muni.ics.kypo.commons.mapping.BeanMapping;
 import cz.muni.ics.kypo.commons.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.model.Role;
-import cz.muni.ics.kypo.commons.model.UserRef;
 import cz.muni.ics.kypo.commons.service.interfaces.IDMGroupRefService;
 import org.junit.Before;
 import org.junit.Rule;
@@ -25,12 +23,12 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
@@ -40,13 +38,13 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willThrow;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @EntityScan(basePackages = {"cz.muni.ics.kypo.commons.model"})
 @EnableJpaRepositories(basePackages = {"cz.muni.ics.kypo.commons.repository"})
-@ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.facade",  "cz.muni.ics.kypo.commons.service"})
+@ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.facade", "cz.muni.ics.kypo.commons.service", "cz.muni.ics.kypo.commons.mapping"})
+@Import(FacadeTestConfiguration.class)
 public class IDMGroupRefFacadeTest {
 
     @Rule
@@ -58,12 +56,8 @@ public class IDMGroupRefFacadeTest {
     @MockBean
     private IDMGroupRefService groupRefService;
 
-    @MockBean
-    private BeanMapping beanMapping;
-
     private IDMGroupRef groupRef1, groupRef2;
     private IDMGroupRefDTO groupRefDTO;
-    private UserRef userRef1;
     private Role role1, role2;
     private Predicate predicate;
     private Pageable pageable;
@@ -74,19 +68,15 @@ public class IDMGroupRefFacadeTest {
 
     @Before
     public void init() {
-        userRef1 = new UserRef();
-        userRef1.setId(1L);
-        userRef1.setLogin("user1");
+
 
         groupRef1 = new IDMGroupRef();
         groupRef1.setId(1L);
-        groupRef1.setIdmGroupId(5L);
-        groupRef1.addUser(userRef1);
+        groupRef1.setIdmGroupId(1L);
 
         groupRefDTO = new IDMGroupRefDTO();
         groupRefDTO.setId(1L);
-        groupRefDTO.setIdmGroupId(5L);
-        groupRefDTO.setUsers(new ArrayList<>());
+        groupRefDTO.setIdmGroupId(1L);
 
         groupRef2 = new IDMGroupRef();
         groupRef2.setId(2L);
@@ -107,9 +97,7 @@ public class IDMGroupRefFacadeTest {
 
     @Test
     public void testCreateIDMGroupRef() {
-        given(beanMapping.mapTo(any(NewGroupRefDTO.class), eq(IDMGroupRef.class))).willReturn(groupRef1);
         given(groupRefService.create(any(IDMGroupRef.class))).willReturn(groupRef1);
-        given(beanMapping.mapTo(groupRef1, IDMGroupRefDTO.class)).willReturn(groupRefDTO);
         IDMGroupRefDTO g = groupRefFacade.create(getNewGroupRefDTO());
         assertEquals(groupRefDTO.getIdmGroupId(), g.getIdmGroupId());
         assertEquals(groupRefDTO.getId(), g.getId());
@@ -125,7 +113,6 @@ public class IDMGroupRefFacadeTest {
     @Test
     public void testGetByIDMGroupId() {
         given(groupRefService.getByIdmGroupId(1L)).willReturn(groupRef1);
-        given(beanMapping.mapTo(any(IDMGroupRef.class), eq(IDMGroupRefDTO.class))).willReturn(groupRefDTO);
         IDMGroupRefDTO gRDTO = groupRefFacade.getByIdmGroupId(1L);
         assertEquals(groupRefDTO.getIdmGroupId(), gRDTO.getIdmGroupId());
         assertEquals(groupRefDTO.getId(), gRDTO.getId());
@@ -145,11 +132,10 @@ public class IDMGroupRefFacadeTest {
         pages.setContent(Arrays.asList(groupRefDTO));
 
         given(groupRefService.findAll(predicate, pageable)).willReturn(groupRefPage);
-        given(beanMapping.mapToPageResultDTO(groupRefPage, IDMGroupRefDTO.class)).willReturn(pages);
         PageResultResource<IDMGroupRefDTO> pageResultResource = groupRefFacade.findAll(predicate,pageable);
 
         assertEquals(1, pageResultResource.getContent().size());
-        assertEquals(groupRefDTO, pageResultResource.getContent().get(0));
+        assertEquals(groupRefDTO.getIdmGroupId(), pageResultResource.getContent().get(0).getIdmGroupId());
     }
 
     @Test
@@ -157,7 +143,6 @@ public class IDMGroupRefFacadeTest {
         groupRef1.addRole(role1);
         given(groupRefService.assignRoleToGroup(1L, "ADMINISTRATOR")).willReturn(groupRef1);
         groupRefDTO.setRoles(getSetOfRolesDTO());
-        given(beanMapping.mapTo(any(IDMGroupRef.class), eq(IDMGroupRefDTO.class))).willReturn(groupRefDTO);
         IDMGroupRefDTO grDTO = groupRefFacade.assignRoleToGroup(1L, "ADMINISTRATOR");
         assertTrue(grDTO.getRoles().contains(getRoleDTO()));
         assertEquals(1, grDTO.getRoles().size());
@@ -170,44 +155,18 @@ public class IDMGroupRefFacadeTest {
         groupRefFacade.assignRoleToGroup(1L, "ADMINISTRATOR");
     }
 
-    @Test
-    public void testAddUsersToGroup() {
-        given(groupRefService.addUsersToGroupRef(1L, Arrays.asList("user1"))).willReturn(groupRef1);
-        groupRefDTO.setUsers(getListOfUsersDTO());
-        given(beanMapping.mapTo(any(IDMGroupRef.class), eq(IDMGroupRefDTO.class))).willReturn(groupRefDTO);
-        IDMGroupRefDTO grDTO = groupRefFacade.addUsersToGroupRef(1L, Arrays.asList("user1"));
-
-        assertEquals(getListOfUsersDTO().get(0).getLogin(),grDTO.getUsers().get(0).getLogin());
-        assertEquals(1, grDTO.getUsers().size());
-    }
-
-    @Test
-    public void testAddUsersToGroupWithServiceException() {
-        given(groupRefService.addUsersToGroupRef(1L, Arrays.asList("user1"))).willThrow(new CommonsServiceException());
-        thrown.expect(CommonsFacadeException.class);
-        IDMGroupRefDTO grDTO = groupRefFacade.addUsersToGroupRef(1L, Arrays.asList("user1"));
-
-    }
-
-    @Test
-    public void testRemoveUsersFromGroup() {
-        given(groupRefService.removeUsersFromGroupRef(1L, Arrays.asList("user1"))).willReturn(groupRef1);
-        given(beanMapping.mapTo(any(IDMGroupRef.class), eq(IDMGroupRefDTO.class))).willReturn(groupRefDTO);
-        IDMGroupRefDTO grDTO = groupRefFacade.removeUsersFromGroupRef(1L, Arrays.asList("user1"));
-        assertEquals(0, grDTO.getUsers().size());
-    }
-
-    @Test
-    public void testRemoveUsersFromGroupWithServiceException() {
-        given(groupRefService.removeUsersFromGroupRef(1L, Arrays.asList("user1"))).willThrow(new CommonsServiceException());
-        thrown.expect(CommonsFacadeException.class);
-        IDMGroupRefDTO grDTO = groupRefFacade.removeUsersFromGroupRef(1L, Arrays.asList("user1"));
-    }
-
     public NewGroupRefDTO getNewGroupRefDTO() {
         NewGroupRefDTO groupRefDTO = new NewGroupRefDTO();
         groupRefDTO.setIdmGroupId(1L);
         return groupRefDTO;
+    }
+
+    @Test
+    public void testGetRolesOfGroups() {
+        given(groupRefService.getRolesOfGroups(Arrays.asList(1L, 2L))).willReturn(new HashSet<>(Arrays.asList(role1,role2)));
+        Set<RoleDTO> roleDTOS = groupRefFacade.getRolesOfGroups(Arrays.asList(1L,2L));
+        assertTrue(roleDTOS.contains(getRoleDTO()));
+        assertEquals(2, roleDTOS.size());
     }
 
     public Set<RoleDTO> getSetOfRolesDTO() {
@@ -223,13 +182,4 @@ public class IDMGroupRefFacadeTest {
         return roleDTO;
     }
 
-    public List<UserRefDTO> getListOfUsersDTO() {
-        UserRefDTO userRefDTO = new UserRefDTO();
-        userRefDTO.setId(1L);
-        userRefDTO.setLogin("user1");
-
-        List<UserRefDTO> userRefDTOList = new ArrayList<>();
-        userRefDTOList.add(userRefDTO);
-        return userRefDTOList;
-    }
 }

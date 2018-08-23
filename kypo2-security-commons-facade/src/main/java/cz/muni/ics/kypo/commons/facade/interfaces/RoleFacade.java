@@ -11,21 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface RoleFacade {
-
-    /**
-     * Creates given role
-     *
-     * @param newRoleDTO to be created
-     * @return created role
-     */
-    RoleDTO create(NewRoleDTO newRoleDTO);
-
-    /**
-     * Deletes role with given role type
-     * @param roleType to be deleted
-     */
-    void delete(String roleType);
-
     /**
      * Returns role by id
      *

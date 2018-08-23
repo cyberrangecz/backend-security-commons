@@ -8,7 +8,6 @@ import cz.muni.ics.kypo.commons.api.PageResultResource;
 import cz.muni.ics.kypo.commons.api.dto.group.IDMGroupRefDTO;
 import cz.muni.ics.kypo.commons.api.dto.group.NewGroupRefDTO;
 import cz.muni.ics.kypo.commons.api.dto.role.RoleDTO;
-import cz.muni.ics.kypo.commons.api.dto.user.UserRefDTO;
 import cz.muni.ics.kypo.commons.controllers.GroupsRefController;
 import cz.muni.ics.kypo.commons.exception.CommonsFacadeException;
 import cz.muni.ics.kypo.commons.exceptions.ResourceNotCreatedException;
@@ -72,7 +71,6 @@ public class GroupsRefControllerTest {
 
     private IDMGroupRefDTO groupDTO1;
     private NewGroupRefDTO newGroupDTO;
-    private UserRefDTO userRefDTO;
     private RoleDTO roleDTO;
     private int page, size;
     private PageResultResource<IDMGroupRefDTO> groupRefPageResultResource;
@@ -100,15 +98,10 @@ public class GroupsRefControllerTest {
         newGroupDTO = new NewGroupRefDTO();
         newGroupDTO.setIdmGroupId(3L);
 
-        userRefDTO = new UserRefDTO();
-        userRefDTO.setId(1L);
-        userRefDTO.setLogin("user1");
-
         roleDTO = new RoleDTO();
         roleDTO.setId(1L);
         roleDTO.setRoleType("GUEST");
 
-        groupDTO1.setUsers(Arrays.asList(userRefDTO));
         Set<RoleDTO> roles = new HashSet<>();
         roles.add(roleDTO);
         groupDTO1.setRoles(roles);
@@ -245,59 +238,18 @@ public class GroupsRefControllerTest {
     }
 
     @Test
-    public void testAddUsersToGroupRef() throws Exception {
-        String valueAs = convertObjectToJsonBytes(groupDTO1);
+    public void testGetRolesOfGroups() throws Exception {
+        String valueAs = convertObjectToJsonBytes(new HashSet<>(Arrays.asList(roleDTO)));
         given(objectMapper.writeValueAsString(any(Object.class))).willReturn(valueAs);
-        given(groupRefFacade.addUsersToGroupRef(anyLong(), anyList())).willReturn(groupDTO1);
+        given(groupRefFacade.getRolesOfGroups(Arrays.asList(1L))).willReturn(new HashSet<>(Arrays.asList(roleDTO)));
 
-        mockMvc.perform(put(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{groupId}/addUsers", 1L)
-                .content(convertObjectToJsonBytes(Arrays.asList("user1")))
+        mockMvc.perform(get(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/rolesOf")
+                .content(convertObjectToJsonBytes(Arrays.asList(1L)))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(convertObjectToJsonBytes(convertObjectToJsonBytes(groupDTO1))));
+                .andExpect(content().string(convertObjectToJsonBytes(convertObjectToJsonBytes(new HashSet<>(Arrays.asList(roleDTO))))));
 
-    }
-
-    @Test
-    public void testAddUserRefToGroupRefWithFacadeException() throws Exception {
-        willThrow(CommonsFacadeException.class).given(groupRefFacade).addUsersToGroupRef(anyLong(), anyList());
-        Exception exception = mockMvc.perform(
-                put(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{groupId}/addUsers", 1L)
-                        .content(convertObjectToJsonBytes(Arrays.asList("user1")))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotModified())
-                .andReturn().getResolvedException();
-
-        assertEquals(ResourceNotModifiedException.class, exception.getClass());
-    }
-
-    @Test
-    public void testRemoveUsersFromGroupRef() throws Exception {
-        String valueAs = convertObjectToJsonBytes(groupDTO1);
-        given(objectMapper.writeValueAsString(any(Object.class))).willReturn(valueAs);
-        given(groupRefFacade.removeUsersFromGroupRef(anyLong(), anyList())).willReturn(groupDTO1);
-
-        mockMvc.perform(put(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{groupId}/removeUsers", 1L)
-                .content(convertObjectToJsonBytes(Arrays.asList("user1")))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(convertObjectToJsonBytes(convertObjectToJsonBytes(groupDTO1))));
-
-    }
-
-    @Test
-    public void testRemoveUserRefFromGroupRefWithFacadeException() throws Exception {
-        willThrow(CommonsFacadeException.class).given(groupRefFacade).removeUsersFromGroupRef(anyLong(), anyList());
-        Exception exception = mockMvc.perform(
-                put(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{groupId}/removeUsers", 1L)
-                        .content(convertObjectToJsonBytes(Arrays.asList("user1")))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotModified())
-                .andReturn().getResolvedException();
-
-        assertEquals(ResourceNotModifiedException.class, exception.getClass());
     }
 
 

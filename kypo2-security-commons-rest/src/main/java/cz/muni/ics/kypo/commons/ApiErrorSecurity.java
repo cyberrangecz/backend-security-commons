@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
  * @author Pavel Seda (441048)
  *
  */
-public class ApiErrorTraining {
+public class ApiErrorSecurity {
 
   private long timestamp;
   private HttpStatus status;
@@ -53,12 +53,12 @@ public class ApiErrorTraining {
       return this;
     }
 
-    public ApiErrorTraining build() {
-      return new ApiErrorTraining(this);
+    public ApiErrorSecurity build() {
+      return new ApiErrorSecurity(this);
     }
   }
 
-  protected ApiErrorTraining(ApiErrorBuilder builder) {
+  protected ApiErrorSecurity(ApiErrorBuilder builder) {
     super();
     this.timestamp = System.currentTimeMillis();
     this.status = builder.status;
@@ -127,9 +127,9 @@ public class ApiErrorTraining {
       return true;
     if (obj == null)
       return false;
-    if (!(obj instanceof ApiErrorTraining))
+    if (!(obj instanceof ApiErrorSecurity))
       return false;
-    ApiErrorTraining other = (ApiErrorTraining) obj;
+    ApiErrorSecurity other = (ApiErrorSecurity) obj;
     if (errors == null) {
       if (other.errors != null)
         return false;

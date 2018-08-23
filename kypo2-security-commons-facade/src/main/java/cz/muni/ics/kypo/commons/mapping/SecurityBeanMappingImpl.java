@@ -12,11 +12,12 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-public class BeanMappingImpl implements BeanMapping {
+public class SecurityBeanMappingImpl implements BeanMapping {
+
     private ModelMapper modelMapper;
 
     @Autowired
-    public BeanMappingImpl(ModelMapper modelMapper) {
+    public SecurityBeanMappingImpl(ModelMapper modelMapper) {
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         this.modelMapper = modelMapper;
     }
