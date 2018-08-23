@@ -120,6 +120,31 @@
                 <artifactId>springfox-spring-web</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
+            <dependency>
+                <groupId>cz.muni.ics.kypo</groupId>
+                <artifactId>kypo2-security-commons-persistence</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>cz.muni.ics.kypo</groupId>
+                <artifactId>kypo2-security-commons-security</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>cz.muni.ics.kypo</groupId>
+                <artifactId>kypo2-security-commons-service</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>cz.muni.ics.kypo</groupId>
+                <artifactId>kypo2-security-commons-facade</artifactId>
+                <version>1.0.0</version>
+            </dependency><dependency>
+            <groupId>cz.muni.ics.kypo</groupId>
+            <artifactId>kypo2-security-commons-rest</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         </dependencies>
     </dependencyManagement>
 

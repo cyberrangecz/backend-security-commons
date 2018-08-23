@@ -2,15 +2,7 @@
 This project represents commons project for other back-end project. This project adds security configuration and manages roles of groups in others projects.
 
 ## Using This Project
-First install each module in order: 
-```
-kypo2-secuirty-commons-persistence
-kypo2-secuirty-commons-security
-kypo2-secuirty-commons-service
-kypo2-secuirty-commons-facade
-kypo2-secuirty-commons-rest 
-```
- with command bellow:
+First install project with command bellow:
 ```
 mvn install
 ```
