@@ -7,7 +7,7 @@ First install project with command bellow:
 mvn install
 ```
 
-Add this Maven dependency to your project: 
+Add this Maven dependency to your POM in persistence module: 
 ```        
 <dependency>
     <groupId>cz.muni.ics.kypo</groupId>
@@ -16,7 +16,32 @@ Add this Maven dependency to your project:
 </dependency>
 ```
 
+and add plugin: 
+```
+<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<configuration>
+					<sqlMigrationSeparator>__</sqlMigrationSeparator>
+					<locations>
+						<location>classpath:db.migration</location>
+					</locations>
+					<url>${jdbc.url}</url>
+					<user>${jdbc.username}</user>
+					<password>${jdbc.password}</password>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.postgresql</groupId>
+						<artifactId>postgresql</artifactId>
+						<version>${postgresql.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+```
 NOTE: Change version to currently released version of kypo2-rest-commons.
+
+
 
 Then use  "**@Import({WebConfigRestSecurityCommons.class})**" in your service layer config class
 

@@ -2,7 +2,9 @@ package cz.muni.ics.kypo.commons.service;
 
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
+import cz.muni.ics.kypo.commons.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.model.Role;
+import cz.muni.ics.kypo.commons.repository.IDMGroupRefRepository;
 import cz.muni.ics.kypo.commons.repository.RoleRepository;
 import cz.muni.ics.kypo.commons.service.interfaces.RoleService;
 import org.junit.Before;
@@ -22,14 +24,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -49,7 +50,11 @@ public class RoleServiceTest {
     @MockBean
     private RoleRepository roleRepository;
 
+    @MockBean
+    IDMGroupRefRepository groupRefRepository;
+
     private Role role1, role2;
+    private IDMGroupRef groupRef1, groupRef2;
 
     private Pageable pageable;
     private Predicate predicate;
@@ -67,6 +72,15 @@ public class RoleServiceTest {
         role2 = new Role();
         role2.setId(2L);
         role2.setRoleType("GUEST");
+
+        groupRef1 = new IDMGroupRef();
+        groupRef1.setId(1L);
+        groupRef1.setIdmGroupId(5L);
+
+        groupRef2 = new IDMGroupRef();
+        groupRef2.setId(2L);
+        groupRef2.setIdmGroupId(2L);
+        groupRef2.setRoles(new HashSet<>(Arrays.asList(role1)));
 
 
         pageable = PageRequest.of(0, 10);
@@ -128,6 +142,85 @@ public class RoleServiceTest {
         assertFalse(roles.contains(role3));
 
         then(roleRepository).should().findAll(predicate, pageable);
+    }
+
+    @Test
+    public void testAssignRoleToGroup() {
+        given(roleRepository.findById(anyLong())).willReturn(Optional.of(role1));
+        given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.of(groupRef1));
+        groupRef1.addRole(role1);
+        given(groupRefRepository.save(groupRef1)).willReturn(groupRef1);
+        roleService.assignRoleToGroup(groupRef1.getId(), 1L);
+
+        then(groupRefRepository).should().save(groupRef1);
+    }
+
+    @Test
+    public void testAssignRoleToGroupWithRoleNotFound() {
+        thrown.expect(CommonsServiceException.class);
+        thrown.expectMessage("Input role with id " + role1.getId() + " cannot be found");
+        given(roleRepository.findById(1L)).willReturn(Optional.empty());
+        roleService.assignRoleToGroup(1L, 1L);
+
+    }
+
+    @Test
+    public void testAssignRoleToGroupWithGroupRefNotFound() {
+        given(roleRepository.findById(1L)).willReturn(Optional.of(role1));
+        given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.empty());
+        roleService.assignRoleToGroup(1L, 1L);
+
+        then(groupRefRepository).should().save(any(IDMGroupRef.class));
+    }
+
+    @Test
+    public void testRemoveRoleFromGroup() {
+        given(roleRepository.findById(anyLong())).willReturn(Optional.of(role1));
+        groupRef2.addRole(role2);
+        given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.of(groupRef2));
+        roleService.removeRoleFromGroup(1L, 2L);
+
+        then(groupRefRepository).should().save(groupRef2);
+    }
+
+    @Test
+    public void testRemoveRoleFromGroupAndDelete() {
+        given(roleRepository.findById(anyLong())).willReturn(Optional.of(role1));
+        given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.of(groupRef2));
+        groupRef2.removeRole(role1);
+        roleService.removeRoleFromGroup(1L, 2L);
+
+        then(groupRefRepository).should().delete(groupRef2);
+    }
+
+    @Test
+    public void testRemoveRoleFromGroupWithRoleNotFound() {
+        thrown.expect(CommonsServiceException.class);
+        thrown.expectMessage("Input role with id " + role1.getId() + " cannot be found");
+        given(roleRepository.findById(1L)).willReturn(Optional.empty());
+        roleService.removeRoleFromGroup(1L, 1L);
+
+    }
+
+    @Test
+    public void testRemoveRoleFromGroupWithGroupRefNotFound() {
+        thrown.expectMessage("Idm group with id: " + 1L + " cannot be found.");
+        thrown.expect(CommonsServiceException.class);
+        given(roleRepository.findById(1L)).willReturn(Optional.of(role1));
+        given(groupRefRepository.findByIdmGroupId(anyLong())).willReturn(Optional.empty());
+        roleService.removeRoleFromGroup(1L, 1L);
+    }
+
+    @Test
+    public void testGetRolesOfGroups() {
+        groupRef1.addRole(role2);
+        given(groupRefRepository.findByIdmGroupId(1L)).willReturn(Optional.of(groupRef1));
+        given(groupRefRepository.findByIdmGroupId(2L)).willReturn(Optional.of(groupRef2));
+        Set<Role> roles = roleService.getRolesOfGroups(Arrays.asList(1L, 2L));
+
+        assertTrue(roles.contains(role1));
+        assertTrue(roles.contains(role2));
+        assertTrue(roles.size() == 2);
     }
 
 

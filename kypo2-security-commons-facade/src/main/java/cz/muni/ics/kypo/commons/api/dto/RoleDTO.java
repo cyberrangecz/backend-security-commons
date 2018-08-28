@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.commons.api.dto.role;
+package cz.muni.ics.kypo.commons.api.dto;
 
 public class RoleDTO {
 

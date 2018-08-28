@@ -6,11 +6,9 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.ApiEndpointsSecurityCommons;
 import cz.muni.ics.kypo.commons.api.PageResultResource;
-import cz.muni.ics.kypo.commons.api.dto.role.NewRoleDTO;
-import cz.muni.ics.kypo.commons.api.dto.role.RoleDTO;
+import cz.muni.ics.kypo.commons.api.dto.RoleDTO;
 import cz.muni.ics.kypo.commons.controllers.RoleController;
 import cz.muni.ics.kypo.commons.exception.CommonsFacadeException;
-import cz.muni.ics.kypo.commons.exceptions.ResourceNotCreatedException;
 import cz.muni.ics.kypo.commons.exceptions.ResourceNotFoundException;
 import cz.muni.ics.kypo.commons.exceptions.ResourceNotModifiedException;
 import cz.muni.ics.kypo.commons.facade.interfaces.RoleFacade;
@@ -37,17 +35,19 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -69,7 +69,6 @@ public class RoleControllerTest {
     private MockMvc mockMvc;
 
     private RoleDTO roleDTO;
-    private NewRoleDTO newRoleDTO;
     private int page, size;
     private PageResultResource<RoleDTO> rolePageResultResource;
 
@@ -91,9 +90,6 @@ public class RoleControllerTest {
         roleDTO = new RoleDTO();
         roleDTO.setId(1L);
         roleDTO.setRoleType("GUEST");
-
-        newRoleDTO = new NewRoleDTO();
-        newRoleDTO.setRoleType("ADMINISTRATOR");
 
         rolePageResultResource = new PageResultResource<RoleDTO>(Arrays.asList(roleDTO));
 
@@ -141,6 +137,61 @@ public class RoleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(convertObjectToJsonBytes(convertObjectToJsonBytes(rolePageResultResource))));
+
+    }
+
+    @Test
+    public void testAssignRoleToGroupRef() throws Exception {
+        mockMvc.perform(put(ApiEndpointsSecurityCommons.ROLES_URL + "/{roleId}/assign/to/{groupId}", 1L, 1L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        then(roleFacade).should().assignRoleToGroup(1L,1L);
+    }
+
+    @Test
+    public void testAssignRoleToGroupRefWithFacadeException() throws Exception {
+        willThrow(CommonsFacadeException.class).given(roleFacade).assignRoleToGroup(anyLong(), anyLong());
+        Exception exception = mockMvc.perform(
+                put(ApiEndpointsSecurityCommons.ROLES_URL + "/{roleId}/assign/to/{groupId}", 1L, 1L)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotModified())
+                .andReturn().getResolvedException();
+
+        assertEquals(ResourceNotModifiedException.class, exception.getClass());
+    }
+
+    @Test
+    public void testRemoveRoleFromGroupRef() throws Exception {
+        mockMvc.perform(put(ApiEndpointsSecurityCommons.ROLES_URL + "/{roleId}/cancel/to/{groupId}", 1L, 1L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        then(roleFacade).should().removeRoleFromGroup(1L,1L);
+    }
+
+    @Test
+    public void testRemoveRoleFromGroupRefWithFacadeException() throws Exception {
+        willThrow(CommonsFacadeException.class).given(roleFacade).removeRoleFromGroup(anyLong(), anyLong());
+        Exception exception = mockMvc.perform(
+                put(ApiEndpointsSecurityCommons.ROLES_URL + "/{roleId}/cancel/to/{groupId}", 1L, 1L)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotModified())
+                .andReturn().getResolvedException();
+
+        assertEquals(ResourceNotModifiedException.class, exception.getClass());
+    }
+
+    @Test
+    public void testGetRolesOfGroups() throws Exception {
+        String valueAs = convertObjectToJsonBytes(new HashSet<>(Arrays.asList(roleDTO)));
+        given(objectMapper.writeValueAsString(any(Object.class))).willReturn(valueAs);
+        given(roleFacade.getRolesOfGroups(Arrays.asList(1L))).willReturn(new HashSet<>(Arrays.asList(roleDTO)));
+
+        mockMvc.perform(get(ApiEndpointsSecurityCommons.ROLES_URL + "/of")
+                .content(convertObjectToJsonBytes(Arrays.asList(1L)))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(convertObjectToJsonBytes(convertObjectToJsonBytes(new HashSet<>(Arrays.asList(roleDTO))))));
 
     }
 

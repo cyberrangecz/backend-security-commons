@@ -2,8 +2,7 @@ package cz.muni.ics.kypo.commons.facade.impl;
 
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.api.PageResultResource;
-import cz.muni.ics.kypo.commons.api.dto.role.NewRoleDTO;
-import cz.muni.ics.kypo.commons.api.dto.role.RoleDTO;
+import cz.muni.ics.kypo.commons.api.dto.RoleDTO;
 import cz.muni.ics.kypo.commons.exception.CommonsFacadeException;
 import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
 import cz.muni.ics.kypo.commons.facade.interfaces.RoleFacade;
@@ -17,6 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -65,6 +67,41 @@ public class RoleFacadeImpl implements RoleFacade {
             return beanMapping.mapToPageResultDTO(roles, RoleDTO.class);
         } catch (CommonsServiceException ex) {
             LOG.error("Error while loading roles.");
+            throw new CommonsFacadeException(ex.getMessage());
+        }
+    }
+
+    @Override
+    public Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds) {
+        try {
+            Set<Role> roles = roleService.getRolesOfGroups(groupsIds);
+            LOG.info("Roles of given groups with ids: " + groupsIds + " have been loaded." );
+            return beanMapping.mapToSet(roles, RoleDTO.class);
+        } catch (CommonsServiceException ex) {
+            LOG.error("Error while loading roles of groups with ids: " + groupsIds + ".");
+            throw new CommonsFacadeException(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void assignRoleToGroup(long roleId, long idmGroupId) throws CommonsFacadeException {
+        try {
+            roleService.assignRoleToGroup(roleId, idmGroupId);
+            LOG.info("Role with id: "+ roleId + " has been assigned to group with id: " + idmGroupId);
+        } catch (CommonsServiceException ex) {
+            LOG.error("Error while assigning role with id: " + roleId + " to group with id: " + idmGroupId);
+            throw new CommonsFacadeException(ex.getMessage());
+        }
+
+    }
+
+    @Override
+    public void removeRoleFromGroup(long roleId, long idmGroupId) throws CommonsServiceException {
+        try {
+            roleService.removeRoleFromGroup(roleId, idmGroupId);
+            LOG.info("Role with id: " + roleId + " has been removed.");
+        } catch (CommonsServiceException ex) {
+            LOG.error("Error while removing role with id: " + roleId + " from group with id: " + idmGroupId);
             throw new CommonsFacadeException(ex.getMessage());
         }
     }
