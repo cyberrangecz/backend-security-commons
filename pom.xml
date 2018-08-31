@@ -7,7 +7,7 @@
     <groupId>cz.muni.ics.kypo</groupId>
     <artifactId>kypo2-security-commons</artifactId>
     <packaging>pom</packaging>
-    <version>${project.version}</version>
+    <version>1.0.0</version>
     <modules>
         <module>kypo2-security-commons-persistence</module>
         <module>kypo2-security-commons-security</module>
@@ -120,30 +120,30 @@
                 <artifactId>springfox-spring-web</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
-            <dependency>
-                <groupId>cz.muni.ics.kypo</groupId>
-                <artifactId>kypo2-security-commons-persistence</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cz.muni.ics.kypo</groupId>
-                <artifactId>kypo2-security-commons-security</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cz.muni.ics.kypo</groupId>
-                <artifactId>kypo2-security-commons-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cz.muni.ics.kypo</groupId>
-                <artifactId>kypo2-security-commons-facade</artifactId>
-                <version>${project.version}</version>
-            </dependency><dependency>
-                <groupId>cz.muni.ics.kypo</groupId>
-                <artifactId>kypo2-security-commons-rest</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>cz.muni.ics.kypo</groupId>-->
+                <!--<artifactId>kypo2-security-commons-persistence</artifactId>-->
+                <!--<version>${project.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>cz.muni.ics.kypo</groupId>-->
+                <!--<artifactId>kypo2-security-commons-security</artifactId>-->
+                <!--<version>${project.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>cz.muni.ics.kypo</groupId>-->
+                <!--<artifactId>kypo2-security-commons-service</artifactId>-->
+                <!--<version>${project.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>cz.muni.ics.kypo</groupId>-->
+                <!--<artifactId>kypo2-security-commons-facade</artifactId>-->
+                <!--<version>${project.version}</version>-->
+            <!--</dependency><dependency>-->
+                <!--<groupId>cz.muni.ics.kypo</groupId>-->
+                <!--<artifactId>kypo2-security-commons-rest</artifactId>-->
+                <!--<version>${project.version}</version>-->
+            <!--</dependency>-->
 
         </dependencies>
     </dependencyManagement>

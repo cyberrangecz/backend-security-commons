@@ -5,7 +5,7 @@
     <parent>
         <artifactId>kypo2-security-commons</artifactId>
         <groupId>cz.muni.ics.kypo</groupId>
-        <version>${project.version}</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>cz.muni.ics.kypo</groupId>
             <artifactId>kypo2-security-commons-service</artifactId>
-            <version>${project.version}</version>
+            <version>1.0.0</version>
         </dependency>
         <!-- mapping entities to dto -->
         <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
