@@ -84,8 +84,7 @@ public class GroupsRefControllerTest {
     @Test
     public void deleteGroupRef() throws Exception {
 
-        mockMvc.perform(delete(ApiEndpointsSecurityCommons.GROUPS_REF_URL)
-                .param("idmGroupId", "1")
+        mockMvc.perform(delete(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
@@ -93,8 +92,7 @@ public class GroupsRefControllerTest {
     @Test
     public void deleteGroupRefWithFacadeException() throws Exception {
         willThrow(CommonsFacadeException.class).given(groupRefFacade).delete(anyLong());
-        Exception exception = mockMvc.perform(delete(ApiEndpointsSecurityCommons.GROUPS_REF_URL)
-                .param("idmGroupId", "1")
+        Exception exception = mockMvc.perform(delete(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotModified())
                 .andReturn().getResolvedException();

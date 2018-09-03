@@ -77,13 +77,13 @@ public class RoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The requested resource was not found.")
     })
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getRoleByRoleType(@ApiParam(name = "Role type") @RequestParam("roleType") String roleType,
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getRoleById(@ApiParam(name = "Role type") @PathVariable("id") Long roleId,
                                                     @ApiParam(value = "Fields which should be returned in REST API response", required = false)
                                                     @RequestParam(value = "fields", required = false) String fields) {
-        LOG.debug("findRoleByRoleType({},{})", roleType, fields);
+        LOG.debug("findRoleByRoleType({},{})", roleId, fields);
         try {
-            RoleDTO r = roleFacade.getByRoleType(roleType);
+            RoleDTO r = roleFacade.getById(roleId);
             Squiggly.init(objectMapper, fields);
             return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, r), HttpStatus.OK);
         } catch (CommonsFacadeException ex) {
@@ -111,7 +111,7 @@ public class RoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The requested resource was not found.")
     })
-    @GetMapping(value = "/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllRoles(@QuerydslPredicate(root = Role.class) Predicate predicate, Pageable pageable,
                                               @RequestParam MultiValueMap<String, String> parameters,
                                               @ApiParam(value = "Fields which should be returned in REST API response", required = false)
@@ -179,7 +179,7 @@ public class RoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The requested resource was not found.")
     })
-    @GetMapping(value = "/of" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/of/groups" ,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getRolesOfGroups(
             @ApiParam(value = "Fields which should be returned in REST API response", required = false) @RequestParam(value = "fields", required = false) String fields,
             @ApiParam(value = "List of groups ids to get roles", required = true) @RequestBody List<Long> groupsIds)
@@ -212,7 +212,7 @@ public class RoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 304, message = "The requested resource was not modified.")
     })
-    @PutMapping(value = "/{roleId}/cancel/to/{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{roleId}/remove/from/{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> removeRoleFromGroupRef(@ApiParam(name = "Role Id") @PathVariable long roleId,
                                                        @ApiParam(name = "IDMGroup Id") @PathVariable long groupId,
                                                        @ApiParam(value = "Fields which should be returned in REST API response", required = false)

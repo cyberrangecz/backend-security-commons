@@ -62,8 +62,8 @@ public class GroupsRefController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The requested resource was not found.")
     })
-    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deleteGroupReference(@ApiParam(name = "Id of group whose reference to be deleted") @RequestParam("idmGroupId") long id) {
+    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> deleteGroupReference(@ApiParam(name = "Id of group whose reference to be deleted") @PathVariable("id") long id) {
         try {
             groupFacade.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
