@@ -9,12 +9,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FacadeTestConfiguration {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SecurityFacadeConfiguration.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SecurityFacadeConfiguration.class);
 
-    @Bean
-    public ModelMapper modelMapper() {
-        LOG.debug("modelMapper()");
-        return new ModelMapper();
-    }
+	@Bean
+	public ModelMapper modelMapper() {
+		LOG.debug("modelMapper()");
+		return new ModelMapper();
+	}
 
 }

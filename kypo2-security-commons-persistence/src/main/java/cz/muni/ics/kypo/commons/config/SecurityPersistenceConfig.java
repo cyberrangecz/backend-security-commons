@@ -15,5 +15,5 @@ import org.springframework.context.annotation.Configuration;
 @EnableJpaRepositories(basePackages = "cz.muni.ics.kypo.commons.repository")
 @PropertySource("file:${path.to.config.file}")
 public class SecurityPersistenceConfig {
-    private Logger LOG = LoggerFactory.getLogger(SecurityPersistenceConfig.class);
+	private Logger LOG = LoggerFactory.getLogger(SecurityPersistenceConfig.class);
 }

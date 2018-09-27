@@ -15,11 +15,11 @@ import java.util.Set;
 @Repository
 public interface IDMGroupRefRepository extends JpaRepository<IDMGroupRef, Long>, QuerydslPredicateExecutor<IDMGroupRef> {
 
-    Optional<IDMGroupRef> findByIdmGroupId(Long id);
+	Optional<IDMGroupRef> findByIdmGroupId(Long id);
 
-    @Query("SELECT g FROM IDMGroupRef AS g INNER JOIN g.roles AS r WHERE r.roleType = :roleType")
-    List<IDMGroupRef> findAllByRoleType(@Param("roleType") String roleType);
+	@Query("SELECT g FROM IDMGroupRef AS g INNER JOIN g.roles AS r WHERE r.roleType = :roleType")
+	List<IDMGroupRef> findAllByRoleType(@Param("roleType") String roleType);
 
-    @Query("SELECT r FROM IDMGroupRef g INNER JOIN g.roles r WHERE g.id = :groupId")
-    Set<Role> getRolesOfGroup(@Param("groupId") Long id);
+	@Query("SELECT r FROM IDMGroupRef g INNER JOIN g.roles r WHERE g.id = :groupId")
+	Set<Role> getRolesOfGroup(@Param("groupId") Long id);
 }

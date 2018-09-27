@@ -36,41 +36,41 @@ import static org.mockito.BDDMockito.then;
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.service"})
 public class IDMGroupRefServiceTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
-    @Autowired
-    private IDMGroupRefService groupRefService;
+	@Autowired
+	private IDMGroupRefService groupRefService;
 
-    @MockBean
-    private IDMGroupRefRepository groupRefRepository;
+	@MockBean
+	private IDMGroupRefRepository groupRefRepository;
 
-    private IDMGroupRef groupRef1, groupRef2;
-
-
-    @SpringBootApplication
-    static class TestConfiguration {
-    }
-
-    @Before
-    public void init() {
-        groupRef1 = new IDMGroupRef();
-        groupRef1.setId(1L);
-        groupRef1.setIdmGroupId(5L);
-
-        groupRef2 = new IDMGroupRef();
-        groupRef2.setId(2L);
-        groupRef2.setIdmGroupId(2L);
-    }
+	private IDMGroupRef groupRef1, groupRef2;
 
 
+	@SpringBootApplication
+	static class TestConfiguration {
+	}
 
-    @Test
-    public void testDeleteIDMGroupRef() {
-        given(groupRefRepository.findByIdmGroupId(1L)).willReturn(Optional.of(groupRef1));
-        groupRefService.delete(1L);
-        then(groupRefRepository).should().delete(groupRef1);
-    }
+	@Before
+	public void init() {
+		groupRef1 = new IDMGroupRef();
+		groupRef1.setId(1L);
+		groupRef1.setIdmGroupId(5L);
+
+		groupRef2 = new IDMGroupRef();
+		groupRef2.setId(2L);
+		groupRef2.setIdmGroupId(2L);
+	}
+
+
+
+	@Test
+	public void testDeleteIDMGroupRef() {
+		given(groupRefRepository.findByIdmGroupId(1L)).willReturn(Optional.of(groupRef1));
+		groupRefService.delete(1L);
+		then(groupRefRepository).should().delete(groupRef1);
+	}
 
 
 

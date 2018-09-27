@@ -12,11 +12,10 @@ import java.util.Set;
 
 public interface IDMGroupRefService {
 
-
-    /**
-     * Deletes given group ref from database.
-     * @param id group id of group ref to be deleted
-     * @throws CommonsServiceException
-     */
-    void delete(long id);
+	/**
+	 * Deletes given group ref from database.
+	 * @param id group id of group ref to be deleted
+	 * @throws CommonsServiceException
+	 */
+	void delete(long id);
 }

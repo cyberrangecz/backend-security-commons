@@ -15,12 +15,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.facade", "cz.muni.ics.kypo.commons.mapping"})
 public class SecurityFacadeConfiguration {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SecurityFacadeConfiguration.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SecurityFacadeConfiguration.class);
 
-    @Bean
-    public ModelMapper modelMapper() {
-        LOG.debug("modelMapper()");
-        return new ModelMapper();
-    }
+	@Bean
+	public ModelMapper modelMapper() {
+		LOG.debug("modelMapper()");
+		return new ModelMapper();
+	}
 
 }

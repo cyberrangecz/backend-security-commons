@@ -21,15 +21,16 @@ import static org.junit.Assert.assertEquals;
 @DataJpaTest
 public class IDMGroupRefEntityTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
-    @Autowired
-    private TestEntityManager entityManager;
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
-    @SpringBootApplication
-    static class TestConfiguration {
-    }
+	@Autowired
+	private TestEntityManager entityManager;
+
+	@SpringBootApplication
+	static class TestConfiguration {
+	}
 
     /*@Test
     public void createWhenIdmGroupIdIsNullShouldThrowException() {
@@ -38,13 +39,13 @@ public class IDMGroupRefEntityTest {
         this.entityManager.persistFlushFind(groupRef);
     }*/
 
-    @Test
-    public void saveShouldPersistData() {
-        IDMGroupRef groupRef = new IDMGroupRef();
-        groupRef.setIdmGroupId(2L);
-        IDMGroupRef g = this.entityManager.persistFlushFind(groupRef);
-        assertEquals(2L, g.getIdmGroupId());
-    }
+	@Test
+	public void saveShouldPersistData() {
+		IDMGroupRef groupRef = new IDMGroupRef();
+		groupRef.setIdmGroupId(2L);
+		IDMGroupRef g = this.entityManager.persistFlushFind(groupRef);
+		assertEquals(2L, g.getIdmGroupId());
+	}
 
 
 }

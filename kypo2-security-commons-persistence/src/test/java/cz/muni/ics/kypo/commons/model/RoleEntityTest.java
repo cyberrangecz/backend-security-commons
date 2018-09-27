@@ -18,37 +18,37 @@ import static org.junit.Assert.assertEquals;
 @DataJpaTest
 public class RoleEntityTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
-    @Autowired
-    private TestEntityManager entityManager;
+	@Autowired
+	private TestEntityManager entityManager;
 
-    private String roleType1 = "ADMINISTRATOR";
-    private String roleType2 = "USER";
+	private String roleType1 = "ADMINISTRATOR";
+	private String roleType2 = "USER";
 
-    @SpringBootApplication
-    static class TestConfiguration {
-    }
+	@SpringBootApplication
+	static class TestConfiguration {
+	}
 
-    @Test
-    public void createWhenRoleTypeIsNullShouldThrowException() {
-        thrown.expect(PersistenceException.class);
-        Role role = new Role();
-        this.entityManager.persistFlushFind(role);
-    }
+	@Test
+	public void createWhenRoleTypeIsNullShouldThrowException() {
+		thrown.expect(PersistenceException.class);
+		Role role = new Role();
+		this.entityManager.persistFlushFind(role);
+	}
 
-    @Test
-    public void saveShouldPersistData() {
-        Role role2 = new Role();
-        role2.setRoleType(roleType2);
-        this.entityManager.persistAndFlush(role2);
+	@Test
+	public void saveShouldPersistData() {
+		Role role2 = new Role();
+		role2.setRoleType(roleType2);
+		this.entityManager.persistAndFlush(role2);
 
-        Role role1 = new Role();
-        role1.setRoleType(roleType1);
-        Role r = this.entityManager.persistFlushFind(role1);
-        assertEquals(roleType1, r.getRoleType());
-    }
+		Role role1 = new Role();
+		role1.setRoleType(roleType1);
+		Role r = this.entityManager.persistFlushFind(role1);
+		assertEquals(roleType1, r.getRoleType());
+	}
 
 
 }

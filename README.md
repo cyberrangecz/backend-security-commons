@@ -1,5 +1,5 @@
 # KYPO2 Security commons
-This project represents commons project for other back-end project. This project adds security configuration and manages roles of groups in others projects.
+This project represents commons project for other back-end projects. This project adds security configuration and manages roles of groups in others projects.
 
 ## Using This Project
 First install project with command bellow:
@@ -16,7 +16,7 @@ Add this Maven dependency to your POM in persistence module:
 </dependency>
 ```
 
-and add plugin: 
+add plugin: 
 ```
 <plugin>
 				<groupId>org.flywaydb</groupId>
@@ -43,7 +43,16 @@ NOTE: Change version to currently released version of kypo2-rest-commons.
 
 
 
-Then use  "**@Import({WebConfigRestSecurityCommons.class})**" in your service layer config class
+Use  "**@Import({WebConfigRestSecurityCommons.class})**" in your service layer config class
+
+For using roles in your project, you have to add **roles.properties** file to your resource 
+package in your service layer. For each role you only need to specify role type which will be used in your project. 
+Roles are stored as string in DB but they are rewritten to upperCase. So roles in example below are stored as GUEST, ADMINISTRATOR and
+USER.  
+ 
+```properties
+kypo.commons.roles=Guest, administrator, USER
+```
 
 ## How to set up the project with imported security commons
 
@@ -64,23 +73,10 @@ Then use  "**@Import({WebConfigRestSecurityCommons.class})**" in your service la
 10. In tab "**Access**" again choose which information about user you will be getting, so called `scopes`.
 11. Hit **Save** button.
 
-### 2. Creating YAML file with roles 
 
-If you want to insert initial roles to the system you have to specify them in external YAML file and then insert its path to 
-properties file which is describe in next step. For each role you only need to specify role type which will be used in your project. 
-Roles are stored as string in DB but they are rewritten to upperCase. So roles in example below are stored as GUEST, ADMINISTRATOR and
-USER.  
- 
-```yaml
-roles:
-- Guest
-- administrator
-- USER
-```
+### 2. Properties file
 
-### 3. Properties file
-
-After step 1 and 2 you have to add this to your properties file according to format below and save it.
+After step 1 you have to add this to your properties file according to format below and save it.
 ```properties
 
 # OpenID Connect
@@ -92,5 +88,7 @@ kypo.idp.4oauth.client.clientId={your client ID from Self-service client}
 kypo.idp.4oauth.scopes=openid, email
 # you can add more scopes according to settings from step 1.
 
-path.to.file.with.initial.roles={path to YAML file from step 2}
+server.url={your server url}
+#for exmample
+server.url=https://localhost:8080/
 ```
