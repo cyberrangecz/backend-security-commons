@@ -2,10 +2,9 @@ package cz.muni.ics.kypo.commons.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import cz.muni.ics.kypo.commons.ApiEndpointsSecurityCommons;
-import cz.muni.ics.kypo.commons.controllers.GroupsRefController;
+import cz.muni.ics.kypo.commons.rest.controllers.GroupsRefController;
 import cz.muni.ics.kypo.commons.exception.CommonsFacadeException;
-import cz.muni.ics.kypo.commons.exceptions.ResourceNotModifiedException;
+import cz.muni.ics.kypo.commons.rest.exceptions.ResourceNotModifiedException;
 import cz.muni.ics.kypo.commons.facade.interfaces.IDMGroupRefFacade;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GroupsRefController.class)
-@ComponentScan(basePackages = "cz.muni.ics.kypo.commons")
+@ComponentScan(basePackages = "cz.muni.ics.kypo.commons.rest")
 public class GroupsRefControllerTest {
 
 	@InjectMocks

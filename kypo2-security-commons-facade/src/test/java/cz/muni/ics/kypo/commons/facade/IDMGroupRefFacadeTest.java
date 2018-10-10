@@ -1,9 +1,9 @@
 package cz.muni.ics.kypo.commons.facade;
 
 import com.querydsl.core.types.Predicate;
-import cz.muni.ics.kypo.commons.config.FacadeTestConfiguration;
+import cz.muni.ics.kypo.commons.rest.config.FacadeTestConfiguration;
 import cz.muni.ics.kypo.commons.facade.interfaces.IDMGroupRefFacade;
-import cz.muni.ics.kypo.commons.model.IDMGroupRef;
+import cz.muni.ics.kypo.commons.persistence.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.service.interfaces.IDMGroupRefService;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,7 +26,7 @@ import static org.mockito.BDDMockito.then;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@EntityScan(basePackages = {"cz.muni.ics.kypo.commons.model"})
+@EntityScan(basePackages = {"cz.muni.ics.kypo.commons.persistence.model"})
 @EnableJpaRepositories(basePackages = {"cz.muni.ics.kypo.commons.repository"})
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.facade", "cz.muni.ics.kypo.commons.service", "cz.muni.ics.kypo.commons.mapping"})
 @Import(FacadeTestConfiguration.class)

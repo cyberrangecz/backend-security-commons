@@ -1,11 +1,11 @@
 package cz.muni.ics.kypo.commons.service.impl;
 
 import com.querydsl.core.types.Predicate;
-import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
-import cz.muni.ics.kypo.commons.model.IDMGroupRef;
-import cz.muni.ics.kypo.commons.model.Role;
-import cz.muni.ics.kypo.commons.repository.IDMGroupRefRepository;
-import cz.muni.ics.kypo.commons.repository.RoleRepository;
+import cz.muni.ics.kypo.commons.rest.exceptions.CommonsServiceException;
+import cz.muni.ics.kypo.commons.persistence.model.IDMGroupRef;
+import cz.muni.ics.kypo.commons.persistence.model.Role;
+import cz.muni.ics.kypo.commons.persistence.repository.IDMGroupRefRepository;
+import cz.muni.ics.kypo.commons.persistence.repository.RoleRepository;
 import cz.muni.ics.kypo.commons.service.interfaces.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

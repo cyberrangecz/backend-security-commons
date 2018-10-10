@@ -1,11 +1,10 @@
 package cz.muni.ics.kypo.commons.service.interfaces;
 
 import com.querydsl.core.types.Predicate;
-import cz.muni.ics.kypo.commons.model.IDMGroupRef;
-import cz.muni.ics.kypo.commons.model.Role;
+import cz.muni.ics.kypo.commons.persistence.model.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
+import cz.muni.ics.kypo.commons.rest.exceptions.CommonsServiceException;
 
 import java.util.List;
 import java.util.Set;

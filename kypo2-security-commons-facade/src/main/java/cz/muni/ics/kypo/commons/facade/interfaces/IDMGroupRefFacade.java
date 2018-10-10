@@ -1,6 +1,6 @@
 package cz.muni.ics.kypo.commons.facade.interfaces;
 
-import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
+import cz.muni.ics.kypo.commons.rest.exceptions.CommonsServiceException;
 
 public interface IDMGroupRefFacade {
 	/**

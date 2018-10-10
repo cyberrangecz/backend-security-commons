@@ -1,11 +1,8 @@
 package cz.muni.ics.kypo.commons.service;
 
-import com.querydsl.core.types.Predicate;
-import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
-import cz.muni.ics.kypo.commons.model.IDMGroupRef;
-import cz.muni.ics.kypo.commons.model.Role;
-import cz.muni.ics.kypo.commons.repository.IDMGroupRefRepository;
-import cz.muni.ics.kypo.commons.repository.RoleRepository;
+import cz.muni.ics.kypo.commons.rest.config.ServiceCommonsConfigTest;
+import cz.muni.ics.kypo.commons.persistence.model.IDMGroupRef;
+import cz.muni.ics.kypo.commons.persistence.repository.IDMGroupRefRepository;
 import cz.muni.ics.kypo.commons.service.interfaces.IDMGroupRefService;
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,14 +11,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
@@ -31,9 +23,7 @@ import static org.mockito.BDDMockito.then;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@EntityScan(basePackages = {"cz.muni.ics.kypo.commons.model"})
-@EnableJpaRepositories(basePackages = {"cz.muni.ics.kypo.commons.repository"})
-@ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.service"})
+@Import(ServiceCommonsConfigTest.class)
 public class IDMGroupRefServiceTest {
 
 	@Rule

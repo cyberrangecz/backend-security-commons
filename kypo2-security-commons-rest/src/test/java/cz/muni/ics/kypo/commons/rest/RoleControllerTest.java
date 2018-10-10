@@ -4,13 +4,12 @@ package cz.muni.ics.kypo.commons.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.querydsl.core.types.Predicate;
-import cz.muni.ics.kypo.commons.ApiEndpointsSecurityCommons;
 import cz.muni.ics.kypo.commons.api.PageResultResource;
 import cz.muni.ics.kypo.commons.api.dto.RoleDTO;
-import cz.muni.ics.kypo.commons.controllers.RoleController;
+import cz.muni.ics.kypo.commons.rest.controllers.RoleController;
 import cz.muni.ics.kypo.commons.exception.CommonsFacadeException;
-import cz.muni.ics.kypo.commons.exceptions.ResourceNotFoundException;
-import cz.muni.ics.kypo.commons.exceptions.ResourceNotModifiedException;
+import cz.muni.ics.kypo.commons.rest.exceptions.ResourceNotFoundException;
+import cz.muni.ics.kypo.commons.rest.exceptions.ResourceNotModifiedException;
 import cz.muni.ics.kypo.commons.facade.interfaces.RoleFacade;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +41,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
@@ -53,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RoleController.class)
-@ComponentScan(basePackages = "cz.muni.ics.kypo.commons")
+@ComponentScan(basePackages = "cz.muni.ics.kypo.commons.rest")
 public class RoleControllerTest {
 
     @Autowired

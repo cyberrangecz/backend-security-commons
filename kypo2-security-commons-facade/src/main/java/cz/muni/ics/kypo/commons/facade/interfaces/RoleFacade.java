@@ -4,7 +4,7 @@ import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.api.PageResultResource;
 import cz.muni.ics.kypo.commons.api.dto.RoleDTO;
 import cz.muni.ics.kypo.commons.exception.CommonsFacadeException;
-import cz.muni.ics.kypo.commons.exceptions.CommonsServiceException;
+import cz.muni.ics.kypo.commons.rest.exceptions.CommonsServiceException;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
