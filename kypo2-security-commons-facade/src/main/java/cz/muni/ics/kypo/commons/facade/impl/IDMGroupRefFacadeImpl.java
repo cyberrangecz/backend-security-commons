@@ -13,22 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class IDMGroupRefFacadeImpl implements IDMGroupRefFacade {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RoleFacadeImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RoleFacadeImpl.class);
 
-    private IDMGroupRefService groupRefService;
-    private BeanMapping beanMapping;
+	private IDMGroupRefService groupRefService;
+	private BeanMapping beanMapping;
 
-    @Autowired
-    public IDMGroupRefFacadeImpl(IDMGroupRefService groupRefService, BeanMapping beanMapping) {
-        this.groupRefService = groupRefService;
-        this.beanMapping = beanMapping;
-    }
+	@Autowired
+	public IDMGroupRefFacadeImpl(IDMGroupRefService groupRefService, BeanMapping beanMapping) {
+		this.groupRefService = groupRefService;
+		this.beanMapping = beanMapping;
+	}
 
-    @Override
-    public void delete(Long idmGroupId) {
-        groupRefService.delete(idmGroupId);
-    }
-
+	@Override
+	public void delete(Long idmGroupId) {
+		groupRefService.delete(idmGroupId);
+	}
 
 
 

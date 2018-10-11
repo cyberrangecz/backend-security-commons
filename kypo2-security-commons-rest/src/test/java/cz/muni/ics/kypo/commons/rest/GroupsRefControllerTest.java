@@ -2,10 +2,9 @@ package cz.muni.ics.kypo.commons.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import cz.muni.ics.kypo.commons.ApiEndpointsSecurityCommons;
-import cz.muni.ics.kypo.commons.controllers.GroupsRefController;
+import cz.muni.ics.kypo.commons.rest.controllers.GroupsRefController;
 import cz.muni.ics.kypo.commons.exception.CommonsFacadeException;
-import cz.muni.ics.kypo.commons.exceptions.ResourceNotModifiedException;
+import cz.muni.ics.kypo.commons.rest.exceptions.ResourceNotModifiedException;
 import cz.muni.ics.kypo.commons.facade.interfaces.IDMGroupRefFacade;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,67 +40,67 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GroupsRefController.class)
-@ComponentScan(basePackages = "cz.muni.ics.kypo.commons")
+@ComponentScan(basePackages = "cz.muni.ics.kypo.commons.rest")
 public class GroupsRefControllerTest {
 
-    @InjectMocks
-    private GroupsRefController groupsRefController;
+	@InjectMocks
+	private GroupsRefController groupsRefController;
 
-    @MockBean
-    private IDMGroupRefFacade groupRefFacade;
+	@MockBean
+	private IDMGroupRefFacade groupRefFacade;
 
-    @MockBean
-    @Qualifier("objMapperRESTApi")
-    private ObjectMapper objectMapper;
+	@MockBean
+	@Qualifier("objMapperRESTApi")
+	private ObjectMapper objectMapper;
 
-    private MockMvc mockMvc;
+	private MockMvc mockMvc;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-
-    @Before
-    public void setup() throws RuntimeException {
-        MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(groupsRefController)
-                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver(), new QuerydslPredicateArgumentResolver(new QuerydslBindingsFactory(SimpleEntityPathResolver.INSTANCE),
-                        Optional.empty()))
-                .setMessageConverters(new MappingJackson2HttpMessageConverter()).build();
+	@Autowired
+	private WebApplicationContext webApplicationContext;
 
 
-        ObjectMapper obj = new ObjectMapper();
-        obj.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-        given(objectMapper.getSerializationConfig()).willReturn(obj.getSerializationConfig());
-
-    }
-
-    @Test
-    public void contextLoads() {
-        assertNotNull(groupsRefController);
-    }
+	@Before
+	public void setup() throws RuntimeException {
+		MockitoAnnotations.initMocks(this);
+		this.mockMvc = MockMvcBuilders.standaloneSetup(groupsRefController)
+				.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver(), new QuerydslPredicateArgumentResolver(new QuerydslBindingsFactory(SimpleEntityPathResolver.INSTANCE),
+						Optional.empty()))
+				.setMessageConverters(new MappingJackson2HttpMessageConverter()).build();
 
 
-    @Test
-    public void deleteGroupRef() throws Exception {
+		ObjectMapper obj = new ObjectMapper();
+		obj.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+		given(objectMapper.getSerializationConfig()).willReturn(obj.getSerializationConfig());
 
-        mockMvc.perform(delete(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{id}", 1L)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
-    }
+	}
 
-    @Test
-    public void deleteGroupRefWithFacadeException() throws Exception {
-        willThrow(CommonsFacadeException.class).given(groupRefFacade).delete(anyLong());
-        Exception exception = mockMvc.perform(delete(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{id}", 1L)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotModified())
-                .andReturn().getResolvedException();
-        assertEquals(ResourceNotModifiedException.class, exception.getClass());
-    }
+	@Test
+	public void contextLoads() {
+		assertNotNull(groupsRefController);
+	}
 
 
-    private static String convertObjectToJsonBytes(Object object) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(object);
-    }
+	@Test
+	public void deleteGroupRef() throws Exception {
+
+		mockMvc.perform(delete(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{id}", 1L)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void deleteGroupRefWithFacadeException() throws Exception {
+		willThrow(CommonsFacadeException.class).given(groupRefFacade).delete(anyLong());
+		Exception exception = mockMvc.perform(delete(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{id}", 1L)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isNotModified())
+				.andReturn().getResolvedException();
+		assertEquals(ResourceNotModifiedException.class, exception.getClass());
+	}
+
+
+	private static String convertObjectToJsonBytes(Object object) throws IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper.writeValueAsString(object);
+	}
 }

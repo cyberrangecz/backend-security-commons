@@ -1,9 +1,9 @@
 package cz.muni.ics.kypo.commons.facade;
 
 import com.querydsl.core.types.Predicate;
-import cz.muni.ics.kypo.commons.config.FacadeTestConfiguration;
+import cz.muni.ics.kypo.commons.rest.config.FacadeTestConfiguration;
 import cz.muni.ics.kypo.commons.facade.interfaces.IDMGroupRefFacade;
-import cz.muni.ics.kypo.commons.model.IDMGroupRef;
+import cz.muni.ics.kypo.commons.persistence.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.service.interfaces.IDMGroupRefService;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,47 +26,47 @@ import static org.mockito.BDDMockito.then;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@EntityScan(basePackages = {"cz.muni.ics.kypo.commons.model"})
+@EntityScan(basePackages = {"cz.muni.ics.kypo.commons.persistence.model"})
 @EnableJpaRepositories(basePackages = {"cz.muni.ics.kypo.commons.repository"})
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.facade", "cz.muni.ics.kypo.commons.service", "cz.muni.ics.kypo.commons.mapping"})
 @Import(FacadeTestConfiguration.class)
 public class IDMGroupRefFacadeTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
-    @Autowired
-    private IDMGroupRefFacade groupRefFacade;
+	@Autowired
+	private IDMGroupRefFacade groupRefFacade;
 
-    @MockBean
-    private IDMGroupRefService groupRefService;
+	@MockBean
+	private IDMGroupRefService groupRefService;
 
-    private IDMGroupRef groupRef1, groupRef2;
-    private Predicate predicate;
-    private Pageable pageable;
+	private IDMGroupRef groupRef1, groupRef2;
+	private Predicate predicate;
+	private Pageable pageable;
 
-    @SpringBootApplication
-    static class TestConfiguration {
-    }
+	@SpringBootApplication
+	static class TestConfiguration {
+	}
 
-    @Before
-    public void init() {
-
-
-        groupRef1 = new IDMGroupRef();
-        groupRef1.setId(1L);
-        groupRef1.setIdmGroupId(1L);
+	@Before
+	public void init() {
 
 
-        pageable = PageRequest.of(0, 10);
+		groupRef1 = new IDMGroupRef();
+		groupRef1.setId(1L);
+		groupRef1.setIdmGroupId(1L);
 
-    }
 
-    @Test
-    public void testDeleteIDMGroupRef() {
-        groupRefFacade.delete(1L);
-        then(groupRefService).should().delete(1L);
-    }
+		pageable = PageRequest.of(0, 10);
+
+	}
+
+	@Test
+	public void testDeleteIDMGroupRef() {
+		groupRefFacade.delete(1L);
+		then(groupRefService).should().delete(1L);
+	}
 
 
 
