@@ -1,83 +1,131 @@
 package cz.muni.ics.kypo.commons.security.config;
 
-
 import org.mitre.oauth2.introspectingfilter.IntrospectingTokenService;
 import org.mitre.oauth2.introspectingfilter.service.impl.StaticIntrospectionConfigurationService;
 import org.mitre.oauth2.model.RegisteredClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.springframework.stereotype.Component;
+
+import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.ProductionCustomAuthorityGranter;
 
 import java.util.Set;
 
+/**
+ * 
+ * @author Pavel Seda (441048) & Dominik Pilar
+ *
+ */
 @Configuration
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.security"})
 @PropertySource("file:${path.to.config.file}")
-public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
+public class ResourceServerSecurityConfig {
 
-	@Value("${kypo.idp.4oauth.introspectionURI}")
-	private String introspectionURI;
+	@Profile("PROD")
+	@Component
+	public class ProductionResourceServiceSecurityConfig extends ResourceServerConfigurerAdapter {
 
-	@Value("${kypo.idp.4oauth.resource.clientId}")
-	private String clientIdOfResource;
+		@Value("${kypo.idp.4oauth.introspectionURI}")
+		private String introspectionURI;
+		@Value("${kypo.idp.4oauth.resource.clientId}")
+		private String clientIdOfResource;
+		@Value("${kypo.idp.4oauth.resource.clientSecret}")
+		private String clientSecretResource;
+		@Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
+		private Set<String> scopes;
+		@Autowired
+		private ProductionCustomAuthorityGranter customAuthorityGranter;
 
-	@Value("${kypo.idp.4oauth.resource.clientSecret}")
-	private String clientSecretResource;
+		@Override
+		public void configure(ResourceServerSecurityConfigurer resources) {
+			resources.tokenServices(tokenServices());
+		}
 
-	@Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
-	private Set<String> scopes;
+		@Override
+		public void configure(HttpSecurity http) throws Exception {
+			http.authorizeRequests().antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs/**", "/webjars/**").permitAll()
+					.anyRequest().authenticated();
+		}
 
-	@Autowired
-	private CustomAuthorityGranter customAuthorityGranter;
+		@Bean
+		public ResourceServerTokenServices tokenServices() {
+			IntrospectingTokenService tokenService = new IntrospectingTokenService();
+			tokenService.setIntrospectionConfigurationService(introspectionConfigurationService());
+			tokenService.setIntrospectionAuthorityGranter(customAuthorityGranter);
+			return tokenService;
+		}
 
-	@Override
-	public void configure(ResourceServerSecurityConfigurer resources) {
+		@Bean
+		public StaticIntrospectionConfigurationService introspectionConfigurationService() {
+			StaticIntrospectionConfigurationService introspectionService = new StaticIntrospectionConfigurationService();
+			introspectionService.setIntrospectionUrl(introspectionURI);
 
-		resources.tokenServices(tokenServices());
+			RegisteredClient client = new RegisteredClient();
+			client.setClientId(clientIdOfResource);
+			client.setClientSecret(clientSecretResource);
+			client.setScope(scopes);
+			introspectionService.setClientConfiguration(client);
+
+			return introspectionService;
+		}
 	}
 
-	@Override
-	public void configure(HttpSecurity http) throws Exception {
-		http
-				.authorizeRequests()
-				.antMatchers("/swagger-ui.html","/swagger-resources/**", "/v2/api-docs/**", "/webjars/**").permitAll()
-				.anyRequest().authenticated();
-	}
+	@Profile("DEV")
+	@Component
+	public class DevResourceServiceSecurityConfig extends ResourceServerConfigurerAdapter {
 
-	@Bean
-	public ResourceServerTokenServices tokenServices() {
-		IntrospectingTokenService tokenService = new IntrospectingTokenService();
-		tokenService.setIntrospectionConfigurationService(introspectionConfigurationService());
-		tokenService.setIntrospectionAuthorityGranter(customAuthorityGranter);
-		return tokenService;
-	}
+		@Value("${kypo.idp.4oauth.introspectionURI}")
+		private String introspectionURI;
+		@Value("${kypo.idp.4oauth.resource.clientId}")
+		private String clientIdOfResource;
+		@Value("${kypo.idp.4oauth.resource.clientSecret}")
+		private String clientSecretResource;
+		@Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
+		private Set<String> scopes;
 
-	@Bean
-	public StaticIntrospectionConfigurationService introspectionConfigurationService() {
-		StaticIntrospectionConfigurationService introspectionService = new StaticIntrospectionConfigurationService();
-		introspectionService.setIntrospectionUrl(introspectionURI);
+		@Override
+		public void configure(ResourceServerSecurityConfigurer resources) {
+			resources.tokenServices(tokenServices());
+		}
 
-		RegisteredClient client = new RegisteredClient();
-		client.setClientId(clientIdOfResource);
-		client.setClientSecret(clientSecretResource);
-		client.setScope(scopes);
-		introspectionService.setClientConfiguration(client);
+		@Override
+		public void configure(HttpSecurity http) throws Exception {
+			http.authorizeRequests().antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs/**", "/webjars/**").permitAll()
+					.anyRequest().authenticated();
+		}
 
-		return introspectionService;
+		@Bean
+		public ResourceServerTokenServices tokenServices() {
+			IntrospectingTokenService tokenService = new IntrospectingTokenService();
+			tokenService.setIntrospectionConfigurationService(introspectionConfigurationService());
+			return tokenService;
+		}
+
+		@Bean
+		public StaticIntrospectionConfigurationService introspectionConfigurationService() {
+			StaticIntrospectionConfigurationService introspectionService = new StaticIntrospectionConfigurationService();
+			introspectionService.setIntrospectionUrl(introspectionURI);
+
+			RegisteredClient client = new RegisteredClient();
+			client.setClientId(clientIdOfResource);
+			client.setClientSecret(clientSecretResource);
+			client.setScope(scopes);
+			introspectionService.setClientConfiguration(client);
+
+			return introspectionService;
+		}
 	}
 }
