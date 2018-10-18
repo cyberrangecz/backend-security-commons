@@ -78,6 +78,9 @@ kypo.commons.roles=Guest, administrator, USER
 
 After step 1 you have to add this to your properties file according to format below and save it.
 ```properties
+# Environment DEV or PROD
+spring.profiles.active=DEV # DEV environment does not need kypo2-user-and-group project but assign authority as GUEST by default
+
 
 # OpenID Connect
 kypo.idp.4oauth.introspectionURI=https://oidc.ics.muni.cz/oidc/introspect
