@@ -43,7 +43,7 @@ public class SwaggerConfig {
 		// @formatter:off
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("public-api")
-                .apiInfo(apiInfo())
+                .apiInfo(apiInfo()).useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
