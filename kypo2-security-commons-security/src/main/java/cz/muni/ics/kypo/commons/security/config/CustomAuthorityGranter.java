@@ -84,7 +84,8 @@ public class CustomAuthorityGranter {
 		@Override
 		public List<GrantedAuthority> getAuthorities(JsonObject introspectionResponse) {
 			List<GrantedAuthority> authorities = new ArrayList<>();
-			if (roles.iterator().next().equals("") || roles.iterator().next().equals("${spring.profiles.dev.roles}")) {
+			String role = roles.iterator().next();
+			if (role.equals("") || role.equals("${spring.profiles.dev.roles}")) {
 				authorities.add(new SimpleGrantedAuthority("GUEST"));
 			} else {
 				for (String r : roles) {
