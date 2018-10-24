@@ -77,13 +77,14 @@ public class CustomAuthorityGranter {
 	public class DevCustomAuthorityGranter implements IntrospectionAuthorityGranter {
 		@Value("#{'${spring.profiles.dev.roles}'.split(',')}")
 		private Set<String> roles;
+		private final Logger LOG = LoggerFactory.getLogger(DevCustomAuthorityGranter.class);
 		@Autowired
 		public DevCustomAuthorityGranter() {}
 
 		@Override
 		public List<GrantedAuthority> getAuthorities(JsonObject introspectionResponse) {
 			List<GrantedAuthority> authorities = new ArrayList<>();
-			if (roles.isEmpty()) {
+			if (roles.iterator().next().equals("") || roles.iterator().next().equals("${spring.profiles.dev.roles}")) {
 				authorities.add(new SimpleGrantedAuthority("GUEST"));
 			} else {
 				for (String r : roles) {
