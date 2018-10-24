@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.persistence.model", "cz.muni.ics.kypo.commons.persistence.repository"})
+@Import(StartUpRunner.class)
 @EntityScan(basePackages = "cz.muni.ics.kypo.commons.persistence.model")
 @EnableJpaRepositories(basePackages = "cz.muni.ics.kypo.commons.persistence.repository")
 @PropertySource("file:${path.to.config.file}")

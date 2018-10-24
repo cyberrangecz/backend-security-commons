@@ -2,6 +2,7 @@ package cz.muni.ics.kypo.commons.security.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,14 +75,23 @@ public class CustomAuthorityGranter {
 	@Profile("DEV")
 	@Component
 	public class DevCustomAuthorityGranter implements IntrospectionAuthorityGranter {
-
+		@Value("#{'${spring.profiles.dev.roles}'.split(',')}")
+		private Set<String> roles;
+		private final Logger LOG = LoggerFactory.getLogger(DevCustomAuthorityGranter.class);
 		@Autowired
 		public DevCustomAuthorityGranter() {}
 
 		@Override
 		public List<GrantedAuthority> getAuthorities(JsonObject introspectionResponse) {
 			List<GrantedAuthority> authorities = new ArrayList<>();
-			authorities.add(new SimpleGrantedAuthority("GUEST"));
+			String role = roles.iterator().next();
+			if (role.equals("") || role.equals("${spring.profiles.dev.roles}")) {
+				authorities.add(new SimpleGrantedAuthority("GUEST"));
+			} else {
+				for (String r : roles) {
+					authorities.add(new SimpleGrantedAuthority(r.toUpperCase()));
+				}
+			}
 			return authorities;
 		}
 
