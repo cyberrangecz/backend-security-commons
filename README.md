@@ -81,6 +81,8 @@ After step 1 you have to add this to your properties file according to format be
 # Environment DEV or PROD
 ### DEV environment does not need kypo2-user-and-group project but assign authority as GUEST by default
 spring.profiles.active=DEV 
+### If you want try your project with specific roles you can define them by adding:
+spring.profiles.dev.role={your role/s}
 
 
 # OpenID Connect
