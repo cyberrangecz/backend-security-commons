@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 import org.springframework.stereotype.Component;
 
 import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.ProductionCustomAuthorityGranter;
+import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.DevCustomAuthorityGranter;
 
 import java.util.Set;
 
@@ -95,6 +96,8 @@ public class ResourceServerSecurityConfig {
 		private String clientSecretResource;
 		@Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
 		private Set<String> scopes;
+		@Autowired
+		private DevCustomAuthorityGranter customAuthorityGranter;
 
 		@Override
 		public void configure(ResourceServerSecurityConfigurer resources) {
@@ -111,6 +114,7 @@ public class ResourceServerSecurityConfig {
 		public ResourceServerTokenServices tokenServices() {
 			IntrospectingTokenService tokenService = new IntrospectingTokenService();
 			tokenService.setIntrospectionConfigurationService(introspectionConfigurationService());
+			tokenService.setIntrospectionAuthorityGranter(customAuthorityGranter);
 			return tokenService;
 		}
 
