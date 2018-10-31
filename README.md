@@ -11,7 +11,7 @@ Add this Maven dependency to your POM in persistence module:
 ```        
 <dependency>
     <groupId>cz.muni.ics.kypo</groupId>
-    <artifactId>kypo2-security-commons-rest</artifactId>
+    <artifactId>kypo2-security-commons</artifactId>
     <version>${kypo2-security-commons-actual-version}</version>
 </dependency>
 ```
