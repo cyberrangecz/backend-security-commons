@@ -1,7 +1,5 @@
 package cz.muni.ics.kypo.commons.persistence.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -16,5 +14,4 @@ import org.springframework.context.annotation.Configuration;
 @EnableJpaRepositories(basePackages = "cz.muni.ics.kypo.commons.persistence.repository")
 @PropertySource("file:${path.to.config.file}")
 public class SecurityPersistenceConfig {
-	private Logger LOG = LoggerFactory.getLogger(SecurityPersistenceConfig.class);
 }

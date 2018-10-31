@@ -25,7 +25,7 @@ public class IDMGroupRefServiceImpl implements IDMGroupRefService {
 	public void delete(long id) {
 		IDMGroupRef idmGroupRef = idmGroupRefRepository.findByIdmGroupId(id).orElseThrow(() -> new CommonsServiceException("Idm group ref with id: " + id + " not found."));
 		idmGroupRefRepository.delete(idmGroupRef);
-		LOG.info("IDMGroupRef with id: " + idmGroupRef.getId() + " deleted." );
+		LOG.info("IDMGroupRef with id: {} deleted.", idmGroupRef.getId()  );
 	}
 
 

@@ -1,46 +1,45 @@
-package cz.muni.ics.kypo.commons.service.interfaces;
+package cz.muni.ics.kypo.commons.facade.interfaces;
 
 import com.querydsl.core.types.Predicate;
-import cz.muni.ics.kypo.commons.persistence.model.Role;
-import org.springframework.data.domain.Page;
+import cz.muni.ics.kypo.commons.facade.api.PageResultResource;
+import cz.muni.ics.kypo.commons.facade.api.dto.RoleDTO;
+import cz.muni.ics.kypo.commons.facade.exception.CommonsFacadeException;
 import org.springframework.data.domain.Pageable;
-import cz.muni.ics.kypo.commons.service.exceptions.CommonsServiceException;
 
 import java.util.List;
 import java.util.Set;
 
-public interface RoleService {
-
+public interface RoleFacade {
 	/**
 	 * Returns role by id
 	 *
 	 * @param id of role
 	 * @return role with given id
-	 * @throws CommonsServiceException if role could not be found
+	 * @throws CommonsFacadeException if role could not be found
 	 */
-	Role getById(long id);
+	RoleDTO getById(long id);
 
 	/**
 	 * Return role by role type
 	 *
 	 * @param roleType of role
 	 * @return role with given roleType
-	 * @throws CommonsServiceException when role with given role type could not be found
+	 * @throws CommonsFacadeException when role with given role type could not be found
 	 */
-	Role getByRoleType(String roleType);
+	RoleDTO getByRoleType(String roleType);
 
 	/**
 	 * Returns all roles
 	 *
 	 * @return all roles
 	 */
-	Page<Role> getAllRoles(Predicate predicate, Pageable pageable);
+	PageResultResource<RoleDTO> getAllRoles(Predicate predicate, Pageable pageable);
 
 	/**
 	 * Assign role to group.
 	 * @param idmGroupId id of idm group ref to assign roles to
 	 * @param roleId type of role to be assigned to group
-	 * @throws CommonsServiceException
+	 * @throws CommonsFacadeException
 	 */
 	void assignRoleToGroup(long roleId, long idmGroupId);
 
@@ -49,7 +48,7 @@ public interface RoleService {
 	 *
 	 * @return roles
 	 */
-	Set<Role> getRolesOfGroups(List<Long> groupsIds);
+	Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds) ;
 
 	void removeRoleFromGroup(long roleId, long idmGroupId);
 }

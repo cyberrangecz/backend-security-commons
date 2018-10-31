@@ -18,7 +18,7 @@ public class IDMGroupRef {
 
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "IDM_GROUP_ROLE", joinColumns = @JoinColumn(name = "IDM_GROUP_REF_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
-	private Set<Role> roles = new HashSet<>();;
+	private Set<Role> roles = new HashSet<>();
 
 	public Long getId() {
 			return id;

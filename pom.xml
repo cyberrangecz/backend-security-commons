@@ -68,12 +68,6 @@
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-core</artifactId>
         </dependency>
-
-
-            <!--<groupId>org.jsondoc</groupId>-->
-            <!--<artifactId>jsondoc-core</artifactId>-->
-            <!--<version>1.0.3</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.mitre</groupId>
             <artifactId>openid-connect-client</artifactId>
@@ -89,98 +83,16 @@
             <artifactId>openid-connect-common</artifactId>
             <version>${mitre.oidc.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.modelmapper</groupId>-->
-            <!--<artifactId>modelmapper</artifactId>-->
-            <!--<version>${modelmapper.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.springfox</groupId>-->
-            <!--<artifactId>springfox-swagger2</artifactId>-->
-            <!--<version>${swagger.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.springfox</groupId>-->
-            <!--<artifactId>springfox-bean-validators</artifactId>-->
-            <!--<version>${swagger.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.springfox</groupId>-->
-            <!--<artifactId>springfox-core</artifactId>-->
-            <!--<version>${swagger.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.springfox</groupId>-->
-            <!--<artifactId>springfox-schema</artifactId>-->
-            <!--<version>${swagger.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.springfox</groupId>-->
-            <!--<artifactId>springfox-spi</artifactId>-->
-            <!--<version>${swagger.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.springfox</groupId>-->
-            <!--<artifactId>springfox-spring-web</artifactId>-->
-            <!--<version>${swagger.version}</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; Persistence &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-data-jpa</artifactId>-->
-            <!--<version>2.0.5.RELEASE</version>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.apache.tomcat</groupId>-->
-                    <!--<artifactId>tomcat-jdbc</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.hibernate</groupId>-->
-                    <!--<artifactId>hibernate-entitymanager</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; for formating LocalDateTime in JSON &ndash;&gt;-->
-        <!--&lt;!&ndash; jackson &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-            <!--<artifactId>jackson-databind</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>com.fasterxml.jackson.datatype</groupId>-->
-            <!--<artifactId>jackson-datatype-jsr310</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>com.fasterxml.jackson.dataformat</groupId>-->
-            <!--<artifactId>jackson-dataformat-yaml</artifactId>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; PostgreSQL driver &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.postgresql</groupId>-->
-            <!--<artifactId>postgresql</artifactId>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; logging &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>junit</groupId>-->
-            <!--<artifactId>junit</artifactId>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; Query DSL &ndash;&gt;-->
-
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-test</artifactId>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>com.h2database</groupId>-->
-            <!--<artifactId>h2</artifactId>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; Persistence &ndash;&gt;-->
-
-        <!--&lt;!&ndash; Security &ndash;&gt;-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -196,14 +108,6 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-         <!--Security-->
-         <!--Service-->
-
-        <!--<dependency>-->
-            <!--<groupId>io.swagger</groupId>-->
-            <!--<artifactId>swagger-codegen-maven-plugin</artifactId>-->
-            <!--<version>${swagger-codegen.version}</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -212,59 +116,25 @@
         <!--&lt;!&ndash; Service &ndash;&gt;-->
 
         <!--&lt;!&ndash; Facade &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.modelmapper</groupId>-->
-            <!--<artifactId>modelmapper</artifactId>-->
-            <!--<version>${modelmapper.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.jsondoc</groupId>-->
-            <!--<artifactId>jsondoc-core</artifactId>-->
-            <!--<version>1.0.3</version>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; Facade &ndash;&gt;-->
-
-        <!--&lt;!&ndash; Rest &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter</artifactId>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.springframework.boot</groupId>-->
-                    <!--<artifactId>spring-boot-starter-logging</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-web</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-log4j2</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-actuator</artifactId>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash;&lt;!&ndash; filtering REST responses &ndash;&gt;&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>com.github.bohnman</groupId>-->
-            <!--<artifactId>squiggly-filter-jackson</artifactId>-->
-            <!--<version>${squiggly.filter.jackson.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.elasticsearch.client</groupId>-->
-            <!--<artifactId>elasticsearch-rest-high-level-client</artifactId>-->
-            <!--<version>${elasticsearch.client.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.apache.tomcat.embed</groupId>-->
-            <!--<artifactId>tomcat-embed-jasper</artifactId>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; Rest &ndash;&gt;-->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsondoc</groupId>
+            <artifactId>jsondoc-core</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.bohnman</groupId>
+            <artifactId>squiggly-filter-jackson</artifactId>
+            <version>${squiggly.filter.jackson.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>

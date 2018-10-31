@@ -17,7 +17,7 @@ import java.util.Set;
 @Component
 @PropertySource("classpath:roles.properties")
 public class StartUpRunner implements ApplicationRunner {
-    private static Logger LOGGER = LoggerFactory.getLogger(StartUpRunner.class);
+    private static Logger LOG = LoggerFactory.getLogger(StartUpRunner.class);
 
     @Value("#{'${kypo.commons.roles}'.split(',')}")
     private Set<String> roles;
@@ -34,7 +34,7 @@ public class StartUpRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         loadRoles(roles);
 
-        LOGGER.info("Roles from external file were loaded and created in DB");
+        LOG.info("Roles from external file were loaded and created in DB");
     }
 
 
@@ -45,9 +45,9 @@ public class StartUpRunner implements ApplicationRunner {
                 Role role = new Role();
                 role.setRoleType(roleString.toUpperCase());
                 roleRepository.save(role);
-                LOGGER.info("Role {} were added.", roleString);
+                LOG.info("Role {} were added.", roleString);
             } else {
-                LOGGER.info("Role {} already exists in DB", roleString);
+                LOG.info("Role {} already exists in DB", roleString);
             }
         });
     }

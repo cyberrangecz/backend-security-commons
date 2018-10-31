@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.JsonObject;
 import org.mitre.oauth2.introspectingfilter.service.IntrospectionAuthorityGranter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -77,7 +75,6 @@ public class CustomAuthorityGranter {
 	public class DevCustomAuthorityGranter implements IntrospectionAuthorityGranter {
 		@Value("#{'${spring.profiles.dev.roles}'.split(',')}")
 		private Set<String> roles;
-		private final Logger LOG = LoggerFactory.getLogger(DevCustomAuthorityGranter.class);
 		@Autowired
 		public DevCustomAuthorityGranter() {}
 

@@ -36,19 +36,19 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role getById(long id) throws CommonsServiceException {
+    public Role getById(long id) {
 			Optional<Role> optionalRole = roleRepository.findById(id);
 			Role r = optionalRole.orElseThrow(() -> new CommonsServiceException("Role with id " + id + " could not be found"));
-			LOG.info(r + " loaded");
+			LOG.info("{} loaded.", r);
 			return r;
     }
 
     @Override
-    public Role getByRoleType(String roleType) throws CommonsServiceException {
+    public Role getByRoleType(String roleType) {
 			Assert.hasLength(roleType, "Input role type must not be null");
 			Optional<Role> optionalRole = roleRepository.findByRoleType(roleType);
 			Role r = optionalRole.orElseThrow(() -> new CommonsServiceException("Role with role type " + roleType + " could not be found"));
-			LOG.info(r + " loaded");
+			LOG.info("{} loaded.", r);
 			return r;
     }
 
@@ -73,7 +73,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void removeRoleFromGroup(long roleId, long idmGroupId) throws CommonsServiceException {
+    public void removeRoleFromGroup(long roleId, long idmGroupId) {
 			Optional<Role> optionalRoleToBeRemoved = roleRepository.findById(roleId);
 			Role role = optionalRoleToBeRemoved.orElseThrow(() -> new CommonsServiceException("Input role with id " + roleId + " cannot be found"));
 
@@ -82,10 +82,10 @@ public class RoleServiceImpl implements RoleService {
 			idmGroupRef.removeRole(role);
 			if (idmGroupRef.getRoles().isEmpty()) {
 					idmGroupRefRepository.delete(idmGroupRef);
-					LOG.info("Role " + role.getRoleType() + " has been removed from group and group has been deleted because has no role.");
+					LOG.info("Role {} has been removed from group and group has been deleted because has no role.", role.getRoleType());
 			} else {
 					idmGroupRefRepository.save(idmGroupRef);
-					LOG.info("Role " + role.getRoleType() + " has been removed from group.");
+					LOG.info("Role {} has been removed from group.", role.getRoleType());
 			}
     }
 

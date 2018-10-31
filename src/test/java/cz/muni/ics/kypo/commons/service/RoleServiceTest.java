@@ -1,12 +1,12 @@
 package cz.muni.ics.kypo.commons.service;
 
 import com.querydsl.core.types.Predicate;
-import cz.muni.ics.kypo.commons.service.config.ServiceCommonsConfigTest;
 import cz.muni.ics.kypo.commons.service.exceptions.CommonsServiceException;
 import cz.muni.ics.kypo.commons.persistence.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.persistence.model.Role;
 import cz.muni.ics.kypo.commons.persistence.repository.IDMGroupRefRepository;
 import cz.muni.ics.kypo.commons.persistence.repository.RoleRepository;
+import cz.muni.ics.kypo.commons.service.impl.RoleServiceImpl;
 import cz.muni.ics.kypo.commons.service.interfaces.RoleService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,39 +16,27 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.util.*;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = RoleService.class)
-@ContextConfiguration(classes = {ServiceCommonsConfigTest.class})
 public class RoleServiceTest {
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
 
-	@Autowired
 	private RoleService roleService;
 
-	@MockBean
+	@Mock
 	private RoleRepository roleRepository;
 
-	@MockBean
+	@Mock
 	IDMGroupRefRepository groupRefRepository;
 
 	private Role role1, role2;
@@ -60,6 +48,8 @@ public class RoleServiceTest {
 
 	@Before
 	public void init() {
+		MockitoAnnotations.initMocks(this);
+		roleService = new RoleServiceImpl(roleRepository, groupRefRepository);
 		role1 = new Role();
 		role1.setId(1L);
 		role1.setRoleType("ADMINISTRATOR");

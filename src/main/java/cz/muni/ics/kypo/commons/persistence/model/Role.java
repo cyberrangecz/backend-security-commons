@@ -50,4 +50,8 @@ public class Role {
 		result = 31 * result + roleType.hashCode();
 		return result;
 	}
+
+	@Override public String toString() {
+		return "Role{" + "id=" + id + ", roleType='" + roleType + '\'' + '}';
+	}
 }
