@@ -192,7 +192,7 @@
                 <configuration>
                     <sqlMigrationSeparator>__</sqlMigrationSeparator>
                     <locations>
-                        <location>filesystem:src/main/resources/db/migration</location>
+                        <location>classpath:db.migration</location>
                     </locations>
                     <url>${jdbc.url}</url>
                     <user>${jdbc.username}</user>

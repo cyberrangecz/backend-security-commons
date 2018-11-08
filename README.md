@@ -6,6 +6,13 @@ First install project with command bellow:
 ```
 mvn install
 ```
+Then migrate tables from security commons to your project:
+```
+mvn flyway:migrate -Djdbc.url=jdbc:postgresql://{url to DB of your project}/training -Djdbc.username={username in DB} -Djdbc.password={password to DB}
+```
+WARN!!!     
+"**In your project use version of sql file equal to 2 or higher.**"
+WARN!!! 
 
 Add this Maven dependency to your POM in persistence module: 
 ```        
@@ -14,30 +21,6 @@ Add this Maven dependency to your POM in persistence module:
     <artifactId>kypo2-security-commons</artifactId>
     <version>${kypo2-security-commons-actual-version}</version>
 </dependency>
-```
-
-add plugin: 
-```
-<plugin>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-maven-plugin</artifactId>
-				<configuration>
-					<sqlMigrationSeparator>__</sqlMigrationSeparator>
-					<locations>
-						<location>classpath:db.migration</location>
-					</locations>
-					<url>${jdbc.url}</url>
-					<user>${jdbc.username}</user>
-					<password>${jdbc.password}</password>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.postgresql</groupId>
-						<artifactId>postgresql</artifactId>
-						<version>${postgresql.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
 ```
 NOTE: Change version to currently released version of kypo2-rest-commons.
 
