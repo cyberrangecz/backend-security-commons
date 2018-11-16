@@ -7,9 +7,7 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
- *
  * @author Dominik Pilar (445537)
- *
  */
 @Configuration
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.persistence.model", "cz.muni.ics.kypo.commons.persistence.repository"})

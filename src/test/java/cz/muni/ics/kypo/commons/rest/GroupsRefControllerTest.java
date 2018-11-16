@@ -1,8 +1,12 @@
 package cz.muni.ics.kypo.commons.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.muni.ics.kypo.commons.rest.controllers.GroupsRefController;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import cz.muni.ics.kypo.commons.facade.api.dto.RoleDTO;
+import cz.muni.ics.kypo.commons.facade.interfaces.RoleFacade;
+import cz.muni.ics.kypo.commons.rest.controllers.GroupsRestController;
 import cz.muni.ics.kypo.commons.facade.exception.CommonsFacadeException;
+import cz.muni.ics.kypo.commons.rest.controllers.RoleRestController;
 import cz.muni.ics.kypo.commons.rest.exceptions.ResourceNotModifiedException;
 import cz.muni.ics.kypo.commons.facade.interfaces.IDMGroupRefFacade;
 import org.junit.Assert;
@@ -21,58 +25,91 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 import java.io.IOException;
 import java.util.Optional;
+
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 public class GroupsRefControllerTest {
 
+    private MockMvc mockMvc;
+    @Mock
+    private RoleFacade roleFacade;
+    @Mock
+    private IDMGroupRefFacade groupRefFacade;
+    private GroupsRestController groupsRefController;
+    private RoleDTO roleDTO;
+    private int page, size;
 
-	private MockMvc mockMvc;
-	@Mock
-	private IDMGroupRefFacade groupRefFacade;
+    @Before
+    public void init() throws RuntimeException {
+        MockitoAnnotations.initMocks(this);
+        ObjectMapper obj = new ObjectMapper();
+        obj.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 
-	private GroupsRefController groupsRefController;
+        groupsRefController = new GroupsRestController(groupRefFacade, roleFacade, obj);
 
+        page = 0;
+        size = 10;
 
-	@Before
-	public void init() throws RuntimeException {
-		MockitoAnnotations.initMocks(this);
-		groupsRefController = new GroupsRefController(groupRefFacade);
-		this.mockMvc = MockMvcBuilders.standaloneSetup(groupsRefController)
-				.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver(),
-						new QuerydslPredicateArgumentResolver(new QuerydslBindingsFactory(SimpleEntityPathResolver.INSTANCE), Optional.empty()))
-				.setMessageConverters(new MappingJackson2HttpMessageConverter()).build();
-	}
-	@Test
-	public void contextLoads() {
-		Assert.assertNotNull(groupsRefController);
-	}
-
-
-	@Test
-	public void deleteGroupRef() throws Exception {
-
-		mockMvc.perform(MockMvcRequestBuilders.delete(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{id}", 1L)
-				.contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk());
-	}
-
-	@Test
-	public void deleteGroupRefWithFacadeException() throws Exception {
-		willThrow(CommonsFacadeException.class).given(groupRefFacade).delete(ArgumentMatchers.anyLong());
-		Exception exception = mockMvc.perform(MockMvcRequestBuilders.delete(ApiEndpointsSecurityCommons.GROUPS_REF_URL + "/{id}", 1L)
-				.contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(MockMvcResultMatchers.status().isNotModified())
-				.andReturn().getResolvedException();
-		Assert.assertEquals(ResourceNotModifiedException.class, exception.getClass());
-	}
+        roleDTO = new RoleDTO();
+        roleDTO.setId(1L);
+        roleDTO.setRoleType("GUEST");
 
 
-	private static String convertObjectToJsonBytes(Object object) throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.writeValueAsString(object);
-	}
+        this.mockMvc = MockMvcBuilders.standaloneSetup(groupsRefController)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver(),
+                        new QuerydslPredicateArgumentResolver(new QuerydslBindingsFactory(SimpleEntityPathResolver.INSTANCE), Optional.empty()))
+                .setMessageConverters(new MappingJackson2HttpMessageConverter()).build();
+    }
+
+    @Test
+    public void contextLoads() {
+        Assert.assertNotNull(groupsRefController);
+    }
+
+    @Test
+    public void deleteGroupRef() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/groups" + "/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteGroupRefWithFacadeException() throws Exception {
+        willThrow(CommonsFacadeException.class).given(groupRefFacade).delete(ArgumentMatchers.anyLong());
+        Exception exception = mockMvc.perform(MockMvcRequestBuilders.delete("/groups" + "/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.status().isNotModified())
+                .andReturn().getResolvedException();
+        Assert.assertEquals(ResourceNotModifiedException.class, exception.getClass());
+    }
+
+    @Test
+    public void testRemoveRoleFromGroupRef() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/groups" + "/{groupId}/roles/{roleId}", 1L, 1L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        BDDMockito.then(roleFacade).should().removeRoleFromGroup(1L, 1L);
+    }
+
+    @Test
+    public void testRemoveRoleFromGroupRefWithFacadeException() throws Exception {
+        willThrow(CommonsFacadeException.class).given(roleFacade).removeRoleFromGroup(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong());
+        Exception exception = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/groups" + "/{groupId}/roles/{roleId}", 1L, 1L)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.status().isNotModified())
+                .andReturn().getResolvedException();
+
+        Assert.assertEquals(ResourceNotModifiedException.class, exception.getClass());
+    }
+
+    private static String convertObjectToJsonBytes(Object object) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(object);
+    }
 }

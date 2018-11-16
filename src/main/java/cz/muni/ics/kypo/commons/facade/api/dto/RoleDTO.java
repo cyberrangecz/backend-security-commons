@@ -2,40 +2,48 @@ package cz.muni.ics.kypo.commons.facade.api.dto;
 
 public class RoleDTO {
 
-	private Long id;
-	private String roleType;
+    private Long id;
+    private String roleType;
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getRoleType() {
-		return roleType;
-	}
+    public String getRoleType() {
+        return roleType;
+    }
 
-	public void setRoleType(String roleType) {
-		this.roleType = roleType;
-	}
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public String toString() {
+        return "RoleDTO{" +
+                "id=" + id +
+                ", roleType='" + roleType + '\'' +
+                '}';
+    }
 
-		RoleDTO roleDTO = (RoleDTO) o;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-		if (id != null ? !id.equals(roleDTO.id) : roleDTO.id != null) return false;
-		return roleType != null ? roleType.equals(roleDTO.roleType) : roleDTO.roleType == null;
-	}
+        RoleDTO roleDTO = (RoleDTO) o;
 
-	@Override
-	public int hashCode() {
-		int result = id != null ? id.hashCode() : 0;
-		result = 31 * result + (roleType != null ? roleType.hashCode() : 0);
-		return result;
-	}
+        if (id != null ? !id.equals(roleDTO.id) : roleDTO.id != null) return false;
+        return roleType != null ? roleType.equals(roleDTO.roleType) : roleDTO.roleType == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (roleType != null ? roleType.hashCode() : 0);
+        return result;
+    }
 }
