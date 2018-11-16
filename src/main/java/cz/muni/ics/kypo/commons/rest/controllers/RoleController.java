@@ -58,16 +58,16 @@ import static cz.muni.ics.kypo.commons.rest.ApiEndpointsSecurityCommons.ROLES_UR
 
 
 		@ApiOperation(httpMethod = "GET",
-				value = "Get role by role type.",
+				value = "Get role by Id.",
 				response = RoleDTO.class,
-				nickname = "findRoleByRoleType",
+				nickname = "findRoleById",
 				produces = "application/json",
 				authorizations = {
 						@Authorization(value = "sampleoauth",
 								scopes = {
 										@AuthorizationScope(
-												scope = "find role by role type",
-												description = "allows returning role by role type."
+												scope = "find role by id",
+												description = "allows returning role by id."
 										)
 								}
 						)
@@ -77,10 +77,10 @@ import static cz.muni.ics.kypo.commons.rest.ApiEndpointsSecurityCommons.ROLES_UR
 				@ApiResponse(code = 404, message = "The requested resource was not found.")
 		})
 		@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-		public ResponseEntity<Object> getRoleById(@ApiParam(name = "Role type") @PathVariable("id") Long roleId,
-				@ApiParam(value = "Fields which should be returned in REST API response", required = false)
-				@RequestParam(value = "fields", required = false) String fields) {
-			LOG.debug("findRoleByRoleType({},{})", roleId, fields);
+		public ResponseEntity<Object> getRoleById(@ApiParam(value = "Role Id") @PathVariable("id") Long roleId,
+												  @ApiParam(value = "Fields which should be returned in REST API response", required = false)
+												  @RequestParam(value = "fields", required = false) String fields) {
+			LOG.debug("findRoleByiId({},{})", roleId, fields);
 			try {
 				RoleDTO r = roleFacade.getById(roleId);
 				Squiggly.init(objectMapper, fields);
