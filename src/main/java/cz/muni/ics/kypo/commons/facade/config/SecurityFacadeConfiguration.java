@@ -14,15 +14,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @Import(SecurityServiceConfig.class)
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.facade.impl", "cz.muni.ics.kypo.commons.facade.interfaces",
-		"cz.muni.ics.kypo.commons.facade.mapping"})
+        "cz.muni.ics.kypo.commons.facade.mapping"})
 public class SecurityFacadeConfiguration {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SecurityFacadeConfiguration.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SecurityFacadeConfiguration.class);
 
-	@Bean
-	public ModelMapper modelMapper() {
-		LOG.debug("modelMapper()");
-		return new ModelMapper();
-	}
+    @Bean
+    public ModelMapper modelMapper() {
+        LOG.debug("modelMapper()");
+        return new ModelMapper();
+    }
 
 }

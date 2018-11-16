@@ -11,45 +11,46 @@ import java.util.Set;
 
 public interface RoleService {
 
-	/**
-	 * Returns role by id
-	 *
-	 * @param id of role
-	 * @return role with given id
-	 * @throws CommonsServiceException if role could not be found
-	 */
-	Role getById(long id);
+    /**
+     * Returns role by id
+     *
+     * @param id of role
+     * @return role with given id
+     * @throws CommonsServiceException if role could not be found
+     */
+    Role getById(long id);
 
-	/**
-	 * Return role by role type
-	 *
-	 * @param roleType of role
-	 * @return role with given roleType
-	 * @throws CommonsServiceException when role with given role type could not be found
-	 */
-	Role getByRoleType(String roleType);
+    /**
+     * Return role by role type
+     *
+     * @param roleType of role
+     * @return role with given roleType
+     * @throws CommonsServiceException when role with given role type could not be found
+     */
+    Role getByRoleType(String roleType);
 
-	/**
-	 * Returns all roles
-	 *
-	 * @return all roles
-	 */
-	Page<Role> getAllRoles(Predicate predicate, Pageable pageable);
+    /**
+     * Returns all roles
+     *
+     * @return all roles
+     */
+    Page<Role> getAllRoles(Predicate predicate, Pageable pageable);
 
-	/**
-	 * Assign role to group.
-	 * @param idmGroupId id of idm group ref to assign roles to
-	 * @param roleId type of role to be assigned to group
-	 * @throws CommonsServiceException
-	 */
-	void assignRoleToGroup(long roleId, long idmGroupId);
+    /**
+     * Assign role to group.
+     *
+     * @param idmGroupId id of idm group ref to assign roles to
+     * @param roleId     type of role to be assigned to group
+     * @throws CommonsServiceException
+     */
+    void assignRoleToGroup(long roleId, long idmGroupId);
 
-	/**
-	 * Returns set of roles of given groups
-	 *
-	 * @return roles
-	 */
-	Set<Role> getRolesOfGroups(List<Long> groupsIds);
+    /**
+     * Returns set of roles of given groups
+     *
+     * @return roles
+     */
+    Set<Role> getRolesOfGroups(List<Long> groupsIds);
 
-	void removeRoleFromGroup(long roleId, long idmGroupId);
+    void removeRoleFromGroup(long roleId, long idmGroupId);
 }

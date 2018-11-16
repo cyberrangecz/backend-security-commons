@@ -1,6 +1,6 @@
 package cz.muni.ics.kypo.commons.service.exceptions;
 
-public class CommonsServiceException extends RuntimeException{
+public class CommonsServiceException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

@@ -22,25 +22,25 @@ import java.util.Set;
 @EnableSwagger2
 public class SwaggerConfig {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SwaggerConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SwaggerConfig.class);
 
-	@Value("${kypo.idp.4oauth.authorizationURI}")
-	private String authorizationURI;
+    @Value("${kypo.idp.4oauth.authorizationURI}")
+    private String authorizationURI;
 
-	@Value("${kypo.idp.4oauth.client.clientId}")
-	private String clientIdOfClient;
+    @Value("${kypo.idp.4oauth.client.clientId}")
+    private String clientIdOfClient;
 
-	@Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
-	private Set<String> scopes;
+    @Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
+    private Set<String> scopes;
 
-	private static String NAME_OF_TOKEN = "bearer";
+    private static String NAME_OF_TOKEN = "bearer";
 
-	private static String NAME_OF_SECURITY_SCHEME = "KYPO";
+    private static String NAME_OF_SECURITY_SCHEME = "KYPO";
 
-	@Bean
-	public Docket api() {
-		LOG.debug("SwaggerConfig -> api()");
-		// @formatter:off
+    @Bean
+    public Docket api() {
+        LOG.debug("SwaggerConfig -> api()");
+        // @formatter:off
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("public-api")
                 .apiInfo(apiInfo()).useDefaultResponseMessages(false)
@@ -51,54 +51,54 @@ public class SwaggerConfig {
                 .securitySchemes(Arrays.asList(securityScheme()))
                 .securityContexts(Arrays.asList(securityContext()));
         // @formatter:on
-	}
+    }
 
-	private ApiInfo apiInfo() {
-		LOG.debug("SwaggerConfig -> apiInfo()");
-		// @formatter:off
+    private ApiInfo apiInfo() {
+        LOG.debug("SwaggerConfig -> apiInfo()");
+        // @formatter:off
         return new ApiInfoBuilder()
                 .title("REST API documentation")
                 .description("Developed By CSIRT team")
                 .termsOfServiceUrl("Licensed by CSIRT team")
                 .build();
         // @formatter:on
-	}
+    }
 
-	@Bean
-	public SecurityConfiguration security() {
-		return SecurityConfigurationBuilder.builder()
-				.clientId(clientIdOfClient)
-				.scopeSeparator(" ")
-				.build();
-	}
+    @Bean
+    public SecurityConfiguration security() {
+        return SecurityConfigurationBuilder.builder()
+                .clientId(clientIdOfClient)
+                .scopeSeparator(" ")
+                .build();
+    }
 
-	private SecurityScheme securityScheme() {
-		GrantType grantType = new ImplicitGrantBuilder()
-				.loginEndpoint(new LoginEndpoint(authorizationURI))
-				.tokenName(NAME_OF_TOKEN)
-				.build();
+    private SecurityScheme securityScheme() {
+        GrantType grantType = new ImplicitGrantBuilder()
+                .loginEndpoint(new LoginEndpoint(authorizationURI))
+                .tokenName(NAME_OF_TOKEN)
+                .build();
 
-		return new OAuthBuilder().name(NAME_OF_SECURITY_SCHEME)
-				.grantTypes(Arrays.asList(grantType))
-				.scopes(Arrays.asList(scopes()))
-				.build();
-	}
+        return new OAuthBuilder().name(NAME_OF_SECURITY_SCHEME)
+                .grantTypes(Arrays.asList(grantType))
+                .scopes(Arrays.asList(scopes()))
+                .build();
+    }
 
-	private AuthorizationScope[] scopes() {
-		AuthorizationScope[] authorizationScopes = new AuthorizationScope[scopes.size()];
-		int i = 0;
-		for (String scope : scopes) {
-			authorizationScopes[i] = new AuthorizationScope(scope, "");
-			i++;
-		}
-		return authorizationScopes;
-	}
+    private AuthorizationScope[] scopes() {
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[scopes.size()];
+        int i = 0;
+        for (String scope : scopes) {
+            authorizationScopes[i] = new AuthorizationScope(scope, "");
+            i++;
+        }
+        return authorizationScopes;
+    }
 
-	private SecurityContext securityContext() {
-		return SecurityContext.builder()
-				.securityReferences(
-						Arrays.asList(new SecurityReference(NAME_OF_SECURITY_SCHEME, scopes())))
-				.forPaths(PathSelectors.any())
-				.build();
-	}
+    private SecurityContext securityContext() {
+        return SecurityContext.builder()
+                .securityReferences(
+                        Arrays.asList(new SecurityReference(NAME_OF_SECURITY_SCHEME, scopes())))
+                .forPaths(PathSelectors.any())
+                .build();
+    }
 }

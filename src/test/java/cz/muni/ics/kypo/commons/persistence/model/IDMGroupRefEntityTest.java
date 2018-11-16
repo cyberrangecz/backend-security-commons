@@ -19,31 +19,23 @@ import static org.junit.Assert.assertEquals;
 @Import(PersistenceConfigTest.class)
 public class IDMGroupRefEntityTest {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
+    @Autowired
+    private TestEntityManager entityManager;
 
-	@Autowired
-	private TestEntityManager entityManager;
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
-
-    /*@Test
-    public void createWhenIdmGroupIdIsNullShouldThrowException() {
-        thrown.expect(PersistenceException.class);
+    @Test
+    public void saveShouldPersistData() {
         IDMGroupRef groupRef = new IDMGroupRef();
-        this.entityManager.persistFlushFind(groupRef);
-    }*/
-
-	@Test
-	public void saveShouldPersistData() {
-		IDMGroupRef groupRef = new IDMGroupRef();
-		groupRef.setIdmGroupId(2L);
-		IDMGroupRef g = this.entityManager.persistFlushFind(groupRef);
-		assertEquals(2L, g.getIdmGroupId());
-	}
+        groupRef.setIdmGroupId(2L);
+        IDMGroupRef g = this.entityManager.persistFlushFind(groupRef);
+        assertEquals(2L, g.getIdmGroupId());
+    }
 
 
 }

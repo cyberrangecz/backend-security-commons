@@ -4,13 +4,13 @@ import java.util.List;
 
 public class RolesWrapper {
 
-	private List<String> roles;
+    private List<String> roles;
 
-	public List<String> getRoles() {
-			return roles;
-	}
+    public List<String> getRoles() {
+        return roles;
+    }
 
-	public void setRoles(List<String> roles) {
-			this.roles = roles;
-	}
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
 }
