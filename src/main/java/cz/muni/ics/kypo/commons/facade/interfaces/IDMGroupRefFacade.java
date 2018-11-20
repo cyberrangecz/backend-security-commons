@@ -2,7 +2,7 @@ package cz.muni.ics.kypo.commons.facade.interfaces;
 
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.facade.api.PageResultResource;
-import cz.muni.ics.kypo.commons.facade.api.dto.GroupsRefDTO;
+import cz.muni.ics.kypo.commons.facade.api.dto.IDMGroupRefDTO;
 import cz.muni.ics.kypo.commons.facade.exception.CommonsFacadeException;
 import org.springframework.data.domain.Pageable;
 
@@ -19,5 +19,5 @@ public interface IDMGroupRefFacade {
      */
     void delete(Long groupRefId);
 
-    PageResultResource<GroupsRefDTO> getAllGroups(Predicate predicate, Pageable pageable);
+    PageResultResource<IDMGroupRefDTO> getAllGroups(Predicate predicate, Pageable pageable);
 }

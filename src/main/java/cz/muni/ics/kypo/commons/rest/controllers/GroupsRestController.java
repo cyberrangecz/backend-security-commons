@@ -6,12 +6,11 @@ import com.github.bohnman.squiggly.Squiggly;
 import com.github.bohnman.squiggly.util.SquigglyUtils;
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.facade.api.PageResultResource;
-import cz.muni.ics.kypo.commons.facade.api.dto.GroupsRefDTO;
+import cz.muni.ics.kypo.commons.facade.api.dto.IDMGroupRefDTO;
 import cz.muni.ics.kypo.commons.facade.api.dto.RoleDTO;
 import cz.muni.ics.kypo.commons.facade.exception.CommonsFacadeException;
 import cz.muni.ics.kypo.commons.facade.interfaces.RoleFacade;
 import cz.muni.ics.kypo.commons.persistence.model.IDMGroupRef;
-import cz.muni.ics.kypo.commons.persistence.model.Role;
 import cz.muni.ics.kypo.commons.rest.exceptions.ResourceNotFoundException;
 import cz.muni.ics.kypo.commons.rest.exceptions.ResourceNotModifiedException;
 import cz.muni.ics.kypo.commons.facade.interfaces.IDMGroupRefFacade;
@@ -27,9 +26,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author Pavel Seda
@@ -73,7 +69,7 @@ public class GroupsRestController {
             @RequestParam(value = "fields", required = false) String fields) {
         LOG.debug("findRolesOfGroups({})", fields);
         try {
-            PageResultResource<GroupsRefDTO> groupResource = groupFacade.getAllGroups(predicate, pageable);
+            PageResultResource<IDMGroupRefDTO> groupResource = groupFacade.getAllGroups(predicate, pageable);
             Squiggly.init(objectMapper, fields);
             return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, groupResource), HttpStatus.OK);
         } catch (CommonsFacadeException ex) {
