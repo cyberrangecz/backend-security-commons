@@ -6,8 +6,9 @@ import cz.muni.ics.kypo.commons.facade.api.dto.RoleDTO;
 import cz.muni.ics.kypo.commons.facade.exception.CommonsFacadeException;
 import cz.muni.ics.kypo.commons.service.exceptions.CommonsServiceException;
 import cz.muni.ics.kypo.commons.facade.interfaces.RoleFacade;
-import cz.muni.ics.kypo.commons.facade.mapping.BeanMapping;
+import cz.muni.ics.kypo.commons.facade.mapping.mapstruct.RoleMapper;
 import cz.muni.ics.kypo.commons.persistence.model.Role;
+import cz.muni.ics.kypo.commons.service.exceptions.CommonsServiceException;
 import cz.muni.ics.kypo.commons.service.interfaces.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,64 +25,64 @@ import java.util.Set;
 @Transactional
 public class RoleFacadeImpl implements RoleFacade {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RoleFacadeImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RoleFacadeImpl.class);
 
-    private RoleService roleService;
-    private BeanMapping beanMapping;
+	private RoleService roleService;
+	private RoleMapper roleMapper;
 
-    @Autowired
-    public RoleFacadeImpl(RoleService roleService, BeanMapping beanMapping) {
-        this.roleService = roleService;
-        this.beanMapping = beanMapping;
-    }
+	@Autowired
+	public RoleFacadeImpl(RoleService roleService, RoleMapper roleMapper) {
+		this.roleService = roleService;
+		this.roleMapper = roleMapper;
+	}
 
-    @Override
-    public RoleDTO getById(long id) {
-        try {
-            Role role = roleService.getById(id);
-            LOG.info("Role with id: {} has been loaded.", id);
-            return beanMapping.mapTo(role, RoleDTO.class);
-        } catch (CommonsServiceException ex) {
-            LOG.error("Error while loading role with id {}.", id);
-            throw new CommonsFacadeException(ex.getMessage());
-        }
-    }
+	@Override
+	public RoleDTO getById(long id) {
+		try {
+			Role role = roleService.getById(id);
+			LOG.info("Role with id: {} has been loaded.", id);
+			return roleMapper.mapToRoleDTO(role);
+		} catch(CommonsServiceException ex) {
+			LOG.error("Error while loading role with id {}.", id);
+			throw new CommonsFacadeException(ex.getMessage());
+		}
+	}
 
-    @Override
-    public RoleDTO getByRoleType(String roleType) {
-        try {
-            Role role = roleService.getByRoleType(roleType);
-            LOG.info("Role with role type: {} has been loaded.", roleType);
-            return beanMapping.mapTo(role, RoleDTO.class);
-        } catch (CommonsServiceException ex) {
-            LOG.error("Error while loading role with role type: {}.", roleType);
-            throw new CommonsFacadeException(ex.getMessage());
-        }
-    }
+	@Override
+	public RoleDTO getByRoleType(String roleType) {
+		try {
+			Role role = roleService.getByRoleType(roleType);
+			LOG.info("Role with role type: {} has been loaded.", roleType);
+			return roleMapper.mapToRoleDTO(role);
+		} catch (CommonsServiceException ex) {
+			LOG.error("Error while loading role with role type: {}.", roleType);
+			throw new CommonsFacadeException(ex.getMessage());
+		}
+	}
 
-    @Override
-    public PageResultResource<RoleDTO> getAllRoles(Predicate predicate, Pageable pageable) {
-        try {
-            Page<Role> roles = roleService.getAllRoles(predicate, pageable);
-            LOG.info("Roles has been loaded.");
-            return beanMapping.mapToPageResultDTO(roles, RoleDTO.class);
-        } catch (CommonsServiceException ex) {
-            LOG.error("Error while loading roles.");
-            throw new CommonsFacadeException(ex.getMessage());
-        }
-    }
+	@Override
+	public PageResultResource<RoleDTO> getAllRoles(Predicate predicate, Pageable pageable) {
+		try {
+			Page<Role> roles = roleService.getAllRoles(predicate,pageable);
+			LOG.info("Roles has been loaded.");
+			return roleMapper.mapToPageResultRoleDTO(roles);
+		} catch (CommonsServiceException ex) {
+			LOG.error("Error while loading roles.");
+			throw new CommonsFacadeException(ex.getMessage());
+		}
+	}
 
-    @Override
-    public Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds) {
-        try {
-            Set<Role> roles = roleService.getRolesOfGroups(groupsIds);
-            LOG.info("Roles of given groups with ids: {} have been loaded.", groupsIds);
-            return beanMapping.mapToSet(roles, RoleDTO.class);
-        } catch (CommonsServiceException ex) {
-            LOG.error("Error while loading roles of groups with ids: {}.", groupsIds);
-            throw new CommonsFacadeException(ex.getMessage());
-        }
-    }
+	@Override
+	public Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds) {
+		try {
+			Set<Role> roles = roleService.getRolesOfGroups(groupsIds);
+			LOG.info("Roles of given groups with ids: {} have been loaded.", groupsIds);
+			return roleMapper.mapToRoleDTOSet(roles);
+		} catch (CommonsServiceException ex) {
+			LOG.error("Error while loading roles of groups with ids: {}.", groupsIds);
+			throw new CommonsFacadeException(ex.getMessage());
+		}
+	}
 
     @Override
     public void assignRoleToGroup(long roleId, long idmGroupId) {

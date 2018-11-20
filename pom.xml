@@ -135,6 +135,11 @@
             <artifactId>squiggly-filter-jackson</artifactId>
             <version>${squiggly.filter.jackson.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-jdk8</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -157,6 +162,8 @@
         <modelmapper.version>0.7.5</modelmapper.version>
         <jackson.version>2.9.5</jackson.version>
         <swagger-codegen.version>2.1.4</swagger-codegen.version>
+
+        <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
     </properties>
 
     <build>
@@ -213,6 +220,23 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
 

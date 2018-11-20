@@ -4,6 +4,7 @@ import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.facade.impl.IDMGroupRefFacadeImpl;
 import cz.muni.ics.kypo.commons.facade.interfaces.IDMGroupRefFacade;
 import cz.muni.ics.kypo.commons.facade.mapping.SecurityBeanMappingImpl;
+import cz.muni.ics.kypo.commons.facade.mapping.mapstruct.IDMGroupRefMapperImpl;
 import cz.muni.ics.kypo.commons.persistence.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.service.interfaces.IDMGroupRefService;
 import org.junit.Before;
@@ -32,7 +33,7 @@ public class IDMGroupRefFacadeTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        groupRefFacade = new IDMGroupRefFacadeImpl(groupRefService, new SecurityBeanMappingImpl(new ModelMapper()));
+        groupRefFacade = new IDMGroupRefFacadeImpl(groupRefService, new IDMGroupRefMapperImpl());
 
         groupRef1 = new IDMGroupRef();
         groupRef1.setId(1L);

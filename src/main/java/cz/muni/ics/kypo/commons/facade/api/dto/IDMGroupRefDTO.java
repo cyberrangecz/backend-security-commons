@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * @author Pavel Seda
  */
-public class GroupsRefDTO {
+public class IDMGroupRefDTO {
 
     private Long id;
     private long idmGroupId;
@@ -38,7 +38,7 @@ public class GroupsRefDTO {
 
     @Override
     public String toString() {
-        return "GroupsRefDTO{" +
+        return "IDMGroupRefDTO{" +
                 "id=" + id +
                 ", idmGroupId=" + idmGroupId +
                 ", roles=" + roles +

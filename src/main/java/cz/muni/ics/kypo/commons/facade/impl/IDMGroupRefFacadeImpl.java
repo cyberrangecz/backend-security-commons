@@ -2,13 +2,11 @@ package cz.muni.ics.kypo.commons.facade.impl;
 
 import com.querydsl.core.types.Predicate;
 import cz.muni.ics.kypo.commons.facade.api.PageResultResource;
-import cz.muni.ics.kypo.commons.facade.api.dto.GroupsRefDTO;
-import cz.muni.ics.kypo.commons.facade.api.dto.RoleDTO;
+import cz.muni.ics.kypo.commons.facade.api.dto.IDMGroupRefDTO;
 import cz.muni.ics.kypo.commons.facade.exception.CommonsFacadeException;
 import cz.muni.ics.kypo.commons.facade.interfaces.IDMGroupRefFacade;
-import cz.muni.ics.kypo.commons.facade.mapping.BeanMapping;
+import cz.muni.ics.kypo.commons.facade.mapping.mapstruct.IDMGroupRefMapper;
 import cz.muni.ics.kypo.commons.persistence.model.IDMGroupRef;
-import cz.muni.ics.kypo.commons.persistence.model.Role;
 import cz.muni.ics.kypo.commons.service.exceptions.CommonsServiceException;
 import cz.muni.ics.kypo.commons.service.interfaces.IDMGroupRefService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class IDMGroupRefFacadeImpl implements IDMGroupRefFacade {
 
     private IDMGroupRefService groupRefService;
-    private BeanMapping beanMapping;
+    private IDMGroupRefMapper idmGroupRefMapper;
 
     @Autowired
-    public IDMGroupRefFacadeImpl(IDMGroupRefService groupRefService, BeanMapping beanMapping) {
+    public IDMGroupRefFacadeImpl(IDMGroupRefService groupRefService, IDMGroupRefMapper idmGroupRefMapper) {
         this.groupRefService = groupRefService;
-        this.beanMapping = beanMapping;
+        this.idmGroupRefMapper = idmGroupRefMapper;
     }
 
     @Override
@@ -39,10 +37,10 @@ public class IDMGroupRefFacadeImpl implements IDMGroupRefFacade {
     }
 
     @Override
-    public PageResultResource<GroupsRefDTO> getAllGroups(Predicate predicate, Pageable pageable) {
+    public PageResultResource<IDMGroupRefDTO> getAllGroups(Predicate predicate, Pageable pageable) {
         try {
             Page<IDMGroupRef> groups = groupRefService.getAllGroups(predicate, pageable);
-            return beanMapping.mapToPageResultDTO(groups, GroupsRefDTO.class);
+            return idmGroupRefMapper.mapToPageResultGroupDTO(groups);
         } catch (CommonsServiceException ex) {
             throw new CommonsFacadeException(ex);
         }
