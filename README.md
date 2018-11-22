@@ -67,7 +67,6 @@ spring.profiles.active=DEV
 ### If you want try your project with specific roles you can define them by adding:
 spring.profiles.dev.role={your role/s}
 
-
 # OpenID Connect
 kypo.idp.4oauth.introspectionURI=https://oidc.ics.muni.cz/oidc/introspect
 kypo.idp.4oauth.authorizationURI=https://oidc.ics.muni.cz/oidc/authorize
@@ -80,4 +79,7 @@ kypo.idp.4oauth.scopes=openid, email
 server.url={your server url}
 #for exmample
 server.url=https://localhost:8080/
+
+# Jackson
+spring.jackson.property-naming-strategy=SNAKE_CASE
 ```

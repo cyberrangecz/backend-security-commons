@@ -44,7 +44,7 @@ public class GroupsRestController {
     private ObjectMapper objectMapper;
 
     @Autowired
-    public GroupsRestController(IDMGroupRefFacade groupFacade, @Qualifier("objMapperRESTApi") ObjectMapper objectMapper) {
+    public GroupsRestController(IDMGroupRefFacade groupFacade, ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         this.groupFacade = groupFacade;
     }

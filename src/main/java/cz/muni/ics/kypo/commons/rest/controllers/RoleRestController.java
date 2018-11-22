@@ -41,7 +41,7 @@ public class RoleRestController {
     private ObjectMapper objectMapper;
 
     @Autowired
-    public RoleRestController(RoleFacade roleFacade, @Qualifier("objMapperRESTApi") ObjectMapper objectMapper) {
+    public RoleRestController(RoleFacade roleFacade, ObjectMapper objectMapper) {
         this.roleFacade = roleFacade;
         this.objectMapper = objectMapper;
     }
