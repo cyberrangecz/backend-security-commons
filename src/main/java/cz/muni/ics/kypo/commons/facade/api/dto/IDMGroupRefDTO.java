@@ -9,7 +9,7 @@ import java.util.Set;
 public class IDMGroupRefDTO {
 
     private Long id;
-    private long idmGroupId;
+    private long idmGroupRefId;
     private Set<RoleDTO> roles = new HashSet<>();
 
     public Long getId() {
@@ -21,11 +21,11 @@ public class IDMGroupRefDTO {
     }
 
     public long getIdmGroupId() {
-        return idmGroupId;
+        return idmGroupRefId;
     }
 
     public void setIdmGroupId(long idmGroupId) {
-        this.idmGroupId = idmGroupId;
+        this.idmGroupRefId = idmGroupId;
     }
 
     public Set<RoleDTO> getRoles() {
@@ -40,7 +40,7 @@ public class IDMGroupRefDTO {
     public String toString() {
         return "IDMGroupRefDTO{" +
                 "id=" + id +
-                ", idmGroupId=" + idmGroupId +
+                ", idmGroupId=" + idmGroupRefId +
                 ", roles=" + roles +
                 '}';
     }

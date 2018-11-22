@@ -5,34 +5,30 @@ import cz.muni.ics.kypo.commons.facade.api.PageResultResource;
 import cz.muni.ics.kypo.commons.facade.api.dto.RoleDTO;
 import cz.muni.ics.kypo.commons.facade.exception.CommonsFacadeException;
 import cz.muni.ics.kypo.commons.facade.impl.RoleFacadeImpl;
-import cz.muni.ics.kypo.commons.facade.mapping.SecurityBeanMappingImpl;
-import cz.muni.ics.kypo.commons.facade.mapping.mapstruct.RoleMapperImpl;
+import cz.muni.ics.kypo.commons.facade.mapping.mapstruct.RoleMapper;
 import cz.muni.ics.kypo.commons.service.exceptions.CommonsServiceException;
 import cz.muni.ics.kypo.commons.facade.interfaces.RoleFacade;
 import cz.muni.ics.kypo.commons.persistence.model.IDMGroupRef;
 import cz.muni.ics.kypo.commons.persistence.model.Role;
 import cz.muni.ics.kypo.commons.service.interfaces.RoleService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.BDDMockito.willThrow;
 
 @RunWith(SpringRunner.class)
 public class RoleFacadeTest  {
@@ -54,7 +50,7 @@ public class RoleFacadeTest  {
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		roleFacade = new RoleFacadeImpl(roleService, new RoleMapperImpl());
+		roleFacade = new RoleFacadeImpl(roleService, Mappers.getMapper(RoleMapper.class));
 		role1 = new Role();
 		role1.setId(1L);
 		role1.setRoleType("ADMINISTRATOR");
@@ -62,10 +58,6 @@ public class RoleFacadeTest  {
 		role2 = new Role();
 		role2.setId(2L);
 		role2.setRoleType("GUEST");
-
-		groupRef1 = new IDMGroupRef();
-		groupRef1.setId(1L);
-		groupRef1.setIdmGroupId(1L);
 
 		roleDTO = new RoleDTO();
 		roleDTO.setId(1L);
@@ -120,38 +112,5 @@ public class RoleFacadeTest  {
 		assertEquals(roleDTO, pageResultResource.getContent().get(0));
 	}
 
-	@Test
-	public void testAssignRoleToGroup() {
-		roleFacade.assignRoleToGroup(1L, 1L);
-		BDDMockito.then(roleService).should().assignRoleToGroup(1L, 1L);
-	}
 
-	@Test
-	public void testAssignRoleToGroupWithServiceException() {
-		willThrow(CommonsServiceException.class).given(roleService).assignRoleToGroup(1L,1L);
-		thrown.expect(CommonsFacadeException.class);
-		roleFacade.assignRoleToGroup(1L, 1L);
-	}
-
-	@Test
-	public void testRemoveRoleFromGroup() {
-		roleFacade.removeRoleFromGroup(1L, 1L);
-		BDDMockito.then(roleService).should().removeRoleFromGroup(1L, 1L);
-	}
-
-	@Test
-	public void testRemoveRoleFromGroupWithServiceException() {
-		willThrow(CommonsServiceException.class).given(roleService).removeRoleFromGroup(1L,1L);
-		thrown.expect(CommonsFacadeException.class);
-		roleFacade.removeRoleFromGroup(1L, 1L);
-	}
-
-
-	@Test
-	public void testGetRolesOfGroups() {
-		BDDMockito.given(roleService.getRolesOfGroups(Arrays.asList(1L, 2L))).willReturn(new HashSet<>(Arrays.asList(role1,role2)));
-		Set<RoleDTO> roleDTOS = roleFacade.getRolesOfGroups(Arrays.asList(1L,2L));
-		Assert.assertTrue(roleDTOS.contains(roleDTO));
-		Assert.assertEquals(2, roleDTOS.size());
-	}
 }

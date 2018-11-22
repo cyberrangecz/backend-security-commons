@@ -37,6 +37,7 @@ public class RoleFacadeImpl implements RoleFacade {
 	}
 
 	@Override
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public RoleDTO getById(long id) {
 		try {
 			Role role = roleService.getById(id);
@@ -49,6 +50,7 @@ public class RoleFacadeImpl implements RoleFacade {
 	}
 
 	@Override
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public RoleDTO getByRoleType(String roleType) {
 		try {
 			Role role = roleService.getByRoleType(roleType);
@@ -61,6 +63,7 @@ public class RoleFacadeImpl implements RoleFacade {
 	}
 
 	@Override
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public PageResultResource<RoleDTO> getAllRoles(Predicate predicate, Pageable pageable) {
 		try {
 			Page<Role> roles = roleService.getAllRoles(predicate,pageable);
@@ -72,38 +75,5 @@ public class RoleFacadeImpl implements RoleFacade {
 		}
 	}
 
-	@Override
-	public Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds) {
-		try {
-			Set<Role> roles = roleService.getRolesOfGroups(groupsIds);
-			LOG.info("Roles of given groups with ids: {} have been loaded.", groupsIds);
-			return roleMapper.mapToRoleDTOSet(roles);
-		} catch (CommonsServiceException ex) {
-			LOG.error("Error while loading roles of groups with ids: {}.", groupsIds);
-			throw new CommonsFacadeException(ex.getMessage());
-		}
-	}
 
-    @Override
-    public void assignRoleToGroup(long roleId, long idmGroupId) {
-        try {
-            roleService.assignRoleToGroup(roleId, idmGroupId);
-            LOG.info("Role with id: {} has been assigned to group with id: {}.", roleId, idmGroupId);
-        } catch (CommonsServiceException ex) {
-            LOG.error("Error while assigning role with id: {} to group with id: {}.", roleId, idmGroupId);
-            throw new CommonsFacadeException(ex.getMessage());
-        }
-
-    }
-
-    @Override
-    public void removeRoleFromGroup(long roleId, long idmGroupId) {
-        try {
-            roleService.removeRoleFromGroup(roleId, idmGroupId);
-            LOG.info("Role with id: {} has been removed.", roleId);
-        } catch (CommonsServiceException ex) {
-            LOG.error("Error while removing role with id: {} from group with id: {}.", roleId, idmGroupId);
-            throw new CommonsFacadeException(ex.getMessage());
-        }
-    }
 }
