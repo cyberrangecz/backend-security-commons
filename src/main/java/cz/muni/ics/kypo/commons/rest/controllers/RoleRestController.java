@@ -27,9 +27,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Set;
 
-@Api(value = "/roles",
-        consumes = "application/json"
-)
+@Api(value = "/roles", consumes = "application/json", tags = "Roles")
+@ApiResponses(value = {
+        @ApiResponse(code = 401, message = "Full authentication is required to access this resource.")
+})
 @RestController
 @RequestMapping(path = "/roles")
 public class RoleRestController {
@@ -52,7 +53,9 @@ public class RoleRestController {
             produces = "application/json"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "The requested resource was not found.")
+            @ApiResponse(code = 200, message = "Role loaded.", response = RoleDTO.class),
+            @ApiResponse(code = 404, message = "Role cannot be found."),
+            @ApiResponse(code = 500, message = "Unexpected condition was encountered.")
     })
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getRoleById(@ApiParam(value = "Role Id") @PathVariable("id") Long roleId,
@@ -76,11 +79,12 @@ public class RoleRestController {
             produces = "application/json"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "The requested resource was not found.")
+            @ApiResponse(code = 200, message = "All roles found.", response = RoleDTO.class, responseContainer = "List"),
+            @ApiResponse(code = 500, message = "Unexpected condition was encountered.")
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllRoles(@QuerydslPredicate(root = Role.class) Predicate predicate, Pageable pageable,
-                                              @RequestParam MultiValueMap<String, String> parameters,
+                                              @RequestParam(required = false) MultiValueMap<String, String> parameters,
                                               @ApiParam(value = "Fields which should be returned in REST API response", required = false)
                                               @RequestParam(value = "fields", required = false) String fields) {
         LOG.debug("findAllRoles({})", fields);

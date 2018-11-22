@@ -30,9 +30,10 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author Pavel Seda
  */
-@Api(value = "/groups",
-        consumes = "application/json"
-)
+@Api(value = "/groups", consumes = "application/json", tags = "GroupsRef")
+@ApiResponses(value = {
+        @ApiResponse(code = 401, message = "Full authentication is required to access this resource.")
+})
 @RestController
 @RequestMapping(path = "/groups")
 public class GroupsRestController {
@@ -40,12 +41,10 @@ public class GroupsRestController {
     private static Logger LOG = LoggerFactory.getLogger(GroupsRestController.class);
 
     private IDMGroupRefFacade groupFacade;
-    private RoleFacade roleFacade;
     private ObjectMapper objectMapper;
 
     @Autowired
-    public GroupsRestController(IDMGroupRefFacade groupFacade, RoleFacade roleFacade, @Qualifier("objMapperRESTApi") ObjectMapper objectMapper) {
-        this.roleFacade = roleFacade;
+    public GroupsRestController(IDMGroupRefFacade groupFacade, @Qualifier("objMapperRESTApi") ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         this.groupFacade = groupFacade;
     }
@@ -58,13 +57,14 @@ public class GroupsRestController {
             produces = "application/json"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "The requested resource was not found.")
+            @ApiResponse(code = 200, message = "All groups found.", response = IDMGroupRefDTO.class, responseContainer = "List"),
+            @ApiResponse(code = 500, message = "Unexpected condition was encountered.")
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllGroups(
             @QuerydslPredicate(root = IDMGroupRef.class) Predicate predicate,
             Pageable pageable,
-            @RequestParam MultiValueMap<String, String> parameters,
+            @RequestParam(required = false) MultiValueMap<String, String> parameters,
             @ApiParam(value = "Fields which should be returned in REST API response", required = false)
             @RequestParam(value = "fields", required = false) String fields) {
         LOG.debug("findRolesOfGroups({})", fields);
@@ -83,55 +83,61 @@ public class GroupsRestController {
             produces = "application/json"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "The requested resource was not found.")
+            @ApiResponse(code = 200, message = "Group reference deleted."),
+            @ApiResponse(code = 404, message = "Group reference cannot be found."),
+            @ApiResponse(code = 500, message = "Unexpected condition was encountered.")
     })
     @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteGroupReference(
-            @ApiParam(name = "Id of group whose reference to be deleted") @PathVariable("id") long id) {
+            @ApiParam(value = "Id of group whose reference to be deleted") @PathVariable("id") long id) {
         try {
             groupFacade.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CommonsFacadeException ex) {
-            throw new ResourceNotModifiedException(ex.getLocalizedMessage());
+            throw new ResourceNotFoundException(ex.getLocalizedMessage());
         }
     }
 
-    @ApiOperation(httpMethod = "PUT",
+    @ApiOperation(httpMethod = "DELETE",
             value = "Remove role from group reference.",
             nickname = "removeRoleFromGroupRef",
             produces = "application/json"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 304, message = "The requested resource was not modified.")
+            @ApiResponse(code = 200, message = "Role removed from group."),
+            @ApiResponse(code = 404, message = "Group or role cannot be found ."),
+            @ApiResponse(code = 500, message = "Unexpected condition was encountered.")
     })
     @DeleteMapping(value = "/{groupId}/roles/{roleId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> removeRoleFromGroupRef(@ApiParam(name = "Role Id") @PathVariable long roleId,
-                                                       @ApiParam(name = "IDMGroup Id") @PathVariable long groupId,
+    public ResponseEntity<Void> removeRoleFromGroupRef(@ApiParam(value = "Role Id", required = true) @PathVariable("roleId") long roleId,
+                                                       @ApiParam(value = "IDMGroup Id", required = true) @PathVariable("groupId") long groupId,
                                                        @ApiParam(value = "Fields which should be returned in REST API response", required = false)
                                                        @RequestParam(value = "fields", required = false) String fields) {
         LOG.debug("removeRoleFromGroupRef({},{},{})", roleId, groupId, fields);
         try {
-            roleFacade.removeRoleFromGroup(roleId, groupId);
+            groupFacade.removeRoleFromGroup(roleId, groupId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CommonsFacadeException ex) {
             throw new ResourceNotModifiedException(ex.getLocalizedMessage());
         }
     }
 
-    @ApiOperation(httpMethod = "PUT",
+    @ApiOperation(httpMethod = "POST",
             value = "Assign role to group reference.",
             nickname = "assignRoleToGroupRef",
             produces = "application/json"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 304, message = "The requested resource was not modified.")
+            @ApiResponse(code = 200, message = "Role assigned to group."),
+            @ApiResponse(code = 404, message = "Group or role cannot be found ."),
+            @ApiResponse(code = 500, message = "Unexpected condition was encountered.")
     })
-    @PutMapping(value = "/{groupId}/roles/{roleId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> assignRoleToGroupRef(@ApiParam(name = "Role Id") @PathVariable long roleId,
-                                                     @ApiParam(name = "IDMGroup Id") @PathVariable long groupId) {
+    @PostMapping(value = "/{groupId}/roles/{roleId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> assignRoleToGroupRef(@ApiParam(value = "Role Id") @PathVariable("roleId") long roleId,
+                                                     @ApiParam(value = "IDMGroup Id") @PathVariable("groupId") long groupId) {
         LOG.debug("assignRoleToGroupRef({},{})", roleId, groupId);
         try {
-            roleFacade.assignRoleToGroup(roleId, groupId);
+            groupFacade.assignRoleToGroup(roleId, groupId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CommonsFacadeException ex) {
             throw new ResourceNotModifiedException(ex.getLocalizedMessage());

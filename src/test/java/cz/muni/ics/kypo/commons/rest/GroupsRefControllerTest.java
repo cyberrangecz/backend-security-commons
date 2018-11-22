@@ -7,6 +7,7 @@ import cz.muni.ics.kypo.commons.facade.interfaces.RoleFacade;
 import cz.muni.ics.kypo.commons.rest.controllers.GroupsRestController;
 import cz.muni.ics.kypo.commons.facade.exception.CommonsFacadeException;
 import cz.muni.ics.kypo.commons.rest.controllers.RoleRestController;
+import cz.muni.ics.kypo.commons.rest.exceptions.ResourceNotFoundException;
 import cz.muni.ics.kypo.commons.rest.exceptions.ResourceNotModifiedException;
 import cz.muni.ics.kypo.commons.facade.interfaces.IDMGroupRefFacade;
 import org.junit.Assert;
@@ -29,6 +30,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.io.IOException;
 import java.util.Optional;
 
+import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,7 +52,7 @@ public class GroupsRefControllerTest {
         ObjectMapper obj = new ObjectMapper();
         obj.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 
-        groupsRefController = new GroupsRestController(groupRefFacade, roleFacade, obj);
+        groupsRefController = new GroupsRestController(groupRefFacade, obj);
 
         page = 0;
         size = 10;
@@ -83,9 +85,9 @@ public class GroupsRefControllerTest {
         willThrow(CommonsFacadeException.class).given(groupRefFacade).delete(ArgumentMatchers.anyLong());
         Exception exception = mockMvc.perform(MockMvcRequestBuilders.delete("/groups" + "/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.status().isNotModified())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andReturn().getResolvedException();
-        Assert.assertEquals(ResourceNotModifiedException.class, exception.getClass());
+        Assert.assertEquals(ResourceNotFoundException.class, exception.getClass());
     }
 
     @Test
@@ -93,12 +95,12 @@ public class GroupsRefControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/groups" + "/{groupId}/roles/{roleId}", 1L, 1L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        BDDMockito.then(roleFacade).should().removeRoleFromGroup(1L, 1L);
+        then(groupRefFacade).should().removeRoleFromGroup(1L, 1L);
     }
 
     @Test
     public void testRemoveRoleFromGroupRefWithFacadeException() throws Exception {
-        willThrow(CommonsFacadeException.class).given(roleFacade).removeRoleFromGroup(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong());
+        willThrow(CommonsFacadeException.class).given(groupRefFacade).removeRoleFromGroup(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong());
         Exception exception = mockMvc.perform(
                 MockMvcRequestBuilders.delete("/groups" + "/{groupId}/roles/{roleId}", 1L, 1L)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))

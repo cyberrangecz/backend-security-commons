@@ -36,21 +36,5 @@ public interface RoleService {
      */
     Page<Role> getAllRoles(Predicate predicate, Pageable pageable);
 
-    /**
-     * Assign role to group.
-     *
-     * @param idmGroupId id of idm group ref to assign roles to
-     * @param roleId     type of role to be assigned to group
-     * @throws CommonsServiceException
-     */
-    void assignRoleToGroup(long roleId, long idmGroupId);
 
-    /**
-     * Returns set of roles of given groups
-     *
-     * @return roles
-     */
-    Set<Role> getRolesOfGroups(List<Long> groupsIds);
-
-    void removeRoleFromGroup(long roleId, long idmGroupId);
 }
