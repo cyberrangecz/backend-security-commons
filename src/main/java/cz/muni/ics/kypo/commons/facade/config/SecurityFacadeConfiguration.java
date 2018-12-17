@@ -17,12 +17,4 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "cz.muni.ics.kypo.commons.facade.mapping"})
 public class SecurityFacadeConfiguration {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SecurityFacadeConfiguration.class);
-
-    @Bean
-    public ModelMapper modelMapper() {
-        LOG.debug("modelMapper()");
-        return new ModelMapper();
-    }
-
 }
