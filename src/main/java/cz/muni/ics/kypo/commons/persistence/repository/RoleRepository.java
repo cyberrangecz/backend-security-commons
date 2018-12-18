@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * @author Jan Duda & Pavel Seda
+ */
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long>, QuerydslPredicateExecutor<Role> {
 

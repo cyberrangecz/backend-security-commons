@@ -1,11 +1,11 @@
 package cz.muni.ics.kypo.commons.persistence.exceptions;
 
+/**
+ * @author Pavel Seda
+ */
 public class PersistenceCommonsException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
-
     public PersistenceCommonsException() {
-        super();
     }
 
     public PersistenceCommonsException(String s) {
@@ -18,5 +18,9 @@ public class PersistenceCommonsException extends RuntimeException {
 
     public PersistenceCommonsException(Throwable throwable) {
         super(throwable);
+    }
+
+    public PersistenceCommonsException(String s, Throwable throwable, boolean b, boolean b1) {
+        super(s, throwable, b, b1);
     }
 }

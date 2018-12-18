@@ -1,6 +1,8 @@
 package cz.muni.ics.kypo.commons.facade.impl;
 
 import com.querydsl.core.types.Predicate;
+import cz.muni.ics.kypo.commons.facade.annotations.TransactionalRO;
+import cz.muni.ics.kypo.commons.facade.annotations.TransactionalWO;
 import cz.muni.ics.kypo.commons.facade.api.PageResultResource;
 import cz.muni.ics.kypo.commons.facade.api.dto.IDMGroupRefDTO;
 import cz.muni.ics.kypo.commons.facade.api.dto.RoleDTO;
@@ -43,13 +45,13 @@ public class IDMGroupRefFacadeImpl implements IDMGroupRefFacade {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @TransactionalWO
     public void delete(Long idmGroupId) {
         groupRefService.delete(idmGroupId);
     }
 
     @Override
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    @TransactionalRO
     public PageResultResource<IDMGroupRefDTO> getAllGroups(Predicate predicate, Pageable pageable) {
         try {
             Page<IDMGroupRef> groups = groupRefService.getAllGroups(predicate, pageable);
@@ -60,39 +62,36 @@ public class IDMGroupRefFacadeImpl implements IDMGroupRefFacade {
     }
 
     @Override
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    @TransactionalRO
     public Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds) {
         try {
             Set<Role> roles = groupRefService.getRolesOfGroups(groupsIds);
             LOG.info("Roles of given groups with ids: {} have been loaded.", groupsIds);
             return roleMapper.mapToRoleDTOSet(roles);
         } catch (CommonsServiceException ex) {
-            LOG.error("Error while loading roles of groups with ids: {}.", groupsIds);
             throw new CommonsFacadeException(ex.getMessage());
         }
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @TransactionalWO
     public void assignRoleToGroup(long roleId, long idmGroupId) {
         try {
             groupRefService.assignRoleToGroup(roleId, idmGroupId);
             LOG.info("Role with id: {} has been assigned to group with id: {}.", roleId, idmGroupId);
         } catch (CommonsServiceException ex) {
-            LOG.error("Error while assigning role with id: {} to group with id: {}.", roleId, idmGroupId);
             throw new CommonsFacadeException(ex.getMessage());
         }
 
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @TransactionalWO
     public void removeRoleFromGroup(long roleId, long idmGroupId) {
         try {
             groupRefService.removeRoleFromGroup(roleId, idmGroupId);
             LOG.info("Role with id: {} has been removed.", roleId);
         } catch (CommonsServiceException ex) {
-            LOG.error("Error while removing role with id: {} from group with id: {}.", roleId, idmGroupId);
             throw new CommonsFacadeException(ex.getMessage());
         }
     }

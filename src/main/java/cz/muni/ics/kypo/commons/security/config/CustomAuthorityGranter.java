@@ -32,6 +32,12 @@ import cz.muni.ics.kypo.commons.security.mapping.UserInfoDTO;
 @Component
 public class CustomAuthorityGranter {
 
+    @Bean(name="kypoSecurityCommonsRestTemplate")
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+
     @Profile("PROD")
     @Component
     public class ProductionCustomAuthorityGranter implements IntrospectionAuthorityGranter {
@@ -59,14 +65,10 @@ public class CustomAuthorityGranter {
                         "Logged in user with sub " + login + " could not be found in database and has been created in database.");
             }
             Assert.notEmpty(response.getBody().getRoles(), "No roles for user with login " + login);
-            return response.getBody().getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRole_type()))
+            return response.getBody().getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRoleType()))
                     .collect(Collectors.toList());
         }
 
-        @Bean
-        public RestTemplate restTemplate() {
-            return new RestTemplate();
-        }
     }
 
     @Profile("DEV")
@@ -91,11 +93,6 @@ public class CustomAuthorityGranter {
                 }
             }
             return authorities;
-        }
-
-        @Bean
-        public RestTemplate restTemplate() {
-            return new RestTemplate();
         }
     }
 

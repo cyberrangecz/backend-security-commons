@@ -1,6 +1,5 @@
 package cz.muni.ics.kypo.commons.rest.config;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +17,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Arrays;
 import java.util.Set;
 
+/**
+ * @author Jan Duda & Pavel Seda
+ */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
@@ -40,7 +42,6 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         LOG.debug("SwaggerConfig -> api()");
-        // @formatter:off
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("public-api")
                 .apiInfo(apiInfo()).useDefaultResponseMessages(false)
@@ -50,18 +51,15 @@ public class SwaggerConfig {
                 .build()
                 .securitySchemes(Arrays.asList(securityScheme()))
                 .securityContexts(Arrays.asList(securityContext()));
-        // @formatter:on
     }
 
     private ApiInfo apiInfo() {
         LOG.debug("SwaggerConfig -> apiInfo()");
-        // @formatter:off
         return new ApiInfoBuilder()
                 .title("REST API documentation")
                 .description("Developed By CSIRT team")
                 .termsOfServiceUrl("Licensed by CSIRT team")
                 .build();
-        // @formatter:on
     }
 
     @Bean

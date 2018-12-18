@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * @author Jan Duda & Pavel Seda
+ */
 @Repository
 public interface IDMGroupRefRepository extends JpaRepository<IDMGroupRef, Long>, QuerydslPredicateExecutor<IDMGroupRef> {
 

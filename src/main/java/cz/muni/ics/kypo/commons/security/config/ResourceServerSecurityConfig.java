@@ -37,18 +37,46 @@ import java.util.Set;
 @PropertySource("file:${path.to.config.file}")
 public class ResourceServerSecurityConfig {
 
+    @Value("${kypo.idp.4oauth.introspectionURI}")
+    private String introspectionURI;
+    @Value("${kypo.idp.4oauth.resource.clientId}")
+    private String clientIdOfResource;
+    @Value("${kypo.idp.4oauth.resource.clientSecret}")
+    private String clientSecretResource;
+    @Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
+    private Set<String> scopes;
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
+    public StaticIntrospectionConfigurationService introspectionConfigurationService() {
+        StaticIntrospectionConfigurationService introspectionService = new StaticIntrospectionConfigurationService();
+        introspectionService.setIntrospectionUrl(introspectionURI);
+
+        RegisteredClient client = new RegisteredClient();
+        client.setClientId(clientIdOfResource);
+        client.setClientSecret(clientSecretResource);
+        client.setScope(scopes);
+        introspectionService.setClientConfiguration(client);
+
+        return introspectionService;
+    }
+
+
     @Profile("PROD")
     @Component
     public class ProductionResourceServiceSecurityConfig extends ResourceServerConfigurerAdapter {
 
-        @Value("${kypo.idp.4oauth.introspectionURI}")
-        private String introspectionURI;
-        @Value("${kypo.idp.4oauth.resource.clientId}")
-        private String clientIdOfResource;
-        @Value("${kypo.idp.4oauth.resource.clientSecret}")
-        private String clientSecretResource;
-        @Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
-        private Set<String> scopes;
         @Autowired
         private ProductionCustomAuthorityGranter customAuthorityGranter;
 
@@ -69,17 +97,6 @@ public class ResourceServerSecurityConfig {
                     .authenticated();
         }
 
-        @Bean
-        public CorsConfigurationSource corsConfigurationSource() {
-            CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList("*"));
-            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-            configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
-            configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
-            return source;
-        }
 
         @Bean
         public ResourceServerTokenServices tokenServices() {
@@ -89,33 +106,12 @@ public class ResourceServerSecurityConfig {
             return tokenService;
         }
 
-        @Bean
-        public StaticIntrospectionConfigurationService introspectionConfigurationService() {
-            StaticIntrospectionConfigurationService introspectionService = new StaticIntrospectionConfigurationService();
-            introspectionService.setIntrospectionUrl(introspectionURI);
-
-            RegisteredClient client = new RegisteredClient();
-            client.setClientId(clientIdOfResource);
-            client.setClientSecret(clientSecretResource);
-            client.setScope(scopes);
-            introspectionService.setClientConfiguration(client);
-
-            return introspectionService;
-        }
     }
 
     @Profile("DEV")
     @Component
     public class DevResourceServiceSecurityConfig extends ResourceServerConfigurerAdapter {
 
-        @Value("${kypo.idp.4oauth.introspectionURI}")
-        private String introspectionURI;
-        @Value("${kypo.idp.4oauth.resource.clientId}")
-        private String clientIdOfResource;
-        @Value("${kypo.idp.4oauth.resource.clientSecret}")
-        private String clientSecretResource;
-        @Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
-        private Set<String> scopes;
         @Autowired
         private DevCustomAuthorityGranter customAuthorityGranter;
 
@@ -137,37 +133,11 @@ public class ResourceServerSecurityConfig {
         }
 
         @Bean
-        public CorsConfigurationSource corsConfigurationSource() {
-            CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList("*"));
-            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-            configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
-            configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
-            return source;
-        }
-
-        @Bean
         public ResourceServerTokenServices tokenServices() {
             IntrospectingTokenService tokenService = new IntrospectingTokenService();
             tokenService.setIntrospectionConfigurationService(introspectionConfigurationService());
             tokenService.setIntrospectionAuthorityGranter(customAuthorityGranter);
             return tokenService;
-        }
-
-        @Bean
-        public StaticIntrospectionConfigurationService introspectionConfigurationService() {
-            StaticIntrospectionConfigurationService introspectionService = new StaticIntrospectionConfigurationService();
-            introspectionService.setIntrospectionUrl(introspectionURI);
-
-            RegisteredClient client = new RegisteredClient();
-            client.setClientId(clientIdOfResource);
-            client.setClientSecret(clientSecretResource);
-            client.setScope(scopes);
-            introspectionService.setClientConfiguration(client);
-
-            return introspectionService;
         }
     }
 }

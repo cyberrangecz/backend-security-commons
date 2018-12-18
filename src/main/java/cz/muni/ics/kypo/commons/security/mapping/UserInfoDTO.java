@@ -1,18 +1,21 @@
 package cz.muni.ics.kypo.commons.security.mapping;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * @author Dominik Pilar & Pavel Seda
+ */
 public class UserInfoDTO {
+
     private Long id;
-
-    private String full_name;
-
+    @JsonProperty("full_name")
+    private String fullName;
     private String login;
-
     private String mail;
-
     private Set<RoleDTO> roles = new HashSet<>();
 
     public Long getId() {
@@ -23,12 +26,12 @@ public class UserInfoDTO {
         this.id = id;
     }
 
-    public String getFull_name() {
-        return full_name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getLogin() {
@@ -70,13 +73,17 @@ public class UserInfoDTO {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(getId(), getLogin());
     }
 
     @Override
     public String toString() {
-        return "UserInfoDTO{" + "id=" + id + ", full_name='" + full_name + '\'' + ", login='" + login + '\'' + ", mail='" + mail + '\''
-                + ", roles=" + roles + '}';
+        return "UserInfoDTO{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", login='" + login + '\'' +
+                ", mail='" + mail + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

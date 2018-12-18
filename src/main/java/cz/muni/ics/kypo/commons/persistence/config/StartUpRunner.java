@@ -17,11 +17,11 @@ import java.util.Set;
 @Component
 @PropertySource("classpath:roles.properties")
 public class StartUpRunner implements ApplicationRunner {
+
     private static Logger LOG = LoggerFactory.getLogger(StartUpRunner.class);
 
     @Value("#{'${kypo.commons.roles}'.split(',')}")
     private Set<String> roles;
-
     private RoleRepository roleRepository;
 
 
@@ -33,10 +33,8 @@ public class StartUpRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         loadRoles(roles);
-
         LOG.info("Roles from external file were loaded and created in DB");
     }
-
 
     private void loadRoles(Set<String> roles) {
         roles.forEach(roleString -> {

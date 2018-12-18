@@ -1,13 +1,19 @@
 package cz.muni.ics.kypo.commons.security.mapping;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
+/**
+ * @author Dominik Pilar & Pavel Seda
+ */
 public class RoleDTO {
+
     private Long id;
-
-    private String role_type;
-
-    private String name_of_microservice;
+    @JsonProperty("role_type")
+    private String roleType;
+    @JsonProperty("name_of_microservice")
+    private String nameOfMicroservice;
 
     public Long getId() {
         return id;
@@ -17,20 +23,20 @@ public class RoleDTO {
         this.id = id;
     }
 
-    public String getRole_type() {
-        return role_type;
+    public String getRoleType() {
+        return roleType;
     }
 
-    public void setRole_type(String role_type) {
-        this.role_type = role_type;
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
     }
 
-    public String getName_of_microservice() {
-        return name_of_microservice;
+    public String getNameOfMicroservice() {
+        return nameOfMicroservice;
     }
 
-    public void setName_of_microservice(String name_of_microservice) {
-        this.name_of_microservice = name_of_microservice;
+    public void setNameOfMicroservice(String nameOfMicroservice) {
+        this.nameOfMicroservice = nameOfMicroservice;
     }
 
     @Override
@@ -39,19 +45,22 @@ public class RoleDTO {
         if (o == null || getClass() != o.getClass()) return false;
         RoleDTO roleDTO = (RoleDTO) o;
         return Objects.equals(getId(), roleDTO.getId()) &&
-                Objects.equals(getRole_type(), roleDTO.getRole_type()) &&
-                Objects.equals(getName_of_microservice(), roleDTO.getName_of_microservice());
+                Objects.equals(getRoleType(), roleDTO.getRoleType()) &&
+                Objects.equals(getNameOfMicroservice(), roleDTO.getNameOfMicroservice());
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(getId(), getRole_type(), getName_of_microservice());
+        return Objects.hash(getId(), getRoleType(), getNameOfMicroservice());
     }
 
     @Override
     public String toString() {
-        return "RoleDTO{" + "id=" + id + ", role_type='" + role_type + '\'' + ", name_of_microservice='" + name_of_microservice + '\''
-                + '}';
+        return "RoleDTO{" +
+                "id=" + id +
+                ", roleType='" + roleType + '\'' +
+                ", nameOfMicroservice='" + nameOfMicroservice + '\'' +
+                '}';
     }
 }

@@ -1,11 +1,11 @@
 package cz.muni.ics.kypo.commons.facade.exception;
 
+/**
+ * @author Pavel Seda
+ */
 public class CommonsFacadeException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
-
     public CommonsFacadeException() {
-        super();
     }
 
     public CommonsFacadeException(String s) {
@@ -18,5 +18,9 @@ public class CommonsFacadeException extends RuntimeException {
 
     public CommonsFacadeException(Throwable throwable) {
         super(throwable);
+    }
+
+    public CommonsFacadeException(String s, Throwable throwable, boolean b, boolean b1) {
+        super(s, throwable, b, b1);
     }
 }

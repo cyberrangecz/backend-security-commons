@@ -4,17 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 
+import java.util.Objects;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
+/**
+ * @author Jan Duda & Pavel Seda
+ */
 @Entity
-@Table(name = "ROLE")
+@Table(name = "role")
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnoreProperties({"id"})
     private Long id;
-
-    @Column(name = "ROLE_TYPE", unique = true, nullable = false)
+    @Column(name = "role_type", unique = true, nullable = false)
     private String roleType;
 
     public Long getId() {
@@ -39,16 +44,13 @@ public class Role {
         if (o == null || getClass() != o.getClass()) return false;
 
         Role role = (Role) o;
-
-        if (!id.equals(role.id)) return false;
-        return roleType.equals(role.roleType);
+        return Objects.equals(id, role.getId()) &&
+                Objects.equals(roleType, role.getRoleType());
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + roleType.hashCode();
-        return result;
+        return Objects.hash(id, roleType);
     }
 
     @Override
