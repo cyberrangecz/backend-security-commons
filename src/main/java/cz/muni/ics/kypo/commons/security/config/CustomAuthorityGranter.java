@@ -32,7 +32,7 @@ import cz.muni.ics.kypo.commons.security.mapping.UserInfoDTO;
 @Component
 public class CustomAuthorityGranter {
 
-    @Bean(name="kypoSecurityCommonsRestTemplate")
+    @Bean(name = "kypoSecurityCommonsRestTemplate")
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
@@ -42,11 +42,18 @@ public class CustomAuthorityGranter {
     @Component
     public class ProductionCustomAuthorityGranter implements IntrospectionAuthorityGranter {
 
-        private static final String USER_INFO_ENDPOINT = "/kypo2-rest-user-and-group/api/v1/users/info";
+        private static final String USER_INFO_ENDPOINT = "/users/info";
         @Autowired
         private HttpServletRequest servletRequest;
-        @Value("${server.url}")
-        private String serverUrl;
+        @Value("${user-and-group-server.protocol}")
+        private String communicationProtocol;
+        @Value("${user-and-group-server.host}")
+        private String host;
+        @Value("${user-and-group-server.port}")
+        private String port;
+        @Value("${user-and-group-context.path}")
+        private String contextPath;
+        private String userAndGroupUrl = communicationProtocol + "://" + host + ":" + port + contextPath;
 
         @Autowired
         public ProductionCustomAuthorityGranter() {
@@ -58,8 +65,9 @@ public class CustomAuthorityGranter {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", servletRequest.getHeader("Authorization"));
             HttpEntity<String> entity = new HttpEntity<>(headers);
+            String userAndGroupUserInfoUri = userAndGroupUrl + USER_INFO_ENDPOINT;
             ResponseEntity<UserInfoDTO> response =
-                    restTemplate().exchange(serverUrl + USER_INFO_ENDPOINT, HttpMethod.GET, entity, UserInfoDTO.class);
+                    restTemplate().exchange(userAndGroupUserInfoUri, HttpMethod.GET, entity, UserInfoDTO.class);
             if (response.getStatusCode().isError()) {
                 throw new SecurityException(
                         "Logged in user with sub " + login + " could not be found in database and has been created in database.");
