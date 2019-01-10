@@ -50,14 +50,14 @@ public class CustomAuthorityGranter {
     @Value("${user-and-group-context.path}")
     private String contextPath;
 
-    private String userAndGroupUrl = communicationProtocol + "://" + host + ":" + port + "/" + contextPath;
-
     @Profile("PROD")
     @Component
     public class ProductionCustomAuthorityGranter implements IntrospectionAuthorityGranter {
 
         @Autowired
         private HttpServletRequest servletRequest;
+
+        private String userAndGroupUrl = communicationProtocol + "://" + host + ":" + port + "/" + contextPath;
 
         @Autowired
         public ProductionCustomAuthorityGranter() {
