@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -30,6 +31,7 @@ import cz.muni.ics.kypo.commons.security.mapping.UserInfoDTO;
  * @author Pavel Seda (441048) & Dominik Pilar
  */
 @Component
+@PropertySource("file:${path.to.config.file}")
 public class CustomAuthorityGranter {
 
     @Bean(name = "kypoSecurityCommonsRestTemplate")
@@ -37,23 +39,25 @@ public class CustomAuthorityGranter {
         return new RestTemplate();
     }
 
+    private static final String USER_INFO_ENDPOINT = "/users/info";
+
+    @Value("${user-and-group-server.protocol}")
+    private String communicationProtocol;
+    @Value("${user-and-group-server.host}")
+    private String host;
+    @Value("${user-and-group-server.port}")
+    private String port;
+    @Value("${user-and-group-context.path}")
+    private String contextPath;
+
+    private String userAndGroupUrl = communicationProtocol + "://" + host + ":" + port + "/" + contextPath;
 
     @Profile("PROD")
     @Component
     public class ProductionCustomAuthorityGranter implements IntrospectionAuthorityGranter {
 
-        private static final String USER_INFO_ENDPOINT = "/users/info";
         @Autowired
         private HttpServletRequest servletRequest;
-        @Value("${user-and-group-server.protocol}")
-        private String communicationProtocol;
-        @Value("${user-and-group-server.host}")
-        private String host;
-        @Value("${user-and-group-server.port}")
-        private String port;
-        @Value("${user-and-group-context.path}")
-        private String contextPath;
-        private String userAndGroupUrl = communicationProtocol + "://" + host + ":" + port + contextPath;
 
         @Autowired
         public ProductionCustomAuthorityGranter() {
