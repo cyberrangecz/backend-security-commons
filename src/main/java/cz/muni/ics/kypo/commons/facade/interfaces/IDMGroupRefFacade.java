@@ -33,12 +33,6 @@ public interface IDMGroupRefFacade {
      */
     void assignRoleToGroup(long roleId, long idmGroupId);
 
-    /**
-     * Returns set of roles of given groups
-     *
-     * @return roles
-     */
-    Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds);
 
     void removeRoleFromGroup(long roleId, long idmGroupId);
 }

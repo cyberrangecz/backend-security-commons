@@ -61,17 +61,6 @@ public class IDMGroupRefFacadeImpl implements IDMGroupRefFacade {
         }
     }
 
-    @Override
-    @TransactionalRO
-    public Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds) {
-        try {
-            Set<Role> roles = groupRefService.getRolesOfGroups(groupsIds);
-            LOG.info("Roles of given groups with ids: {} have been loaded.", groupsIds);
-            return roleMapper.mapToRoleDTOSet(roles);
-        } catch (CommonsServiceException ex) {
-            throw new CommonsFacadeException(ex.getMessage());
-        }
-    }
 
     @Override
     @TransactionalWO

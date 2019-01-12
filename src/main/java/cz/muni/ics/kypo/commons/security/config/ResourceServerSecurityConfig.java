@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -96,6 +97,11 @@ public class ResourceServerSecurityConfig {
                     .anyRequest()
                     .authenticated();
         }
+
+//        @Bean
+//        GrantedAuthorityDefaults grantedAuthorityDefaults() {
+//            return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
+//        }
 
 
         @Bean

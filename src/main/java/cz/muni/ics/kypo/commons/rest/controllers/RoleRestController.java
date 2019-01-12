@@ -24,8 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Api(value = "/roles", consumes = "application/json", tags = "Roles")
 @ApiResponses(value = {
@@ -95,6 +94,33 @@ public class RoleRestController {
         } catch (CommonsFacadeException ex) {
             throw new ResourceNotFoundException(ex.getLocalizedMessage());
         }
+    }
+
+    @ApiOperation(httpMethod = "GET",
+            value = "Get roles of given groups.",
+            response = RoleDTO.class,
+            responseContainer = "Page",
+            nickname = "findRolesOfGivenGroups",
+            produces = "application/json"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Roles of given groups found.", response = RoleDTO.class, responseContainer = "List"),
+            @ApiResponse(code = 500, message = "Unexpected condition was encountered.")
+    })
+    @GetMapping(value = "/roles-of-groups", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getRolesOfGroups(
+            @ApiParam(value = "List of groups ids to get roles", required = true) @RequestParam(name = "ids") List<Long> groupsIds,
+            @ApiParam(value = "Fields which should be returned in REST API response", required = false)
+            @RequestParam(value = "fields", required = false) String fields) {
+        LOG.debug("findRolesOfGroups({},{})", groupsIds, fields);
+        try {
+            Set<RoleDTO> roles = roleFacade .getRolesOfGroups(groupsIds);
+            Squiggly.init(objectMapper, fields);
+            return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, roles), HttpStatus.OK);
+        } catch (CommonsFacadeException ex) {
+            throw new ResourceNotFoundException(ex.getLocalizedMessage());
+        }
+
     }
 
 }
