@@ -9,6 +9,7 @@ import cz.muni.ics.kypo.commons.service.exceptions.CommonsServiceException;
 import cz.muni.ics.kypo.commons.facade.interfaces.RoleFacade;
 import cz.muni.ics.kypo.commons.facade.mapping.mapstruct.RoleMapper;
 import cz.muni.ics.kypo.commons.persistence.model.Role;
+import cz.muni.ics.kypo.commons.service.interfaces.IDMGroupRefService;
 import cz.muni.ics.kypo.commons.service.interfaces.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Pavel Seda
@@ -28,12 +31,14 @@ public class RoleFacadeImpl implements RoleFacade {
 	private static final Logger LOG = LoggerFactory.getLogger(RoleFacadeImpl.class);
 
 	private RoleService roleService;
+	private IDMGroupRefService groupRefService;
 	private RoleMapper roleMapper;
 
 	@Autowired
-	public RoleFacadeImpl(RoleService roleService, RoleMapper roleMapper) {
+	public RoleFacadeImpl(RoleService roleService, RoleMapper roleMapper, IDMGroupRefService groupRefService) {
 		this.roleService = roleService;
 		this.roleMapper = roleMapper;
+		this.groupRefService = groupRefService;
 	}
 
 	@Override
@@ -67,6 +72,18 @@ public class RoleFacadeImpl implements RoleFacade {
 			Page<Role> roles = roleService.getAllRoles(predicate,pageable);
 			LOG.info("Roles has been loaded.");
 			return roleMapper.mapToPageResultRoleDTO(roles);
+		} catch (CommonsServiceException ex) {
+			throw new CommonsFacadeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	@TransactionalRO
+	public Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds) {
+		try {
+			Set<Role> roles = groupRefService.getRolesOfGroups(groupsIds);
+			LOG.info("Roles of given groups with ids: {} have been loaded.", groupsIds);
+			return roleMapper.mapToRoleDTOSet(roles);
 		} catch (CommonsServiceException ex) {
 			throw new CommonsFacadeException(ex.getMessage());
 		}

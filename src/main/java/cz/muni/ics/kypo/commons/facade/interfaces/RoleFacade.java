@@ -39,4 +39,12 @@ public interface RoleFacade {
     PageResultResource<RoleDTO> getAllRoles(Predicate predicate, Pageable pageable);
 
 
+    /**
+     * Returns set of roles of given groups
+     *
+     * @return roles
+     */
+    Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds);
+
+
 }
