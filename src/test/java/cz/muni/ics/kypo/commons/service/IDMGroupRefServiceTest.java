@@ -144,9 +144,8 @@ public class IDMGroupRefServiceTest {
     public void testGetRolesOfGroups() {
         groupRef1.addRole(role2);
         groupRef2.addRole(role1);
-        given(groupRefRepository.findByIdmGroupId(1L)).willReturn(Optional.of(groupRef1));
-        given(groupRefRepository.findByIdmGroupId(2L)).willReturn(Optional.of(groupRef2));
-        Set<Role> roles = groupRefService.getRolesOfGroups(Arrays.asList(1L, 2L));
+        given(groupRefRepository.getRolesOfGroupsRef(Set.of(1L, 2L))).willReturn(Set.of(role1, role2));
+        Set<Role> roles = groupRefService.getRolesOfGroups(Set.of(1L, 2L));
 
         Assert.assertTrue(roles.contains(role1));
         Assert.assertTrue(roles.contains(role2));

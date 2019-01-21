@@ -38,7 +38,7 @@ public class IDMGroupRefRepositoryTest {
     @Autowired
     private IDMGroupRefRepository groupRefRepository;
 
-    private IDMGroupRef groupRef;
+    private IDMGroupRef groupRef, groupRef2;
 
     private Role adminRole, userRole, guestRole;
 
@@ -63,6 +63,9 @@ public class IDMGroupRefRepositoryTest {
 
         groupRef = new IDMGroupRef();
         groupRef.setIdmGroupId(1L);
+
+        groupRef2 = new IDMGroupRef();
+        groupRef2.setIdmGroupId(2L);
 
         pageable = PageRequest.of(0, 10);
     }
@@ -108,5 +111,24 @@ public class IDMGroupRefRepositoryTest {
         assertTrue(rolesOfGroup.contains(adminRole));
         assertTrue(rolesOfGroup.contains(userRole));
         assertFalse(rolesOfGroup.contains(guestRole));
+    }
+
+    @Test
+    public void getRolesOfGroupsRef() {
+        entityManager.persistFlushFind(adminRole);
+        entityManager.persistFlushFind(userRole);
+        entityManager.persistFlushFind(guestRole);
+        groupRef.setRoles(Stream.of(adminRole, userRole).collect(Collectors.toSet()));
+        entityManager.persistFlushFind(groupRef);
+
+        groupRef2.setRoles(Stream.of(guestRole).collect(Collectors.toSet()));
+        entityManager.persistFlushFind(groupRef2);
+
+        Set<Role> rolesOfGroup = groupRefRepository.getRolesOfGroupsRef(Set.of(groupRef.getIdmGroupId(), groupRef2.getIdmGroupId()));
+        rolesOfGroup.forEach(role -> System.out.println(role.getRoleType()));
+        assertEquals(3, rolesOfGroup.size());
+        assertTrue(rolesOfGroup.contains(adminRole));
+        assertTrue(rolesOfGroup.contains(userRole));
+        assertTrue(rolesOfGroup.contains(guestRole));
     }
 }

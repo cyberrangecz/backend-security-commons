@@ -44,7 +44,7 @@ public interface RoleFacade {
      *
      * @return roles
      */
-    Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds);
+    Set<RoleDTO> getRolesOfGroups(Set<Long> groupsIds);
 
 
 }

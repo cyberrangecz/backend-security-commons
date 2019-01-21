@@ -79,7 +79,7 @@ public class RoleFacadeImpl implements RoleFacade {
 
 	@Override
 	@TransactionalRO
-	public Set<RoleDTO> getRolesOfGroups(List<Long> groupsIds) {
+	public Set<RoleDTO> getRolesOfGroups(Set<Long> groupsIds) {
 		try {
 			Set<Role> roles = groupRefService.getRolesOfGroups(groupsIds);
 			LOG.info("Roles of given groups with ids: {} have been loaded.", groupsIds);

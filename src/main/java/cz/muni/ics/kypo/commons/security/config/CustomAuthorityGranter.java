@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.JsonObject;
+import cz.muni.ics.kypo.commons.persistence.repository.IDMGroupRefRepository;
+import cz.muni.ics.kypo.commons.security.mapping.UserBasicInfoDTO;
 import org.mitre.oauth2.introspectingfilter.service.IntrospectionAuthorityGranter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +43,7 @@ public class CustomAuthorityGranter {
         return new RestTemplate();
     }
 
-    private static final String USER_INFO_ENDPOINT = "/users/info";
+    private static final String USER_INFO_ENDPOINT = "/users/basic-info";
 
     @Value("${user-and-group-server.protocol}")
     private String communicationProtocol;
@@ -56,13 +58,18 @@ public class CustomAuthorityGranter {
     @Component
     public class ProductionCustomAuthorityGranter implements IntrospectionAuthorityGranter {
 
+        private final Logger LOG = LoggerFactory.getLogger(ProductionCustomAuthorityGranter.class);
+
         @Autowired
         private HttpServletRequest servletRequest;
+
+        private IDMGroupRefRepository groupRefRepository;
 
         private String userAndGroupUrl = communicationProtocol + "://" + host + ":" + port + "/" + contextPath;
 
         @Autowired
-        public ProductionCustomAuthorityGranter() {
+        public ProductionCustomAuthorityGranter(IDMGroupRefRepository groupRefRepository) {
+            this.groupRefRepository = groupRefRepository;
         }
 
         @Override
@@ -72,15 +79,19 @@ public class CustomAuthorityGranter {
             headers.set("Authorization", servletRequest.getHeader("Authorization"));
             HttpEntity<String> entity = new HttpEntity<>(headers);
             String userAndGroupUserInfoUri = userAndGroupUrl + USER_INFO_ENDPOINT;
-            ResponseEntity<UserInfoDTO> response =
-                    restTemplate().exchange(userAndGroupUserInfoUri, HttpMethod.GET, entity, UserInfoDTO.class);
+            ResponseEntity<UserBasicInfoDTO> response =
+                    restTemplate().exchange(userAndGroupUserInfoUri, HttpMethod.GET, entity, UserBasicInfoDTO.class);
             if (response.getStatusCode().isError()) {
                 throw new SecurityException(
                         "Logged in user with sub " + login + " could not be found in database and has been created in database.");
             }
             Assert.notEmpty(response.getBody().getRoles(), "No roles for user with login " + login);
-            return response.getBody().getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRoleType()))
+            List<GrantedAuthority> roles = response.getBody().getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRoleType()))
                     .collect(Collectors.toList());
+            roles.addAll(groupRefRepository.getRolesOfGroupsRef(response.getBody().getGroupIds()).stream().map(role ->
+                    new SimpleGrantedAuthority(role.getRoleType())).collect(Collectors.toSet()));
+            return roles;
+
         }
 
     }
