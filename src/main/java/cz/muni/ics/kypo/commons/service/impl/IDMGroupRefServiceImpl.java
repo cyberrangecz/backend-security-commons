@@ -77,15 +77,10 @@ public class IDMGroupRefServiceImpl implements IDMGroupRefService {
     }
 
     @Override
-    public Set<Role> getRolesOfGroups(List<Long> groupsIds) {
+    public Set<Role> getRolesOfGroups(Set<Long> groupsIds) {
         LOG.info("getRolesOfGroups({})", groupsIds);
         Assert.notEmpty(groupsIds, "Input list of groups ids must not be empty.");
-        Set<Role> roles = new HashSet<>();
-        for (Long id : groupsIds) {
-            Optional<IDMGroupRef> groupRef = idmGroupRefRepository.findByIdmGroupId(id);
-            groupRef.ifPresent(group -> roles.addAll(group.getRoles()));
-        }
-        return roles;
+        return idmGroupRefRepository.getRolesOfGroupsRef(groupsIds);
     }
 
 

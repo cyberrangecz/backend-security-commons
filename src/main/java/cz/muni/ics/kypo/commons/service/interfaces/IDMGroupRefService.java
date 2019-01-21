@@ -39,7 +39,7 @@ public interface IDMGroupRefService {
      *
      * @return roles
      */
-    Set<Role> getRolesOfGroups(List<Long> groupsIds);
+    Set<Role> getRolesOfGroups(Set<Long> groupsIds);
 
     /**
      * Remove given role from group and if the group no longer has role it is removed too.

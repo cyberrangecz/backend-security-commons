@@ -114,7 +114,7 @@ public class RoleRestController {
             @RequestParam(value = "fields", required = false) String fields) {
         LOG.debug("findRolesOfGroups({},{})", groupsIds, fields);
         try {
-            Set<RoleDTO> roles = roleFacade .getRolesOfGroups(groupsIds);
+            Set<RoleDTO> roles = roleFacade .getRolesOfGroups(new HashSet<>(groupsIds));
             Squiggly.init(objectMapper, fields);
             return new ResponseEntity<>(SquigglyUtils.stringify(objectMapper, roles), HttpStatus.OK);
         } catch (CommonsFacadeException ex) {

@@ -25,4 +25,7 @@ public interface IDMGroupRefRepository extends JpaRepository<IDMGroupRef, Long>,
 
     @Query("SELECT r FROM IDMGroupRef g INNER JOIN g.roles r WHERE g.id = :groupId")
     Set<Role> getRolesOfGroup(@Param("groupId") Long id);
+
+    @Query("SELECT DISTINCT r FROM IDMGroupRef g INNER JOIN g.roles r WHERE g.idmGroupId IN :groupIds")
+    Set<Role> getRolesOfGroupsRef(@Param("groupIds") Set<Long> ids);
 }
