@@ -45,14 +45,8 @@ public class CustomAuthorityGranter {
 
     private static final String USER_INFO_ENDPOINT = "/users/basic-info";
 
-    @Value("${user-and-group-server.protocol}")
-    private String communicationProtocol;
-    @Value("${user-and-group-server.host}")
-    private String host;
-    @Value("${user-and-group-server.port}")
-    private String port;
-    @Value("${user-and-group-context.path}")
-    private String contextPath;
+    @Value("${user-and-group-server.uri}")
+    private String userAndGroupUrl;
 
     @Profile("PROD")
     @Component
@@ -64,8 +58,6 @@ public class CustomAuthorityGranter {
         private HttpServletRequest servletRequest;
 
         private IDMGroupRefRepository groupRefRepository;
-
-        private String userAndGroupUrl = communicationProtocol + "://" + host + ":" + port + "/" + contextPath;
 
         @Autowired
         public ProductionCustomAuthorityGranter(IDMGroupRefRepository groupRefRepository) {
@@ -99,6 +91,7 @@ public class CustomAuthorityGranter {
     @Profile("DEV")
     @Component
     public class DevCustomAuthorityGranter implements IntrospectionAuthorityGranter {
+        
         @Value("#{'${spring.profiles.dev.roles}'.split(',')}")
         private Set<String> roles;
 

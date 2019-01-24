@@ -77,11 +77,7 @@ kypo.idp.4oauth.scopes=openid, email
 # you can add more scopes according to settings from step 1.
 
 # calling user-and-group project
-user-and-group-server.protocol={communication protocol}, e.g., http
-user-and-group-server.host={host}, e.g., localhost
-user-and-group-server.port={port}, e.g., 8081
-user-and-group-context.path={context}, e.g., /kypo2-rest-user-and-group/api/v1
-
+user-and-group-server.uri={URI}, e.g. http://localhost:8081/kypo2-rest-user-and-group/api/v1
 
 server.url={your server url}
 #for exmample
