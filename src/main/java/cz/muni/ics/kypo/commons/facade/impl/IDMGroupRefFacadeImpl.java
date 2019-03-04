@@ -47,7 +47,11 @@ public class IDMGroupRefFacadeImpl implements IDMGroupRefFacade {
     @Override
     @TransactionalWO
     public void delete(Long idmGroupId) {
-        groupRefService.delete(idmGroupId);
+        try {
+            groupRefService.delete(idmGroupId);
+        } catch (CommonsServiceException ex) {
+            throw new CommonsFacadeException(ex);
+        }
     }
 
     @Override

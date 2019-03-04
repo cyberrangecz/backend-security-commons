@@ -87,9 +87,9 @@ public class GroupsRestController {
             @ApiResponse(code = 404, message = "Group reference cannot be found."),
             @ApiResponse(code = 500, message = "Unexpected condition was encountered.")
     })
-    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteGroupReference(
-            @ApiParam(value = "Id of group whose reference to be deleted") @PathVariable("id") long id) {
+            @ApiParam(value = "Id of group whose reference to be deleted") @PathVariable("id") Long id) {
         try {
             groupFacade.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -97,6 +97,7 @@ public class GroupsRestController {
             throw new ResourceNotFoundException(ex.getLocalizedMessage());
         }
     }
+
 
     @ApiOperation(httpMethod = "DELETE",
             value = "Remove role from group reference.",
