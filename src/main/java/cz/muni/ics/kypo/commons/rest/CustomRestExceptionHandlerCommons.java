@@ -38,7 +38,7 @@ import org.springframework.web.util.UrlPathHelper;
  * @author Pavel Seda (441048)
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "cz.muni.ics.kypo.commons")
 public class CustomRestExceptionHandlerCommons extends ResponseEntityExceptionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(CustomRestExceptionHandlerCommons.class);
