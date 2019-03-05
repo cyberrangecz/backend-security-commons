@@ -104,10 +104,10 @@ public class GroupsRefControllerTest {
         Exception exception = mockMvc.perform(
                 MockMvcRequestBuilders.delete("/groups" + "/{groupId}/roles/{roleId}", 1L, 1L)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.status().isNotModified())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andReturn().getResolvedException();
 
-        Assert.assertEquals(ResourceNotModifiedException.class, exception.getClass());
+        Assert.assertEquals(ResourceNotFoundException.class, exception.getClass());
     }
 
     private static String convertObjectToJsonBytes(Object object) throws IOException {

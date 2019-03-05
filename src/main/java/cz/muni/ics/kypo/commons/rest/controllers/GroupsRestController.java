@@ -119,7 +119,7 @@ public class GroupsRestController {
             groupFacade.removeRoleFromGroup(roleId, groupId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CommonsFacadeException ex) {
-            throw new ResourceNotModifiedException(ex.getLocalizedMessage());
+            throw new ResourceNotFoundException(ex.getLocalizedMessage());
         }
     }
 
@@ -141,7 +141,7 @@ public class GroupsRestController {
             groupFacade.assignRoleToGroup(roleId, groupId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CommonsFacadeException ex) {
-            throw new ResourceNotModifiedException(ex.getLocalizedMessage());
+            throw new ResourceNotFoundException(ex.getLocalizedMessage());
         }
     }
 
