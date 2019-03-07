@@ -48,18 +48,6 @@ public class ResourceServerSecurityConfig {
     private Set<String> scopes;
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
-        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
-    @Bean
     public StaticIntrospectionConfigurationService introspectionConfigurationService() {
         StaticIntrospectionConfigurationService introspectionService = new StaticIntrospectionConfigurationService();
         introspectionService.setIntrospectionUrl(introspectionURI);
@@ -89,7 +77,7 @@ public class ResourceServerSecurityConfig {
         @Override
         public void configure(HttpSecurity http) throws Exception {
             http
-                    .cors()
+                    .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
                     .and()
                     .authorizeRequests()
                     .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs/**", "/webjars/**")
@@ -97,12 +85,6 @@ public class ResourceServerSecurityConfig {
                     .anyRequest()
                     .authenticated();
         }
-
-//        @Bean
-//        GrantedAuthorityDefaults grantedAuthorityDefaults() {
-//            return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
-//        }
-
 
         @Bean
         public ResourceServerTokenServices tokenServices() {
@@ -130,7 +112,7 @@ public class ResourceServerSecurityConfig {
         @Override
         public void configure(HttpSecurity http) throws Exception {
             http
-                    .cors()
+                    .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
                     .and()
                     .authorizeRequests()
                     .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs/**", "/webjars/**")
