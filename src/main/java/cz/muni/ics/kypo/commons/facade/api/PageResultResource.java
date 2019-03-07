@@ -2,13 +2,10 @@ package cz.muni.ics.kypo.commons.facade.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-import org.jsondoc.core.annotation.ApiObject;
 
 import java.util.Collections;
 import java.util.List;
 
-@ApiObject(name = "Result info (Page)",
-        description = "Content (Retrieved data) and meta information about REST API result page. Including page number, number of elements in page, size of elements, total number of elements and total number of pages")
 public class PageResultResource<E> {
     @JsonProperty(required = true)
     @ApiModelProperty(value = "Content - (Retrieved data) from databases.")
