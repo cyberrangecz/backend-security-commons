@@ -47,7 +47,7 @@ public class StartUpRunner implements ApplicationRunner {
 
     @Value("${server.protocol}")
     private String serverProtocol;
-    @Value("${server.ipadress}")
+    @Value("${server.ipaddress}")
     private String serverIpAddress;
     @Value("${server.port}")
     private String serverPort;
