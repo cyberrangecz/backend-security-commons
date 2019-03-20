@@ -1,18 +1,15 @@
 package cz.muni.ics.kypo.commons.security.config;
 
+import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.DevCustomAuthorityGranter;
+import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.ProductionCustomAuthorityGranter;
 import org.mitre.oauth2.introspectingfilter.IntrospectingTokenService;
 import org.mitre.oauth2.introspectingfilter.service.impl.StaticIntrospectionConfigurationService;
 import org.mitre.oauth2.model.RegisteredClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -21,9 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.ProductionCustomAuthorityGranter;
-import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.DevCustomAuthorityGranter;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -102,7 +96,7 @@ public class ResourceServerSecurityConfig {
         public ResourceServerTokenServices tokenServices() {
             IntrospectingTokenService tokenService = new IntrospectingTokenService();
             tokenService.setIntrospectionConfigurationService(introspectionConfigurationService());
-            tokenService.setCacheTokens(false);
+            tokenService.setCacheTokens(true);
             tokenService.setIntrospectionAuthorityGranter(customAuthorityGranter);
             return tokenService;
         }

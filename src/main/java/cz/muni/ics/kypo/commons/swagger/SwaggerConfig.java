@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.commons.rest.config;
+package cz.muni.ics.kypo.commons.swagger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
