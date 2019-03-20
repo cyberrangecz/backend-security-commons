@@ -6,13 +6,6 @@ First install project with command bellow:
 ```
 mvn install
 ```
-Then migrate tables from security commons to your project:
-```
-mvn flyway:migrate -Djdbc.url=jdbc:postgresql://{url to DB of your project}/training -Djdbc.username={username in DB} -Djdbc.password={password to DB}
-```
-WARN!!!     
-"**In your project use version of sql file equal to 2 or higher.**"
-WARN!!! 
 
 Add this Maven dependency to your POM in persistence module: 
 ```        
@@ -22,24 +15,25 @@ Add this Maven dependency to your POM in persistence module:
     <version>${kypo2-security-commons-actual-version}</version>
 </dependency>
 ```
-NOTE: Change version to currently released version of kypo2-rest-commons.
-
-
-
-Use  "**@Import({WebConfigRestSecurityCommons.class})**" in your service layer config class
-
-For using roles in your project, you have to add **roles.properties** file to your resource 
-package in your service layer. For each role you only need to specify role type which will be used in your project. 
-Roles are stored as string in DB but they are rewritten to upperCase. So roles in example below are stored as GUEST, ADMINISTRATOR and
-USER.  
- 
-```properties
-kypo.commons.roles=Guest, administrator, USER
-```
+NOTE: Change version to currently released version of kypo2-security-commons.
 
 ## How to set up the project with imported security commons
+### 1. Creating JSON file with roles 
 
-### 1. Getting Masaryk University OpenID Connect credentials 
+You need to create file roles.json in classpath of your project. In file you can define initial roles for your microservice. 
+For each role, you only need to specify role type and status if role is default or not (notice that only one role can be default). The role type format must be as follows 
+ROLE_{name of microservice}_{role type} as example below. Enum class of roles must contain same values as defined role types in JSON file.
+ 
+```json
+[
+  {
+    "role_type": "ROLE_TRAINING_ADMINISTRATOR",
+    "default": false
+  }
+]
+```
+
+### 2. Getting Masaryk University OpenID Connect credentials 
 
 1. Go to `https://oidc.ics.muni.cz/oidc/` and log in.
 2. Click on "**Self-service Client Registration**" -> "**New Client**".
@@ -57,7 +51,7 @@ kypo.commons.roles=Guest, administrator, USER
 11. Hit **Save** button.
 
 
-### 2. Properties file
+### 3. Properties file
 
 After step 1 you have to add this to your properties file according to format below and save it.
 ```properties
@@ -79,9 +73,12 @@ kypo.idp.4oauth.scopes=openid, email
 # calling user-and-group project
 user-and-group-server.uri={URI}, e.g. http://localhost:8081/kypo2-rest-user-and-group/api/v1
 
-server.url={your server url}
-#for exmample
-server.url=https://localhost:8080/
+server.servlet.context-path={your servlet path}, e.g., /kypo2-rest-training/api/v1
+server.port={port for service}, e.g., 8080 
+server.protocol={protocol for service}, e.g., http
+server.ipaddress={ip address}, e.g., localhost
+microservice.name={name for your microservice}, e.g., kypo2-security-commons
+user-and-group-server.uri={URI to user and group microservice}, e.g., http://localhost:8082/kypo2-rest-user-and-group/api/v1
 
 # Jackson
 spring.jackson.property-naming-strategy=SNAKE_CASE
