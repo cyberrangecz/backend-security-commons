@@ -1,0 +1,13 @@
+Source: kypo2-security-commons
+Maintainer: Martin Machac <machacm@ics.muni.cz>
+Build-depends: debhelper (>= 8.0.0)
+Section: misc
+Standards-Version: 3.9.8
+
+Package: kypo2-security-commons
+Architecture: any
+Depends: maven, oracle-java11-installer, postgresql, ${misc:Depends}
+Priority: optional
+Description: KYPO security commons project
+ This project represents commons project for other back-end projects. This project adds security configuration and manages roles of groups in others projects.
+
