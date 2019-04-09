@@ -52,7 +52,7 @@ installJava:
 deployJava:
     stage: deployJava
     script:
-        - sed -i -e '/<parent>/r add.txt' -e //N pom.xml
+        - sed -i -e '/<parent>/r /root/add.txt' -e //N pom.xml
         - mvn deploy
     only:
         - tags
