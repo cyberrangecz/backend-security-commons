@@ -50,9 +50,12 @@ installJava:
         - tags
         
 deployJava:
+    image: javadeploy
     stage: deployJava
     script:
+        - pwd 
         - sed -i -e '/<parent>/r /root/add.txt' -e //N pom.xml
+        - cat pom.xml
         - mvn deploy
     only:
         - tags
