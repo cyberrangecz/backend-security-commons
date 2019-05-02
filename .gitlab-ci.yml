@@ -76,7 +76,6 @@ buildDebian:
     image: gitbuildpackage
     stage: buildDebian
     script:
-        - git pull
         # --distribution $DEBIAN_DISTRIBUTION
         - >
             gbp dch
