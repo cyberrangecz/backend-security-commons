@@ -53,8 +53,8 @@ installJava:
 editVersion:
     stage: editVersion
     script:
-        - ssh -o "StrictHostKeyChecking no" git@gitlab.ics.muni.cz && sleep 1
         - export GIT_SSH_COMMAND='ssh -i ~/.ssh/kyposervicekey'
+        - ssh -o "StrictHostKeyChecking no" git@gitlab.ics.muni.cz && sleep 1
         - git clone git@gitlab.ics.muni.cz:kypo2/services-and-portlets/kypo2-security-commons.git
         - cd $CI_PROJECT_NAME
         - git config --global user.name "KYPO CI" && git config --global user.email "kyposervice@ics.muni.cz"
@@ -76,6 +76,7 @@ buildDebian:
     image: gitbuildpackage
     stage: buildDebian
     script:
+        - git pull
         # --distribution $DEBIAN_DISTRIBUTION
         - >
             gbp dch
