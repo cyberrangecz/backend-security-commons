@@ -53,7 +53,9 @@ installJava:
 editVersion:
     stage: editVersion
     script:
+        - git status
         - git checkout master
+        - git status
         - git pull
         - git remote set-url origin git@gitlab.ics.muni:410360/$CI_PROJECT_NAME.git
         - git config --global user.name "KYPO CI" && git config --global user.email "410360@mail.muni.cz"
