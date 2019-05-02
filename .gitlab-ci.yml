@@ -68,6 +68,7 @@ deployJava:
     image: javadeploy
     stage: deployJava
     script:
+        - git checkout master && git pull
         - mvn deploy
     only:
         - tags
