@@ -54,7 +54,7 @@ editVersion:
     stage: editVersion
     script:
         - git status
-        - git checkout origin/master
+        - git checkout master
         - git status
         - git diff .gitlab-ci.yml
         - git diff
