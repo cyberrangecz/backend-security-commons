@@ -7,9 +7,11 @@ import org.mitre.oauth2.introspectingfilter.service.impl.StaticIntrospectionConf
 import org.mitre.oauth2.model.RegisteredClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.*;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -26,6 +28,7 @@ import java.util.Set;
  * @author Pavel Seda (441048) & Dominik Pilar
  */
 @Configuration
+@Import(SecurityStrategyConfig.class)
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.security"})
