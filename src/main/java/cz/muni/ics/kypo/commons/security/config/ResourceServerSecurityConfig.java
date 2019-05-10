@@ -28,7 +28,6 @@ import java.util.Set;
  * @author Pavel Seda (441048) & Dominik Pilar
  */
 @Configuration
-@Import(SecurityStrategyConfig.class)
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.security"})
