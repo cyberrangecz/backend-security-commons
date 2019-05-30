@@ -1,5 +1,8 @@
 package cz.muni.ics.kypo.commons.startup;
 
+/**
+ * @author Pavel Seda & Jan Duda
+ */
 public class RolesWrapper {
 
     private String role;

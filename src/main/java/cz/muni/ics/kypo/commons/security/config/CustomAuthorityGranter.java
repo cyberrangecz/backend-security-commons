@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author Pavel Seda (441048) & Dominik Pilar
+ * @author Pavel Seda & Dominik Pilar
  */
 @Component
 @PropertySource("file:${path.to.config.file}")

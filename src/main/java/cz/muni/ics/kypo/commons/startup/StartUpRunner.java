@@ -27,6 +27,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+/**
+ * @author Pavel Seda & Jan Duda
+ */
 @Profile("PROD")
 @Component
 public class StartUpRunner implements ApplicationRunner {

@@ -3,6 +3,9 @@ package cz.muni.ics.kypo.commons.security.mapping;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Pavel Seda & Dominik Pilar
+ */
 public class RegisterMicroserviceDTO {
 
     private String name;

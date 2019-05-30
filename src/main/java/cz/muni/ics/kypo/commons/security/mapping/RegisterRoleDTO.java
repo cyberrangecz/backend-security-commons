@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
+/**
+ * @author Pavel Seda & Dominik Pilar
+ */
 public class RegisterRoleDTO {
 
     @JsonProperty(value = "role_type")
