@@ -13,6 +13,8 @@ public class RegisterRoleDTO {
     private String roleType;
     @JsonProperty(value = "default")
     private boolean isDefault;
+    @JsonProperty(value = "description")
+    private String description;
 
     public String getRoleType() {
         return roleType;
@@ -28,6 +30,14 @@ public class RegisterRoleDTO {
 
     public void setDefault(boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
@@ -49,6 +59,7 @@ public class RegisterRoleDTO {
         return "RegisterRoleDTO{" +
                 "roleType='" + roleType + '\'' +
                 ", isDefault=" + isDefault +
+                ", description='" + description + '\'' +
                 '}';
     }
 }
