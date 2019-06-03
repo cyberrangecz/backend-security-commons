@@ -21,14 +21,16 @@ NOTE: Change version to currently released version of kypo2-security-commons.
 ### 1. Creating JSON file with roles 
 
 You need to create file roles.json in classpath of your project. In file you can define initial roles for your microservice. 
-For each role, you only need to specify role type and status if role is default or not (notice that only one role can be default). The role type format must be as follows 
+For each role, you only need to specify role type, status if role is default or not (notice that only one role can be default) 
+and description of role (a description of what the user is capable of with this role) . The role type format must be as follows 
 ROLE_{name of microservice}_{role type} as example below. Enum class of roles must contain same values as defined role types in JSON file.
  
 ```json
 [
   {
     "role_type": "ROLE_TRAINING_ADMINISTRATOR",
-    "default": false
+    "default": false,
+    "description": "This role will allow you ..."
   }
 ]
 ```
