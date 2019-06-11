@@ -4,7 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author Pavel Seda & Dominik Pilar
+ * @author Pavel Seda
+ * @author Dominik Pilar
  */
 public class RegisterMicroserviceDTO {
 

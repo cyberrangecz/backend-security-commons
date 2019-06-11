@@ -1,7 +1,8 @@
 package cz.muni.ics.kypo.commons.security.exceptions;
 
 /**
- * @author Dominik Pilar & Pavel Seda
+ * @author Pavel Seda
+ * @author Dominik Pilar
  */
 public class SecurityException extends RuntimeException {
 

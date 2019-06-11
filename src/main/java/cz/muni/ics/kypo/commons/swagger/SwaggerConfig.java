@@ -14,11 +14,12 @@ import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 /**
- * @author Jan Duda & Pavel Seda
+ * @author Jan Duda
+ * @author Pavel Seda
  */
 @Configuration
 @EnableSwagger2
@@ -49,8 +50,8 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
-                .securitySchemes(Arrays.asList(securityScheme()))
-                .securityContexts(Arrays.asList(securityContext()));
+                .securitySchemes(List.of(securityScheme()))
+                .securityContexts(List.of(securityContext()));
     }
 
     private ApiInfo apiInfo() {
@@ -77,8 +78,8 @@ public class SwaggerConfig {
                 .build();
 
         return new OAuthBuilder().name(NAME_OF_SECURITY_SCHEME)
-                .grantTypes(Arrays.asList(grantType))
-                .scopes(Arrays.asList(scopes()))
+                .grantTypes(List.of(grantType))
+                .scopes(List.of(scopes()))
                 .build();
     }
 
@@ -95,7 +96,7 @@ public class SwaggerConfig {
     private SecurityContext securityContext() {
         return SecurityContext.builder()
                 .securityReferences(
-                        Arrays.asList(new SecurityReference(NAME_OF_SECURITY_SCHEME, scopes())))
+                        List.of(new SecurityReference(NAME_OF_SECURITY_SCHEME, scopes())))
                 .forPaths(PathSelectors.any())
                 .build();
     }
