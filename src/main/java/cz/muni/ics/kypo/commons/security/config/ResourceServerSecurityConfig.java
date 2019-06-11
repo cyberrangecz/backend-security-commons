@@ -2,16 +2,15 @@ package cz.muni.ics.kypo.commons.security.config;
 
 import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.DevCustomAuthorityGranter;
 import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.ProductionCustomAuthorityGranter;
+import cz.muni.ics.kypo.commons.security.enums.SpringProfiles;
 import org.mitre.oauth2.introspectingfilter.IntrospectingTokenService;
 import org.mitre.oauth2.introspectingfilter.service.impl.StaticIntrospectionConfigurationService;
 import org.mitre.oauth2.model.RegisteredClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.*;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -25,7 +24,8 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
- * @author Pavel Seda (441048) & Dominik Pilar
+ * @author Pavel Seda
+ * @author Dominik Pilar
  */
 @Configuration
 @EnableResourceServer
@@ -70,7 +70,7 @@ public class ResourceServerSecurityConfig {
     }
 
 
-    @Profile("PROD")
+    @Profile(SpringProfiles.PROD)
     @Component
     public class ProductionResourceServiceSecurityConfig extends ResourceServerConfigurerAdapter {
 
@@ -105,7 +105,7 @@ public class ResourceServerSecurityConfig {
 
     }
 
-    @Profile("DEV")
+    @Profile(SpringProfiles.DEV)
     @Component
     public class DevResourceServiceSecurityConfig extends ResourceServerConfigurerAdapter {
 

@@ -1,6 +1,7 @@
 package cz.muni.ics.kypo.commons.startup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.muni.ics.kypo.commons.security.enums.SpringProfiles;
 import cz.muni.ics.kypo.commons.security.mapping.RegisterMicroserviceDTO;
 import cz.muni.ics.kypo.commons.security.mapping.RegisterRoleDTO;
 import org.apache.commons.io.IOUtils;
@@ -28,9 +29,10 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /**
- * @author Pavel Seda & Jan Duda
+ * @author Pavel Seda
+ * @author Jan Duda
  */
-@Profile("PROD")
+@Profile(SpringProfiles.PROD)
 @Component
 public class StartUpRunner implements ApplicationRunner {
 

@@ -1,6 +1,8 @@
 package cz.muni.ics.kypo.commons.security.config;
 
 import com.google.gson.JsonObject;
+import cz.muni.ics.kypo.commons.security.enums.AuthenticatedUserOIDCItems;
+import cz.muni.ics.kypo.commons.security.enums.SpringProfiles;
 import cz.muni.ics.kypo.commons.security.mapping.UserInfoDTO;
 import org.mitre.oauth2.introspectingfilter.service.IntrospectionAuthorityGranter;
 import org.slf4j.Logger;
@@ -28,7 +30,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author Pavel Seda & Dominik Pilar
+ * @author Pavel Seda
+ * @author Dominik Pilar
  */
 @Component
 @PropertySource("file:${path.to.config.file}")
@@ -40,7 +43,7 @@ public class CustomAuthorityGranter {
     @Value("${user-and-group-server.uri}")
     private String userAndGroupUrl;
 
-    @Profile("PROD")
+    @Profile(SpringProfiles.PROD)
     @Component
     public class ProductionCustomAuthorityGranter implements IntrospectionAuthorityGranter {
 
@@ -58,7 +61,7 @@ public class CustomAuthorityGranter {
 
         @Override
         public List<GrantedAuthority> getAuthorities(JsonObject introspectionResponse) {
-            String login = introspectionResponse.get("sub").getAsString();
+            String login = introspectionResponse.get(AuthenticatedUserOIDCItems.SUB.getName()).getAsString();
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", servletRequest.getHeader("Authorization"));
             HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -72,13 +75,10 @@ public class CustomAuthorityGranter {
             } catch (HttpClientErrorException ex) {
                 throw new SecurityException("Error while getting info about logged in user: " + ex.getStatusCode());
             }
-
-
         }
-
     }
 
-    @Profile("DEV")
+    @Profile(SpringProfiles.DEV)
     @Component
     public class DevCustomAuthorityGranter implements IntrospectionAuthorityGranter {
 

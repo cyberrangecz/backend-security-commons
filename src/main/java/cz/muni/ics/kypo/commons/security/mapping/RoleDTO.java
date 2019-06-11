@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**
- * @author Dominik Pilar & Pavel Seda
+ * @author Dominik Pilar
+ * @author Pavel Seda
  */
 public class RoleDTO {
 

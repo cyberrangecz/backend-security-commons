@@ -7,7 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * @author Dominik Pilar & Pavel Seda
+ * @author Dominik Pilar
+ * @author Pavel Seda
  */
 public class UserInfoDTO {
 
