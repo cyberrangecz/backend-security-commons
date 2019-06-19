@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
+ * Configuration of Spring Security beans in production and developer mode.
+ *
  * @author Pavel Seda
  * @author Dominik Pilar
  */

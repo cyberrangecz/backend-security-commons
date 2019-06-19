@@ -29,6 +29,8 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /**
+ * The StartUpRunner provides control over methods executed during start of application (microservice) which import this project.
+ *
  * @author Pavel Seda
  * @author Jan Duda
  */
@@ -36,11 +38,22 @@ import java.util.stream.Collectors;
 @Component
 public class StartUpRunner implements ApplicationRunner {
 
+    /**
+     * Bean creates rest template.
+     *
+     * @return the rest template
+     */
     @Bean(name = "kypoSecurityCommonsRestTemplate")
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
+    /**
+     * Bean creates property sources placeholder configurer that resolves ${...} placeholders within bean definition
+     * property values and @Value annotations against the current Spring Environment and its set of PropertySources.
+     *
+     * @return the property sources placeholder configurer
+     */
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigValues() {
         PropertySourcesPlaceholderConfigurer confPropertyPlaceholder = new PropertySourcesPlaceholderConfigurer();
@@ -65,6 +78,9 @@ public class StartUpRunner implements ApplicationRunner {
     @Value("classpath:roles.json")
     private Resource rolesFile;
 
+    /**
+     * Instantiates a new StartUpRunner.
+     */
     @Autowired
     public StartUpRunner() {
     }
