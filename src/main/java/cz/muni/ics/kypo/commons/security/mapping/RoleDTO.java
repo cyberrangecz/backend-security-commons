@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**
+ * Encapsulates information about role of user.
+ *
  * @author Dominik Pilar
  * @author Pavel Seda
  */
@@ -16,26 +18,55 @@ public class RoleDTO {
     @JsonProperty("name_of_microservice")
     private String nameOfMicroservice;
 
+    /**
+     * Gets ID of the role.
+     *
+     * @return the ID of the role.
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Sets ID of the role.
+     *
+     * @param id the ID of the role.
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * Gets role type of the role.
+     *
+     * @return the role type of the role.
+     */
     public String getRoleType() {
         return roleType;
     }
 
+    /**
+     * Sets role type of the role.
+     *
+     * @param roleType the role type of the role.
+     */
     public void setRoleType(String roleType) {
         this.roleType = roleType;
     }
 
+    /**
+     * Gets name of microservice in which is role used.
+     *
+     * @return the name of microservice in which is role used.
+     */
     public String getNameOfMicroservice() {
         return nameOfMicroservice;
     }
 
+    /**
+     * Sets name of microservice in which is role used.
+     *
+     * @param nameOfMicroservice the name of microservice in which is role used.     */
     public void setNameOfMicroservice(String nameOfMicroservice) {
         this.nameOfMicroservice = nameOfMicroservice;
     }

@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Common configuration of Swagger for all projects that import this project.
+ *
  * @author Jan Duda
  * @author Pavel Seda
  */
@@ -40,6 +42,11 @@ public class SwaggerConfig {
 
     private static String NAME_OF_SECURITY_SCHEME = "KYPO";
 
+    /**
+     * The Docket bean is configured to give more control over the API documentation generation process.
+     *
+     * @return the docket
+     */
     @Bean
     public Docket api() {
         LOG.debug("SwaggerConfig -> api()");
@@ -63,6 +70,11 @@ public class SwaggerConfig {
                 .build();
     }
 
+    /**
+     * Security configuration.
+     *
+     * @return the security configuration
+     */
     @Bean
     public SecurityConfiguration security() {
         return SecurityConfigurationBuilder.builder()

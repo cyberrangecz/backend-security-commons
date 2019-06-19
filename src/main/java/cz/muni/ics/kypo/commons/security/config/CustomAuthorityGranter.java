@@ -30,6 +30,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Class is annotated with {@link Component}, so its mark as candidates for auto-detection when using annotation-based configuration and classpath scanning.
+ * This class is responsible for returning a set of Spring Security GrantedAuthority objects to be assigned to the token service's resulting <i>Authentication</i> object.
+ *
  * @author Pavel Seda
  * @author Dominik Pilar
  */
@@ -43,6 +46,9 @@ public class CustomAuthorityGranter {
     @Value("${user-and-group-server.uri}")
     private String userAndGroupUrl;
 
+    /**
+     * The custom authority granter in production mode.
+     */
     @Profile(SpringProfiles.PROD)
     @Component
     public class ProductionCustomAuthorityGranter implements IntrospectionAuthorityGranter {
@@ -54,6 +60,11 @@ public class CustomAuthorityGranter {
 
         private RestTemplate restTemplate;
 
+        /**
+         * Instantiates a new ProductionCustomAuthorityGranter.
+         *
+         * @param restTemplate the rest template
+         */
         @Autowired
         public ProductionCustomAuthorityGranter(@Qualifier(value = "kypoSecurityCommonsRestTemplate") RestTemplate restTemplate) {
             this.restTemplate = restTemplate;
@@ -78,6 +89,9 @@ public class CustomAuthorityGranter {
         }
     }
 
+    /**
+     * The custom authority granter in developer mode.
+     */
     @Profile(SpringProfiles.DEV)
     @Component
     public class DevCustomAuthorityGranter implements IntrospectionAuthorityGranter {
@@ -85,6 +99,9 @@ public class CustomAuthorityGranter {
         @Value("#{'${spring.profiles.dev.roles}'.split(',')}")
         private Set<String> roles;
 
+        /**
+         * Instantiates a new DevCustomAuthorityGranter.
+         */
         @Autowired
         public DevCustomAuthorityGranter() {
         }
