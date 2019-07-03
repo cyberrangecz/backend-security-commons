@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -93,7 +94,10 @@ public class ResourceServerSecurityConfig {
                     .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs/**", "/webjars/**")
                     .permitAll()
                     .anyRequest()
-                    .authenticated();
+                    .authenticated()
+                    .and().x509()
+                    .and().sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.NEVER);
         }
 
         @Bean
@@ -128,7 +132,10 @@ public class ResourceServerSecurityConfig {
                     .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs/**", "/webjars/**")
                     .permitAll()
                     .anyRequest()
-                    .authenticated();
+                    .authenticated()
+                    .and().x509()
+                    .and().sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.NEVER);
         }
 
         @Bean
