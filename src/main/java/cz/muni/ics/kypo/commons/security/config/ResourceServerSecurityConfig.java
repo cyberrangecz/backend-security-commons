@@ -4,8 +4,14 @@ import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.DevCustom
 import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.ProductionCustomAuthorityGranter;
 import cz.muni.ics.kypo.commons.security.enums.SpringProfiles;
 import org.mitre.oauth2.introspectingfilter.IntrospectingTokenService;
+import org.mitre.oauth2.introspectingfilter.service.IntrospectionConfigurationService;
+import org.mitre.oauth2.introspectingfilter.service.impl.JWTParsingIntrospectionConfigurationService;
 import org.mitre.oauth2.introspectingfilter.service.impl.StaticIntrospectionConfigurationService;
 import org.mitre.oauth2.model.RegisteredClient;
+import org.mitre.openid.connect.client.service.ClientConfigurationService;
+import org.mitre.openid.connect.client.service.ServerConfigurationService;
+import org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationService;
+import org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
@@ -21,8 +27,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Configuration of Spring Security beans in production and developer mode.
@@ -37,14 +42,28 @@ import java.util.Set;
 @PropertySource("file:${path.to.config.file}")
 public class ResourceServerSecurityConfig {
 
-    @Value("${kypo.idp.4oauth.introspectionURI}")
-    private String introspectionURI;
-    @Value("${kypo.idp.4oauth.resource.clientId}")
-    private String clientIdOfResource;
-    @Value("${kypo.idp.4oauth.resource.clientSecret}")
-    private String clientSecretResource;
-    @Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
-    private Set<String> scopes;
+    @Value("${kypo.muni.idp.4oauth.issuer}")
+    private String issuerMUNI;
+    @Value("${kypo.muni.idp.4oauth.introspectionURI}")
+    private String introspectionURIMUNI;
+    @Value("${kypo.muni.idp.4oauth.resource.clientId}")
+    private String clientIdOfResourceMUNI;
+    @Value("${kypo.muni.idp.4oauth.resource.clientSecret}")
+    private String clientSecretResourceMUNI;
+    @Value("#{'${kypo.muni.idp.4oauth.scopes}'.split(',')}")
+    private Set<String> scopesMUNI;
+
+    //TODO uncomment after adding new custom mitre provider
+//    @Value("${kypo.mitre.idp.4oauth.issuer}")
+//    private String issuerKYPO;
+//    @Value("${kypo.mitre.idp.4oauth.introspectionURI}")
+//    private String introspectionURIKYPO;
+//    @Value("${kypo.mitre.idp.4oauth.resource.clientId}")
+//    private String clientIdOfResourceKYPO;
+//    @Value("${kypo.mitre.idp.4oauth.resource.clientSecret}")
+//    private String clientSecretResourceKYPO;
+//    @Value("#{'${kypo.mitre.idp.4oauth.scopes}'.split(',')}")
+//    private Set<String> scopesKYPO;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -59,17 +78,46 @@ public class ResourceServerSecurityConfig {
     }
 
     @Bean
-    public StaticIntrospectionConfigurationService introspectionConfigurationService() {
-        StaticIntrospectionConfigurationService introspectionService = new StaticIntrospectionConfigurationService();
-        introspectionService.setIntrospectionUrl(introspectionURI);
+    public IntrospectionConfigurationService introspectionConfigurationService() {
+        JWTParsingIntrospectionConfigurationService introspectionConfigurationService =
+                new JWTParsingIntrospectionConfigurationService();
+        introspectionConfigurationService
+                .setServerConfigurationService(serverConfigurationService());
+        introspectionConfigurationService
+                .setClientConfigurationService(clientConfigurationService());
+        return introspectionConfigurationService;
+    }
 
-        RegisteredClient client = new RegisteredClient();
-        client.setClientId(clientIdOfResource);
-        client.setClientSecret(clientSecretResource);
-        client.setScope(scopes);
-        introspectionService.setClientConfiguration(client);
+    @Bean
+    public ServerConfigurationService serverConfigurationService() {
+        DynamicServerConfigurationService serverConfigurationService =
+                new DynamicServerConfigurationService();
+        //TODO add issuerKYPO to the set of whitelist
+        serverConfigurationService.setWhitelist(new HashSet<>(Set.of(issuerMUNI)));
+        return serverConfigurationService;
+    }
 
-        return introspectionService;
+    @Bean
+    public ClientConfigurationService clientConfigurationService() {
+        Map<String, RegisteredClient> clients = new HashMap<>();
+        //TODO uncomment after adding new custom mitre provider
+//        RegisteredClient clientKYPO = new RegisteredClient();
+//        clientKYPO.setClientId(clientIdOfResourceKYPO);
+//        clientKYPO.setClientSecret(clientSecretResourceKYPO);
+//        clientKYPO.setScope(scopesKYPO);
+//        clients.put(issuerKYPO, clientKYPO);
+
+        RegisteredClient clientMUNI = new RegisteredClient();
+        clientMUNI.setClientId(clientIdOfResourceMUNI);
+        clientMUNI.setClientSecret(clientSecretResourceMUNI);
+        clientMUNI.setScope(scopesMUNI);
+        clients.put(issuerMUNI, clientMUNI);
+
+        StaticClientConfigurationService clientConfigurationService =
+                new StaticClientConfigurationService();
+        clientConfigurationService.setClients(clients);
+
+        return clientConfigurationService;
     }
 
 
