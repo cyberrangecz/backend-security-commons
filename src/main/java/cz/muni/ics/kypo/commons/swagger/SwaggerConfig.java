@@ -29,13 +29,13 @@ public class SwaggerConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(SwaggerConfig.class);
 
-    @Value("${kypo.idp.4oauth.authorizationURI}")
+    @Value("${kypo.muni.idp.4oauth.authorizationURI}")
     private String authorizationURI;
 
-    @Value("${kypo.idp.4oauth.client.clientId}")
+    @Value("${kypo.muni.idp.4oauth.client.clientId}")
     private String clientIdOfClient;
 
-    @Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
+    @Value("#{'${kypo.muni.idp.4oauth.scopes}'.split(',')}")
     private Set<String> scopes;
 
     private static String NAME_OF_TOKEN = "bearer";
