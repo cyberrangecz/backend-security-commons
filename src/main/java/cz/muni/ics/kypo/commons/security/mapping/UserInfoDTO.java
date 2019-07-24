@@ -1,7 +1,6 @@
 package cz.muni.ics.kypo.commons.security.mapping;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import cz.muni.ics.kypo.commons.security.enums.OidcIdpProviderDTO;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -18,8 +17,6 @@ public class UserInfoDTO {
     private Long id;
     @JsonProperty("full_name")
     private String fullName;
-    @JsonProperty("oidc_idp_provider")
-    private OidcIdpProviderDTO oidcIdpProvider;
     private String login;
     private String mail;
     private Set<RoleDTO> roles = new HashSet<>();
@@ -67,24 +64,6 @@ public class UserInfoDTO {
      */
     public String getLogin() {
         return login;
-    }
-
-    /**
-     * Gets oidc idp provider.
-     *
-     * @return the oidc idp provider
-     */
-    public OidcIdpProviderDTO getOidcIdpProvider() {
-        return oidcIdpProvider;
-    }
-
-    /**
-     * Sets oidc idp provider.
-     *
-     * @param oidcIdpProvider the oidc idp provider
-     */
-    public void setOidcIdpProvider(OidcIdpProviderDTO oidcIdpProvider) {
-        this.oidcIdpProvider = oidcIdpProvider;
     }
 
     /**
@@ -138,13 +117,12 @@ public class UserInfoDTO {
         if (!(o instanceof UserInfoDTO)) return false;
         UserInfoDTO that = (UserInfoDTO) o;
         return Objects.equals(getId(), that.getId()) &&
-                getOidcIdpProvider() == that.getOidcIdpProvider() &&
                 Objects.equals(getLogin(), that.getLogin());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getOidcIdpProvider(), getLogin());
+        return Objects.hash(getId(), getLogin());
     }
 
     @Override
@@ -152,7 +130,6 @@ public class UserInfoDTO {
         return "UserInfoDTO{" +
                 "id=" + id +
                 ", fullName='" + fullName + '\'' +
-                ", oidcIdpProvider=" + oidcIdpProvider +
                 ", login='" + login + '\'' +
                 ", mail='" + mail + '\'' +
                 ", roles=" + roles +
