@@ -14,11 +14,17 @@ import java.util.Set;
  */
 public class UserInfoDTO {
 
-    private Long id;
+    @JsonProperty(value = "id")
+    private Long userRefId;
     @JsonProperty("full_name")
     private String fullName;
     private String login;
     private String mail;
+    @JsonProperty(value = "given_name")
+    private String givenName;
+    @JsonProperty(value = "family_name")
+    private String familyName;
+    private String iss;
     private Set<RoleDTO> roles = new HashSet<>();
 
     /**
@@ -26,8 +32,8 @@ public class UserInfoDTO {
      *
      * @return the ID of the user.
      */
-    public Long getId() {
-        return id;
+    public Long getUserRefId() {
+        return userRefId;
     }
 
     /**
@@ -35,8 +41,62 @@ public class UserInfoDTO {
      *
      * @param id the ID of the user.
      */
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserRefId(Long id) {
+        this.userRefId = id;
+    }
+
+    /**
+     * Gets given name.
+     *
+     * @return the given name
+     */
+    public String getGivenName() {
+        return givenName;
+    }
+
+    /**
+     * Sets given name.
+     *
+     * @param givenName the given name
+     */
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
+    /**
+     * Gets family name.
+     *
+     * @return the family name
+     */
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    /**
+     * Sets family name.
+     *
+     * @param familyName the family name
+     */
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    /**
+     * Gets iss.
+     *
+     * @return the iss
+     */
+    public String getIss() {
+        return iss;
+    }
+
+    /**
+     * Sets iss.
+     *
+     * @param iss the iss
+     */
+    public void setIss(String iss) {
+        this.iss = iss;
     }
 
     /**
@@ -111,24 +171,16 @@ public class UserInfoDTO {
         this.roles = roles;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserInfoDTO)) return false;
-        UserInfoDTO that = (UserInfoDTO) o;
-        return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getLogin(), that.getLogin());
-    }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getLogin());
+        return Objects.hash(getUserRefId(), getLogin());
     }
 
     @Override
     public String toString() {
         return "UserInfoDTO{" +
-                "id=" + id +
+                "userRefId=" + userRefId +
                 ", fullName='" + fullName + '\'' +
                 ", login='" + login + '\'' +
                 ", mail='" + mail + '\'' +
