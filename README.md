@@ -55,42 +55,4 @@ ROLE_{name of microservice}_{role type} as example below. Enum class of roles mu
 
 ### 3. Properties file
 
-After step 1 you have to add this to your properties file according to format below and save it.
-```properties
-# Environment DEV or PROD
-### DEV environment does not need kypo2-user-and-group project but assign authority as GUEST by default
-spring.profiles.active=DEV 
-### If you want try your project with specific roles you can define them by adding:
-spring.profiles.dev.role={your role/s}
-
-# OpenID Connect MUNI 
-kypo.muni.idp.4oauth.issuer=https://oidc.ics.muni.cz/oidc/
-kypo.muni.idp.4oauth.introspectionURI=https://oidc.ics.muni.cz/oidc/introspect
-kypo.muni.idp.4oauth.authorizationURI=https://oidc.ics.muni.cz/oidc/authorize
-kypo.muni.idp.4oauth.resource.clientId={your client ID from Self-service protected resource}
-kypo.muni.idp.4oauth.resource.clientSecret={your client secret from Self-service protected resource}
-kypo.muni.idp.4oauth.client.clientId={your client ID from Self-service client}
-kypo.muni.idp.4oauth.scopes=openid, profile, email
-# you can add more scopes according to settings from step 1.
-
-# if custom MITRE authorization server is enabled 
-# OpenID Connect custom MITRE 
-kypo.mitre.idp.4oauth.issuer={custom MITRE issuer URI}
-kypo.mitre.idp.4oauth.introspectionURI={custom MITRE issuer URI}introspect
-kypo.mitre.idp.4oauth.authorizationURI={custom MITRE issuer URI}authorize
-kypo.mitre.idp.4oauth.resource.clientId={your client ID from Self-service protected resource in custom MITRE openid}
-kypo.mitre.idp.4oauth.resource.clientSecret={your client secret from Self-service protected resource in custom MITRE openid}
-kypo.mitre.idp.4oauth.client.clientId={your client ID from Self-service client in custom MITRE openid}
-kypo.mitre.idp.4oauth.scopes=openid, profile, email
-# you can add more scopes according to settings from step 1.
-
-server.servlet.context-path={your servlet path}, e.g., /kypo2-rest-training/api/v1
-server.port={port for service}, e.g., 8080 
-server.protocol={protocol for service}, e.g., http
-server.ipaddress={ip address}, e.g., localhost
-microservice.name={name for your microservice}, e.g., kypo2-security-commons
-user-and-group-server.uri={URI to user and group microservice}, e.g., https://localhost:8084/kypo2-rest-user-and-group/api/v1
-
-# Jackson
-spring.jackson.property-naming-strategy=SNAKE_CASE
-```
+After the previous steps you have to add to the properties file of project which import security-commons all fields shown in [kypo2 security commons example file](kypo2-security-commons-example.properties) and save it. 

@@ -29,18 +29,18 @@ public class SwaggerConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(SwaggerConfig.class);
 
-    @Value("${kypo.muni.idp.4oauth.authorizationURI}")
-    private String authorizationURI;
-
-    @Value("${kypo.muni.idp.4oauth.client.clientId}")
-    private String clientIdOfClient;
-
-    @Value("#{'${kypo.muni.idp.4oauth.scopes}'.split(',')}")
+    @Value("#{'${kypo.idp.4oauth.authorizationURIs}'.split(',')}")
+    private List<String> authorizationURIs;
+    @Value("#{'${kypo.idp.4oauth.client.clientIds}'.split(',')}")
+    private List<String> clientIds;
+    @Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
     private Set<String> scopes;
+    @Value("${swagger.enabled}")
+    private boolean swaggerEnabled;
 
-    private static String NAME_OF_TOKEN = "bearer";
+    private static final String NAME_OF_TOKEN = "bearer";
 
-    private static String NAME_OF_SECURITY_SCHEME = "KYPO";
+    private static final String NAME_OF_SECURITY_SCHEME = "KYPO";
 
     /**
      * The Docket bean is configured to give more control over the API documentation generation process.
@@ -51,6 +51,7 @@ public class SwaggerConfig {
     public Docket api() {
         LOG.debug("SwaggerConfig -> api()");
         return new Docket(DocumentationType.SWAGGER_2)
+                .enable(swaggerEnabled)
                 .groupName("public-api")
                 .apiInfo(apiInfo()).useDefaultResponseMessages(false)
                 .select()
@@ -78,14 +79,14 @@ public class SwaggerConfig {
     @Bean
     public SecurityConfiguration security() {
         return SecurityConfigurationBuilder.builder()
-                .clientId(clientIdOfClient)
+                .clientId(clientIds.get(0).trim())
                 .scopeSeparator(" ")
                 .build();
     }
 
     private SecurityScheme securityScheme() {
         GrantType grantType = new ImplicitGrantBuilder()
-                .loginEndpoint(new LoginEndpoint(authorizationURI))
+                .loginEndpoint(new LoginEndpoint(authorizationURIs.get(0).trim()))
                 .tokenName(NAME_OF_TOKEN)
                 .build();
 
