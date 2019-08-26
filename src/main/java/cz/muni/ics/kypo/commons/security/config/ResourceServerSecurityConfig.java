@@ -13,7 +13,9 @@ import org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationSe
 import org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.*;
+import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -57,6 +60,7 @@ public class ResourceServerSecurityConfig {
     private String corsAllowedOrigins;
 
     @Bean
+    @Primary
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(corsAllowedOrigins));
@@ -65,6 +69,8 @@ public class ResourceServerSecurityConfig {
         configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+        FilterRegistrationBean corsFilter = new FilterRegistrationBean(new CorsFilter(source));
+        corsFilter.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return source;
     }
 
