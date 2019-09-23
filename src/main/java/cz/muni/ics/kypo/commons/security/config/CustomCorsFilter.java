@@ -16,7 +16,6 @@ import java.io.IOException;
  * @author Pavel Seda
  * @author Dominik Pilar
  */
-
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CustomCorsFilter implements Filter {
@@ -34,8 +33,8 @@ public class CustomCorsFilter implements Filter {
         response.setHeader("Access-Control-Allow-Origin", corsAllowedOrigins);
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "content-type, authorization, x-auth-token");
-        response.setHeader("Access-Control-Expose-Headers", "x-auth-token");
+        response.setHeader("Access-Control-Allow-Headers", "content-type, authorization, x-auth-token, Content-Disposition");
+        response.setHeader("Access-Control-Expose-Headers", "x-auth-token, Content-Disposition");
 
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
