@@ -154,7 +154,6 @@ public class ResourceServerSecurityConfig {
                     .permitAll()
                     .anyRequest()
                     .authenticated()
-                    .and().x509()
                     .and().sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.NEVER);
         }
