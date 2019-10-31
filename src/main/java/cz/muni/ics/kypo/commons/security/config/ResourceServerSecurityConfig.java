@@ -1,8 +1,5 @@
 package cz.muni.ics.kypo.commons.security.config;
 
-import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.DevCustomAuthorityGranter;
-import cz.muni.ics.kypo.commons.security.config.CustomAuthorityGranter.ProductionCustomAuthorityGranter;
-import cz.muni.ics.kypo.commons.security.enums.SpringProfiles;
 import org.mitre.oauth2.introspectingfilter.IntrospectingTokenService;
 import org.mitre.oauth2.introspectingfilter.service.IntrospectionConfigurationService;
 import org.mitre.oauth2.introspectingfilter.service.impl.JWTParsingIntrospectionConfigurationService;
@@ -13,9 +10,7 @@ import org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationSe
 import org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.*;
-import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,7 +19,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.stereotype.Component;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,7 +34,7 @@ import java.util.stream.Collectors;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.security"})
 @PropertySource("file:${path.to.config.file}")
-public class ResourceServerSecurityConfig {
+public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
 
     @Value("#{'${kypo.idp.4oauth.issuers}'.split(',')}")
     private List<String> issuers;
@@ -51,9 +46,21 @@ public class ResourceServerSecurityConfig {
     private List<String> clientSecretResources;
     @Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
     private Set<String> scopes;
+    @Value("${spring.profiles.active}")
+    private String profile;
 
-    @Autowired
+    private CustomAuthorityGranter customAuthorityGranter;
     private CustomCorsFilter corsFilter;
+
+    /**
+     * Instantiates a new ResourceServerSecurityConfig.
+     *
+     */
+    @Autowired
+    public ResourceServerSecurityConfig(CustomCorsFilter customCorsFilter, CustomAuthorityGranter customAuthorityGranter) {
+        this.corsFilter = customCorsFilter;
+        this.customAuthorityGranter = customAuthorityGranter;
+    }
 
     @Bean
     public IntrospectionConfigurationService introspectionConfigurationService() {
@@ -92,78 +99,36 @@ public class ResourceServerSecurityConfig {
         return clientConfigurationService;
     }
 
-
-    @Profile(SpringProfiles.PROD)
-    @Component
-    public class ProductionResourceServiceSecurityConfig extends ResourceServerConfigurerAdapter {
-
-        @Autowired
-        private ProductionCustomAuthorityGranter customAuthorityGranter;
-
-        @Override
-        public void configure(ResourceServerSecurityConfigurer resources) {
-            resources.tokenServices(tokenServices());
-        }
-
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            http
-                    .cors()
-                    .and()
-                    .addFilterBefore(corsFilter, BasicAuthenticationFilter.class)
-                    .authorizeRequests()
-                    .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs/**", "/webjars/**")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated()
-                    .and().x509()
-                    .and().sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.NEVER);
-        }
-
-        @Bean
-        public ResourceServerTokenServices tokenServices() {
-            IntrospectingTokenService tokenService = new IntrospectingTokenService();
-            tokenService.setIntrospectionConfigurationService(introspectionConfigurationService());
-            tokenService.setCacheTokens(true);
-            tokenService.setIntrospectionAuthorityGranter(customAuthorityGranter);
-            return tokenService;
-        }
-
+    @Override
+    public void configure(ResourceServerSecurityConfigurer resources) {
+        resources.tokenServices(tokenServices());
     }
 
-    @Profile(SpringProfiles.DEV)
-    @Component
-    public class DevResourceServiceSecurityConfig extends ResourceServerConfigurerAdapter {
-
-        @Autowired
-        private DevCustomAuthorityGranter customAuthorityGranter;
-
-        @Override
-        public void configure(ResourceServerSecurityConfigurer resources) {
-            resources.tokenServices(tokenServices());
-        }
-
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            http
-                    .cors()
-                    .and()
-                    .authorizeRequests()
-                    .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs/**", "/webjars/**")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated()
-                    .and().sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.NEVER);
-        }
-
-        @Bean
-        public ResourceServerTokenServices tokenServices() {
-            IntrospectingTokenService tokenService = new IntrospectingTokenService();
-            tokenService.setIntrospectionConfigurationService(introspectionConfigurationService());
-            tokenService.setIntrospectionAuthorityGranter(customAuthorityGranter);
-            return tokenService;
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http
+                .cors()
+                .and()
+                .addFilterBefore(corsFilter, BasicAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs/**", "/webjars/**")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+                .and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.NEVER);
+        if(profile.equals("PROD")) {
+            http.x509();
         }
     }
+
+    @Bean
+    public ResourceServerTokenServices tokenServices() {
+        IntrospectingTokenService tokenService = new IntrospectingTokenService();
+        tokenService.setIntrospectionConfigurationService(introspectionConfigurationService());
+        tokenService.setCacheTokens(true);
+        tokenService.setIntrospectionAuthorityGranter(customAuthorityGranter);
+        return tokenService;
+    }
+
 }
