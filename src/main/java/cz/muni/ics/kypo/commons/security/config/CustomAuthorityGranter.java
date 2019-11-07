@@ -7,6 +7,7 @@ import org.mitre.oauth2.introspectingfilter.service.IntrospectionAuthorityGrante
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
@@ -52,7 +53,7 @@ public class CustomAuthorityGranter implements IntrospectionAuthorityGranter {
      * @param restTemplate the rest template
      */
     @Autowired
-    public CustomAuthorityGranter(RestTemplate restTemplate, HttpServletRequest httpServletRequest) {
+    public CustomAuthorityGranter(@Qualifier(value = "kypoSecurityCommonsRestTemplate") RestTemplate restTemplate, HttpServletRequest httpServletRequest) {
         this.restTemplate = restTemplate;
         this.servletRequest = httpServletRequest;
     }
