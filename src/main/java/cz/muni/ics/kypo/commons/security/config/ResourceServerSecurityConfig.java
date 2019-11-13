@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  * @author Dominik Pilar
  */
 @Configuration
+@Import(BeansConfig.class)
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.security"})

@@ -1,19 +1,16 @@
 package cz.muni.ics.kypo.commons.startup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.muni.ics.kypo.commons.security.enums.SpringProfiles;
 import cz.muni.ics.kypo.commons.security.mapping.RegisterMicroserviceDTO;
 import cz.muni.ics.kypo.commons.security.mapping.RegisterRoleDTO;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -37,29 +34,6 @@ import java.util.stream.Collectors;
 @Component
 public class StartUpRunner implements ApplicationRunner {
 
-    /**
-     * Bean creates rest template.
-     *
-     * @return the rest template
-     */
-    @Bean(name = "kypoSecurityCommonsRestTemplate")
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
-    /**
-     * Bean creates property sources placeholder configurer that resolves ${...} placeholders within bean definition
-     * property values and @Value annotations against the current Spring Environment and its set of PropertySources.
-     *
-     * @return the property sources placeholder configurer
-     */
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyConfigValues() {
-        PropertySourcesPlaceholderConfigurer confPropertyPlaceholder = new PropertySourcesPlaceholderConfigurer();
-        confPropertyPlaceholder.setIgnoreUnresolvablePlaceholders(true);
-        return confPropertyPlaceholder;
-    }
-
     private static Logger LOG = LoggerFactory.getLogger(StartUpRunner.class);
 
     @Value("${server.protocol}")
@@ -76,12 +50,14 @@ public class StartUpRunner implements ApplicationRunner {
     private String userAndGroupEndpoint;
     @Value("classpath:roles.json")
     private Resource rolesFile;
+    private RestTemplate restTemplate;
 
     /**
      * Instantiates a new StartUpRunner.
      */
     @Autowired
-    public StartUpRunner() {
+    public StartUpRunner(@Qualifier(value = "kypoSecurityCommonsRestTemplate") RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
 
@@ -92,7 +68,6 @@ public class StartUpRunner implements ApplicationRunner {
     }
 
     private void registerMicroserviceWithRoles(String roles) {
-        RestTemplate restTemplate = restTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBasicAuth("microservice", "micros");
