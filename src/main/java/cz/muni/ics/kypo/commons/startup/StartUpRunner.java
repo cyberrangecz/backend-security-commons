@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
  * @author Pavel Seda
  * @author Jan Duda
  */
-@Profile(SpringProfiles.PROD)
 @Component
 public class StartUpRunner implements ApplicationRunner {
 
