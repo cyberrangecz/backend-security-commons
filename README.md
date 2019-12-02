@@ -38,7 +38,7 @@ Add this Maven dependency to your `pom.xml`:
 ```
 NOTE: Change version to currently released version of kypo2-security-commons.
 
-## Setting up the Project with Imported Security Commons (Project Configuration)
+## 3. Setting up the Project with Imported Security Commons (Project Configuration)
 ### Creation of JSON File with Roles 
 
 You need to create file `roles.json` in the classpath of your project. In the file, you can define initial roles for your microservice. 
