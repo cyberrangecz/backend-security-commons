@@ -44,7 +44,7 @@ NOTE: Change version to currently released version of kypo2-security-commons.
 You need to create file `roles.json` in the classpath of your project. In the file, you can define initial roles for your microservice. 
 For each role, you only need to specify role type, status if the role is default or not (notice that only one role can be the default) 
 and a description of the role (a description of what the user is capable of with this role). The role type format must be as follows 
-ROLE_{name of microservice}_{role type} as an example below. Enum class of roles must contain the same values as defined role types in the JSON file.
+ROLE{NAME_OF_MICROESERVICE}_{ROLE_TYPE} as an example below. Enum class of roles must contain the same values as defined role types in the JSON file.
  
 ```json
 [
