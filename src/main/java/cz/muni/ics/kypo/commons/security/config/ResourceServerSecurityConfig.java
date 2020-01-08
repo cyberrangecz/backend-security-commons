@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 /**
  * Configuration of Spring Security beans in production and developer mode.
  *
- * @author Pavel Seda
- * @author Dominik Pilar
  */
 @Configuration
 @Import(BeansConfig.class)

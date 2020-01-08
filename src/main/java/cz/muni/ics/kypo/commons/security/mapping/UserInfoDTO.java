@@ -9,8 +9,6 @@ import java.util.Set;
 /**
  * Encapsulates information about user and his roles.
  *
- * @author Dominik Pilar
- * @author Pavel Seda
  */
 public class UserInfoDTO {
 

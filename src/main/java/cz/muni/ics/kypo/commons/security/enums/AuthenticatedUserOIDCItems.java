@@ -1,8 +1,5 @@
 package cz.muni.ics.kypo.commons.security.enums;
 
-/**
- * @author Pavel Seda
- */
 public enum AuthenticatedUserOIDCItems {
 
     ACTIVE("active", "", "true"),

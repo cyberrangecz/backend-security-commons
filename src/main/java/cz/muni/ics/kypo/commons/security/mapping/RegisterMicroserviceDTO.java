@@ -6,8 +6,6 @@ import java.util.Set;
 /**
  * Encapsulates information about microservice to be registered in <i>User-and-group</i>.
  *
- * @author Pavel Seda
- * @author Dominik Pilar
  */
 public class RegisterMicroserviceDTO {
 
