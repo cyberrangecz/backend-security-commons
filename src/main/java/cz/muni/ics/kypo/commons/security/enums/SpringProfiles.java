@@ -3,7 +3,6 @@ package cz.muni.ics.kypo.commons.security.enums;
 /**
  * SpringProfiles defines custom environments.
  *
- * @author Pavel Seda
  */
 public abstract class SpringProfiles {
 

@@ -28,8 +28,6 @@ import java.util.stream.Collectors;
 /**
  * The StartUpRunner provides control over methods executed during start of application (microservice) which import this project.
  *
- * @author Pavel Seda
- * @author Jan Duda
  */
 @Component
 public class StartUpRunner implements ApplicationRunner {

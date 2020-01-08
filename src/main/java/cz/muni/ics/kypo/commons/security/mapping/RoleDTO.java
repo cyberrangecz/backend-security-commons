@@ -7,8 +7,6 @@ import java.util.Objects;
 /**
  * Encapsulates information about role of user.
  *
- * @author Dominik Pilar
- * @author Pavel Seda
  */
 public class RoleDTO {
 

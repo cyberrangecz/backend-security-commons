@@ -7,8 +7,6 @@ import java.util.Objects;
 /**
  * Encapsulates information about role used in microservice to be registered in <i>User-and-group</i>.
  *
- * @author Pavel Seda
- * @author Dominik Pilar
  */
 public class RegisterRoleDTO {
 
