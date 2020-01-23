@@ -12,17 +12,10 @@ Boris Jaduš   |   445343@mail.muni.cz
 
 ## Content
 
-1.  License
-2.  Usage of This Library
-3.  Setting up the Project with Imported Security Commons (Project Configuration)
+1.  Usage of This Library
+2.  Setting up the Project with Imported Security Commons (Project Configuration)
 
-## 1. License
-(c) Copyright 2019 MASARYK UNIVERSITY 
-
-All rights reserved. This software is freely available for non-commercial use under license specified in following license agreement in LICENSE file. Please review the terms of the license agreement before using this software. If you are  interested in using this software commercially or in ways not allowed in  aforementioned license, feel free to contact Technology transfer office of the  Masaryk university in order to negotiate ad-hoc license agreement. 
-
-
-## 2. Usage of This Library
+## 1. Usage of This Library
 First, install project with command bellow:
 ```
 mvn install
@@ -38,7 +31,7 @@ Add this Maven dependency to your `pom.xml`:
 ```
 NOTE: Change version to currently released version of kypo2-security-commons.
 
-## 3. Setting up the Project with Imported Security Commons (Project Configuration)
+## 2. Setting up the Project with Imported Security Commons (Project Configuration)
 ### Creation of JSON File with Roles 
 
 You need to create file `roles.json` in the classpath of your project. In the file, you can define initial roles for your microservice. 
