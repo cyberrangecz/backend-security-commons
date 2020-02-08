@@ -71,7 +71,7 @@ public class StartUpRunner implements ApplicationRunner {
         httpHeaders.setBasicAuth("microservice", "micros");
         RegisterMicroserviceDTO newMicroservice = new RegisterMicroserviceDTO();
         newMicroservice.setName(microserviceName);
-        String endpoint = serverPort + "://" +
+        String endpoint = serverProtocol + "://" +
                 serverIpAddress + ":" +
                 serverPort + "/" +
                 servletContext;
