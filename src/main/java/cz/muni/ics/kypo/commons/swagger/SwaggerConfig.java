@@ -64,7 +64,7 @@ public class SwaggerConfig {
         LOG.debug("SwaggerConfig -> apiInfo()");
         return new ApiInfoBuilder()
                 .title("REST API documentation")
-                .description("Developed By CSIRT team")
+                .description("Developed by CSIRT team")
                 .termsOfServiceUrl("Licensed by CSIRT team")
                 .build();
     }
