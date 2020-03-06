@@ -24,20 +24,16 @@
         <swagger.version>2.9.2</swagger.version>
         <mitre.oidc.version>1.3.2</mitre.oidc.version>
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+        
+        <proprietary-repo-id>kypo-nexus</proprietary-repo-id>
     </properties>
 
-    <distributionManagement>
+    <repositories>
         <repository>
-            <id>nexus</id>
-            <name>Releases</name>
-            <url>https://kypo-storage.ics.muni.cz:8443/repository/maven-releases/</url>
+            <id>${proprietary-repo-id}</id>
+            <url>${proprietary-repo-url}</url>
         </repository>
-        <snapshotRepository>
-            <id>nexus</id>
-            <name>Snapshot</name>
-            <url>https://kypo-storage.ics.muni.cz:8443/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+    </repositories>
 
     <dependencyManagement>
         <dependencies>
