@@ -53,7 +53,6 @@ createTag:
   artifacts:
     paths:
     - ./pom.xml
-    - ./*/pom.xml
     expire_in: 1 hour
     when: on_success
     
@@ -65,7 +64,7 @@ build:
   - if: '$CI_COMMIT_BRANCH'
   artifacts:
     paths:
-    - $PROJECT_ARTIFACT_ID/target/$PROJECT_ARTIFACT_ID-*.jar
+    - target/$PROJECT_ARTIFACT_ID-*.jar
     expire_in: 1 hour
     when: on_success
     
@@ -87,7 +86,7 @@ deploy:
   - >
     curl -X PUT -v -u
     ${CSIRT_MU_NEXUS_URL_JAVA_DEPLOY_USERNAME}:${CSIRT_MU_NEXUS_URL_JAVA_DEPLOY_PASSWORD}
-    --upload-file $PROJECT_ARTIFACT_ID/target/$PROJECT_ARTIFACT_ID-$VERSION.jar
+    --upload-file target/$PROJECT_ARTIFACT_ID-$VERSION.jar
     ${CSIRT_MU_NEXUS_URL}/$PROJECT_GROUP_ID/$PROJECT_ARTIFACT_ID/$VERSION/$PROJECT_ARTIFACT_ID-$VERSION.jar
   rules:
   - if: '$CI_COMMIT_BRANCH == "master"'
