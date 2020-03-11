@@ -80,7 +80,7 @@ tests:
 deploy:
   stage: deploy
   script:
-  - export VERSION=$(cut -d ' ' -f1 $DEPLOYMENT_INFO_VERSION_FILE)  
+  - export VERSION=$(grep -oP '^([^\s]*)' $DEPLOYMENT_INFO_VERSION_FILE)
   - >
     curl -X PUT -v -u
     ${CSIRT_MU_NEXUS_URL_JAVA_DEPLOY_USERNAME}:${CSIRT_MU_NEXUS_URL_JAVA_DEPLOY_PASSWORD}
