@@ -1,1 +1,1 @@
-1.0.16 Security Commoons Gitlab CI Test
+1.0.17 Security Commoons Gitlab CI Test
