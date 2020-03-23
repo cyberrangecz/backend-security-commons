@@ -80,9 +80,7 @@ tests:
 deploy:
   stage: deploy
   script:
-  #- apt-get update && apt-get install zip unzip
   - export VERSION=$(grep -oP '^([^\s]*)' $DEPLOYMENT_INFO_VERSION_FILE)
-  #- zip $PROJECT_ARTIFACT_ID-$VERSION.zip target/$PROJECT_ARTIFACT_ID-$VERSION.jar pom.xml
   - >
     curl -X PUT -v -u
     ${CSIRT_MU_NEXUS_URL_JAVA_DEPLOY_USERNAME}:${CSIRT_MU_NEXUS_URL_JAVA_DEPLOY_PASSWORD}
