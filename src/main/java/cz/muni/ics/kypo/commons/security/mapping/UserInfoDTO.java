@@ -16,7 +16,7 @@ public class UserInfoDTO {
     private Long userRefId;
     @JsonProperty("full_name")
     private String fullName;
-    private String login;
+    private String sub;
     private String mail;
     @JsonProperty(value = "given_name")
     private String givenName;
@@ -116,21 +116,21 @@ public class UserInfoDTO {
     }
 
     /**
-     * Gets login of the user.
+     * Gets sub of the user.
      *
-     * @return the login of the user.
+     * @return the sub of the user.
      */
-    public String getLogin() {
-        return login;
+    public String getSub() {
+        return sub;
     }
 
     /**
-     * Sets login of the user.
+     * Sets sub of the user.
      *
-     * @param login the login of the user.
+     * @param sub the sub of the user.
      */
-    public void setLogin(String login) {
-        this.login = login;
+    public void setSub(String sub) {
+        this.sub = sub;
     }
 
     /**
@@ -172,7 +172,7 @@ public class UserInfoDTO {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUserRefId(), getLogin());
+        return Objects.hash(getUserRefId(), getSub());
     }
 
     @Override
@@ -180,7 +180,7 @@ public class UserInfoDTO {
         return "UserInfoDTO{" +
                 "userRefId=" + userRefId +
                 ", fullName='" + fullName + '\'' +
-                ", login='" + login + '\'' +
+                ", sub='" + sub + '\'' +
                 ", mail='" + mail + '\'' +
                 ", roles=" + roles +
                 '}';

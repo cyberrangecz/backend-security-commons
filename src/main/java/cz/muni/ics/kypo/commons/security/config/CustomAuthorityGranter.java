@@ -58,7 +58,7 @@ public class CustomAuthorityGranter implements IntrospectionAuthorityGranter {
 
     @Override
     public List<GrantedAuthority> getAuthorities(JsonObject introspectionResponse) {
-        String login = introspectionResponse.get(AuthenticatedUserOIDCItems.SUB.getName()).getAsString();
+        String sub = introspectionResponse.get(AuthenticatedUserOIDCItems.SUB.getName()).getAsString();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", servletRequest.getHeader("Authorization"));
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -66,7 +66,7 @@ public class CustomAuthorityGranter implements IntrospectionAuthorityGranter {
         try {
             ResponseEntity<UserInfoDTO> response =
                     restTemplate.exchange(userAndGroupUserInfoUri, HttpMethod.GET, entity, UserInfoDTO.class);
-            Assert.notEmpty(response.getBody().getRoles(), "No roles for user with login " + login);
+            Assert.notEmpty(response.getBody().getRoles(), "No roles for user with sub " + sub);
             return response.getBody().getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRoleType()))
                     .collect(Collectors.toList());
         } catch (HttpClientErrorException ex) {
