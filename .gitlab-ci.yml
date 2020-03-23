@@ -79,7 +79,6 @@ tests:
   
 deploy:
   stage: deploy
-  image: curlimages/curl
   script:
   - apt-get update && apt-get install zip unzip
   - export VERSION=$(grep -oP '^([^\s]*)' $DEPLOYMENT_INFO_VERSION_FILE)
