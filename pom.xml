@@ -76,7 +76,7 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
-        <!-- logging -->
+        <!-- OpenID Connect dependencies -->
         <dependency>
             <groupId>org.mitre</groupId>
             <artifactId>openid-connect-client</artifactId>
@@ -92,6 +92,7 @@
             <artifactId>openid-connect-common</artifactId>
             <version>${mitre.oidc.version}</version>
         </dependency>
+        <!-- Swagger Documentation dependencies -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
