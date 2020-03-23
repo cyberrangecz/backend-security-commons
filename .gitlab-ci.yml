@@ -81,13 +81,16 @@ tests:
   
 deploy:
   stage: deploy
+  image: curlimages/curl
   script:
+  - apt-get update && apt-get install zip unzip
   - export VERSION=$(grep -oP '^([^\s]*)' $DEPLOYMENT_INFO_VERSION_FILE)
+  - zip $PROJECT_ARTIFACT_ID-$VERSION.zip target/$PROJECT_ARTIFACT_ID-$VERSION.jar pom.xml
   - >
     curl -X PUT -v -u
     ${CSIRT_MU_NEXUS_URL_JAVA_DEPLOY_USERNAME}:${CSIRT_MU_NEXUS_URL_JAVA_DEPLOY_PASSWORD}
-    --upload-file target/$PROJECT_ARTIFACT_ID-$VERSION.jar
-    ${CSIRT_MU_NEXUS_URL}/$PROJECT_GROUP_ID/$PROJECT_ARTIFACT_ID/$VERSION/$PROJECT_ARTIFACT_ID-$VERSION.jar
+    --upload-file $PROJECT_ARTIFACT_ID-$VERSION.zip
+    ${CSIRT_MU_NEXUS_URL}/$PROJECT_GROUP_ID/$PROJECT_ARTIFACT_ID/$VERSION/$PROJECT_ARTIFACT_ID-$VERSION.zip
   rules:
   - if: '$CI_COMMIT_BRANCH == "master"'
     changes:
