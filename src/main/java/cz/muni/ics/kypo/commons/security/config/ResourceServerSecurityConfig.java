@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 /**
  * Configuration of Spring Security beans in production and developer mode.
- *
  */
 @Configuration
 @Import(BeansConfig.class)
@@ -54,7 +53,6 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
 
     /**
      * Instantiates a new ResourceServerSecurityConfig.
-     *
      */
     @Autowired
     public ResourceServerSecurityConfig(CustomCorsFilter customCorsFilter, CustomAuthorityGranter customAuthorityGranter) {
@@ -64,38 +62,33 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
 
     @Bean
     public IntrospectionConfigurationService introspectionConfigurationService() {
-        JWTParsingIntrospectionConfigurationService introspectionConfigurationService =
-                new JWTParsingIntrospectionConfigurationService();
-        introspectionConfigurationService
-                .setServerConfigurationService(serverConfigurationService());
-        introspectionConfigurationService
-                .setClientConfigurationService(clientConfigurationService());
+        JWTParsingIntrospectionConfigurationService introspectionConfigurationService = new JWTParsingIntrospectionConfigurationService();
+        introspectionConfigurationService.setServerConfigurationService(serverConfigurationService());
+        introspectionConfigurationService.setClientConfigurationService(clientConfigurationService());
         return introspectionConfigurationService;
     }
 
     @Bean
     public ServerConfigurationService serverConfigurationService() {
-        DynamicServerConfigurationService serverConfigurationService =
-                new DynamicServerConfigurationService();
-        serverConfigurationService.setWhitelist(issuers.stream().map(String::trim).collect(Collectors.toSet()));
+        DynamicServerConfigurationService serverConfigurationService = new DynamicServerConfigurationService();
+        serverConfigurationService.setWhitelist(issuers.stream()
+                .map(String::trim)
+                .collect(Collectors.toSet()));
         return serverConfigurationService;
     }
 
     @Bean
     public ClientConfigurationService clientConfigurationService() {
         Map<String, RegisteredClient> clients = new HashMap<>();
-        for(int i = 0; i < issuers.size(); i++) {
+        for (int i = 0; i < issuers.size(); i++) {
             RegisteredClient client = new RegisteredClient();
             client.setClientId(clientIdsOfResources.get(i).trim());
             client.setClientSecret(clientSecretResources.get(i).trim());
             client.setScope(scopes);
             clients.put(issuers.get(i).trim(), client);
-        };
-
-        StaticClientConfigurationService clientConfigurationService =
-                new StaticClientConfigurationService();
+        }
+        StaticClientConfigurationService clientConfigurationService = new StaticClientConfigurationService();
         clientConfigurationService.setClients(clients);
-
         return clientConfigurationService;
     }
 
@@ -117,7 +110,7 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
                 .authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.NEVER);
-        if(profile.equals(SpringProfiles.PROD)) {
+        if (profile.equals(SpringProfiles.PROD)) {
             http.x509();
         }
     }

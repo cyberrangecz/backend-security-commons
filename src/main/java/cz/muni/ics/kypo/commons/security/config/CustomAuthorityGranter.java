@@ -28,17 +28,10 @@ import java.util.stream.Collectors;
 /**
  * Class is annotated with {@link Component}, so its mark as candidates for auto-detection when using annotation-based configuration and classpath scanning.
  * This class is responsible for returning a set of Spring Security GrantedAuthority objects to be assigned to the token service's resulting <i>Authentication</i> object.
- *
  */
 @Component
 @PropertySource("file:${path.to.config.file}")
 public class CustomAuthorityGranter implements IntrospectionAuthorityGranter {
-
-
-    private static final String USER_INFO_ENDPOINT = "/users/info";
-
-    @Value("${user-and-group-server.uri}")
-    private String userAndGroupUrl;
 
     private final Logger LOG = LoggerFactory.getLogger(CustomAuthorityGranter.class);
 
@@ -62,12 +55,11 @@ public class CustomAuthorityGranter implements IntrospectionAuthorityGranter {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", servletRequest.getHeader("Authorization"));
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        String userAndGroupUserInfoUri = userAndGroupUrl + USER_INFO_ENDPOINT;
         try {
-            ResponseEntity<UserInfoDTO> response =
-                    restTemplate.exchange(userAndGroupUserInfoUri, HttpMethod.GET, entity, UserInfoDTO.class);
+            ResponseEntity<UserInfoDTO> response = restTemplate.exchange("/users/info", HttpMethod.GET, entity, UserInfoDTO.class);
             Assert.notEmpty(response.getBody().getRoles(), "No roles for user with sub " + sub);
-            return response.getBody().getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRoleType()))
+            return response.getBody().getRoles().stream()
+                    .map(role -> new SimpleGrantedAuthority(role.getRoleType()))
                     .collect(Collectors.toList());
         } catch (HttpClientErrorException ex) {
             throw new SecurityException("Error while getting info about logged in user: " + ex.getStatusCode());
