@@ -1,3 +1,7 @@
+* 9477a58 -- Update pom.xml version based on GitLab tag. Done by CI.
+* bcf691f -- Update VERSION.txt
+* 90583e5 -- Update .gitlab-ci.yml
+* 5028cbb -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * ffbdde3 -- Update pom.xml version based on GitLab tag. Done by CI.
 * c947538 -- Update VERSION.txt
 * bd15a94 -- Update .gitlab-ci.yml
