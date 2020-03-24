@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 /**
  * The StartUpRunner provides control over methods executed during start of application (microservice) which import this project.
- *
  */
 @Component
 public class StartUpRunner implements ApplicationRunner {
@@ -44,8 +43,6 @@ public class StartUpRunner implements ApplicationRunner {
     private String servletContext;
     @Value("${microservice.name}")
     private String microserviceName;
-    @Value("${user-and-group-server.uri}")
-    private String userAndGroupEndpoint;
     @Value("classpath:roles.json")
     private Resource rolesFile;
     private RestTemplate restTemplate;
@@ -80,7 +77,7 @@ public class StartUpRunner implements ApplicationRunner {
         try {
             LOG.info(httpHeaders.toString());
             newMicroservice.setRoles(Arrays.stream(mapper.readValue(roles, RegisterRoleDTO[].class)).collect(Collectors.toCollection(HashSet::new)));
-            restTemplate.exchange(userAndGroupEndpoint + "/microservices", HttpMethod.POST, new HttpEntity<>(mapper.writeValueAsString(newMicroservice), httpHeaders), Void.class);
+            restTemplate.exchange("/microservices", HttpMethod.POST, new HttpEntity<>(mapper.writeValueAsString(newMicroservice), httpHeaders), Void.class);
         } catch (IOException ex) {
             throw new SecurityException("Error while parsing roles for microservices", ex);
         } catch (HttpClientErrorException ex) {
