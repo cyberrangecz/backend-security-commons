@@ -1,12 +1,18 @@
 package cz.muni.ics.kypo.commons.security.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 @Configuration
 public class BeansConfig {
+
+    @Value("${user-and-group-server.uri}")
+    private String userAndGroupEndpoint;
 
     /**
      * Bean creates rest template.
@@ -15,7 +21,9 @@ public class BeansConfig {
      */
     @Bean(name = "kypoSecurityCommonsRestTemplate")
     public RestTemplate restTemplate() {
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(userAndGroupEndpoint));
+        return restTemplate;
     }
 
     /**
@@ -25,6 +33,7 @@ public class BeansConfig {
      * @return the property sources placeholder configurer
      */
     @Bean
+    @Primary
     public static PropertySourcesPlaceholderConfigurer propertyConfigValues() {
         PropertySourcesPlaceholderConfigurer confPropertyPlaceholder = new PropertySourcesPlaceholderConfigurer();
         confPropertyPlaceholder.setIgnoreUnresolvablePlaceholders(true);
