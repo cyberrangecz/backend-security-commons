@@ -1,1 +1,1 @@
-1.0.27 Security Commoons Gitlab CI Test Generation of Changelog
+1.0.28 Security Commoons Gitlab CI Test Generation of Changelog
