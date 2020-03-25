@@ -1,3 +1,11 @@
+* 91d5090 -- Update pom.xml version based on GitLab tag. Done by CI.
+* 942ffa6 -- Update VERSION.txt
+* 2345e5c -- format code.
+*   405817a -- Merge branch '45-set-default-url-for-rest-calls-in-resttemplate' into 'master'
+|\  
+| * 0229dd7 -- add default URL for rest call.
+|/  
+* 8132b8d -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * 9477a58 -- Update pom.xml version based on GitLab tag. Done by CI.
 * bcf691f -- Update VERSION.txt
 * 90583e5 -- Update .gitlab-ci.yml
