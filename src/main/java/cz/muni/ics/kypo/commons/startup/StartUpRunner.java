@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -73,7 +74,7 @@ public class StartUpRunner implements ApplicationRunner {
                     .post()
                     .uri("/microservices")
                     .headers(headers -> headers.setBasicAuth("microservice", "micros"))
-                    .body(objectMapper.writeValueAsString(newMicroservice), String.class)
+                    .body(Mono.just(objectMapper.writeValueAsString(newMicroservice)), String.class)
                     .retrieve()
                     .bodyToMono(Void.class)
                     .block();
