@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class ObjectMapperConfigSecurityCommons {
 
     @Bean("kypoSecurityCommonsObjectMapper")
-    public ObjectMapper objectMapper() {
+    public ObjectMapper kypoSecurityCommonsObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
         objectMapper.registerModule(new JavaTimeModule());

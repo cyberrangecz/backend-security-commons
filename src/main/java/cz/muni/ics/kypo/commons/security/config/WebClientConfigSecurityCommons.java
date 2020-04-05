@@ -18,7 +18,7 @@ public class WebClientConfigSecurityCommons {
 
     @Bean
     @Qualifier("userManagementServiceWebClientSecurityCommons")
-    public WebClient userManagementServiceWebClient() {
+    public WebClient userManagementServiceWebClientSecurityCommons() {
         return WebClient.builder()
                 .baseUrl(userAndGroupEndpoint)
                 .defaultHeaders(headers -> {
