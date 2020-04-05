@@ -16,9 +16,15 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.ClientRequest;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,16 +52,16 @@ public class StartUpRunner implements ApplicationRunner {
     private String microserviceName;
     @Value("classpath:roles.json")
     private Resource rolesFile;
-    private RestTemplate restTemplate;
+    private WebClient webClient;
     private ObjectMapper objectMapper;
 
     /**
      * Instantiates a new StartUpRunner.
      */
     @Autowired
-    public StartUpRunner(@Qualifier(value = "kypoSecurityCommonsRestTemplate") RestTemplate restTemplate,
+    public StartUpRunner(@Qualifier(value = "userManagementServiceWebClientSecurityCommons") WebClient webClient,
                          @Qualifier("kypoSecurityCommonsObjectMapper") ObjectMapper objectMapper) {
-        this.restTemplate = restTemplate;
+        this.webClient = webClient;
         this.objectMapper = objectMapper;
     }
 
@@ -71,22 +77,22 @@ public class StartUpRunner implements ApplicationRunner {
         String endpoint = serverProtocol + "://" + serverIpAddress + ":" + serverPort + "/" + servletContext;
         newMicroservice.setEndpoint(endpoint);
         try {
-            newMicroservice.setRoles(Arrays.stream(objectMapper.readValue(roles, RegisterRoleDTO[].class))
-                    .collect(Collectors.toCollection(HashSet::new)));
-            restTemplate.exchange("/microservices", HttpMethod.POST, new HttpEntity<>(objectMapper.writeValueAsString(newMicroservice), initializeHeaders()), Void.class);
+            newMicroservice.setRoles(
+                    Arrays.stream(objectMapper.readValue(roles, RegisterRoleDTO[].class))
+                            .collect(Collectors.toCollection(HashSet::new)));
+            webClient
+                    .post()
+                    .uri("/microservices")
+                    .headers(headers -> headers.setBasicAuth("microservice", "micros"))
+                    .body(objectMapper.writeValueAsString(newMicroservice), String.class)
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
         } catch (IOException ex) {
             throw new SecurityException("Error while parsing roles for microservices", ex);
         } catch (HttpClientErrorException ex) {
             throw new SecurityException("Error while register microservice in user and group microservice. Message: " + System.lineSeparator() + ex.getResponseBodyAsString());
         }
-    }
-
-    private HttpHeaders initializeHeaders() {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
-        httpHeaders.setBasicAuth("microservice", "micros");
-        return httpHeaders;
     }
 
 }

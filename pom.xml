@@ -23,7 +23,7 @@
         <swagger.version>2.9.2</swagger.version>
         <mitre.oidc.version>1.3.2</mitre.oidc.version>
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
-        
+
         <proprietary-repo-id>kypo-nexus</proprietary-repo-id>
     </properties>
 
@@ -54,6 +54,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- web client dependency -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
