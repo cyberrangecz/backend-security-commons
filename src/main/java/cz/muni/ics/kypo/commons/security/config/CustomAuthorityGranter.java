@@ -8,18 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -36,29 +30,33 @@ public class CustomAuthorityGranter implements IntrospectionAuthorityGranter {
     private final Logger LOG = LoggerFactory.getLogger(CustomAuthorityGranter.class);
 
     private HttpServletRequest servletRequest;
-    private RestTemplate restTemplate;
+    private WebClient webClient;
 
     /**
      * Instantiates a new ProductionCustomAuthorityGranter.
      *
-     * @param restTemplate the rest template
+     * @param webClient the rest template
      */
     @Autowired
-    public CustomAuthorityGranter(@Qualifier(value = "kypoSecurityCommonsRestTemplate") RestTemplate restTemplate, HttpServletRequest httpServletRequest) {
-        this.restTemplate = restTemplate;
+    public CustomAuthorityGranter(@Qualifier(value = "userManagementServiceWebClientSecurityCommons") WebClient webClient,
+                                  HttpServletRequest httpServletRequest) {
+        this.webClient = webClient;
         this.servletRequest = httpServletRequest;
     }
 
     @Override
     public List<GrantedAuthority> getAuthorities(JsonObject introspectionResponse) {
-        String sub = introspectionResponse.get(AuthenticatedUserOIDCItems.SUB.getName()).getAsString();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", servletRequest.getHeader("Authorization"));
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        String oidcToken = servletRequest.getHeader("Authorization");
         try {
-            ResponseEntity<UserInfoDTO> response = restTemplate.exchange("/users/info", HttpMethod.GET, entity, UserInfoDTO.class);
-            Assert.notEmpty(response.getBody().getRoles(), "No roles for user with sub " + sub);
-            return response.getBody().getRoles().stream()
+            UserInfoDTO userInfoResponse = webClient
+                    .get()
+                    .uri("/users/info")
+                    .header("Authorization", oidcToken)
+                    .retrieve()
+                    .bodyToMono(UserInfoDTO.class)
+                    .block();
+            return userInfoResponse.getRoles()
+                    .stream()
                     .map(role -> new SimpleGrantedAuthority(role.getRoleType()))
                     .collect(Collectors.toList());
         } catch (HttpClientErrorException ex) {
