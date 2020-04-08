@@ -1,3 +1,11 @@
+* ef1772e -- Update pom.xml version based on GitLab tag. Done by CI.
+* 83d767e -- Update VERSION.txt
+* db09f8a -- body wrapped to Mono.just.
+* f826ffb -- Modify CustomAuthorityGranter to use WebClient.
+* 2ce3bc6 -- rename bean methods.
+* 2c0aeee -- removed unused imports in StartUpRunner class.
+* 5a083f7 -- move to webClient object.
+* afcb6a0 -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * 91d5090 -- Update pom.xml version based on GitLab tag. Done by CI.
 * 942ffa6 -- Update VERSION.txt
 * 2345e5c -- format code.
