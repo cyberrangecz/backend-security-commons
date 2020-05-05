@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.security"})
-@PropertySource("file:${path.to.config.file}")
 public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
 
     @Value("#{'${kypo.idp.4oauth.issuers}'.split(',')}")
