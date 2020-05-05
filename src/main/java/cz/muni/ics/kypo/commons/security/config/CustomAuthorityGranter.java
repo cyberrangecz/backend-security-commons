@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
  * This class is responsible for returning a set of Spring Security GrantedAuthority objects to be assigned to the token service's resulting <i>Authentication</i> object.
  */
 @Component
-@PropertySource("file:${path.to.config.file}")
 public class CustomAuthorityGranter implements IntrospectionAuthorityGranter {
 
     private final Logger LOG = LoggerFactory.getLogger(CustomAuthorityGranter.class);
