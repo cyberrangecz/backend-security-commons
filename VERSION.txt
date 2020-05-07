@@ -1,1 +1,1 @@
-1.0.30 Security Commoons Web Client implemented
+1.0.31 Security Commoons Path to konfig file config removed.
