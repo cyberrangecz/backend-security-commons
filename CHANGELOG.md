@@ -1,3 +1,10 @@
+* 373e981 -- Update pom.xml version based on GitLab tag. Done by CI.
+* 5d6c45a -- removed path to konfig file.
+*   555ded0 -- Merge branch '46-replace-dpath-to-config-file-by-spring-config-location' into 'master'
+|\  
+| * 5033293 -- Removed annotations @PropertySource with path.to.config.file
+|/  
+* 879b26d -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * ef1772e -- Update pom.xml version based on GitLab tag. Done by CI.
 * 83d767e -- Update VERSION.txt
 * db09f8a -- body wrapped to Mono.just.
