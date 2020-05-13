@@ -1,3 +1,9 @@
+* f6a0c3f -- Update pom.xml version based on GitLab tag. Done by CI.
+*   5b09e19 -- Merge branch '47-use-v-prefix-for-tags' into 'master'
+|\  
+| * b9485ce -- Resolve "Use 'v' prefix for tags"
+|/  
+* ae61ad2 -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * 373e981 -- Update pom.xml version based on GitLab tag. Done by CI.
 * 5d6c45a -- removed path to konfig file.
 *   555ded0 -- Merge branch '46-replace-dpath-to-config-file-by-spring-config-location' into 'master'
