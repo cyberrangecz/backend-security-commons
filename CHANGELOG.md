@@ -1,3 +1,10 @@
+* 78dd963 -- Update pom.xml version based on GitLab tag. Done by CI.
+* c823cf8 -- Update VERSION.txt
+*   c730eb9 -- Merge branch '48-check-the-code-and-remove-profiles-if-not-necessary' into 'master'
+|\  
+| * 9887b25 -- Removed environment profiles
+|/  
+* e4ec8e8 -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * f6a0c3f -- Update pom.xml version based on GitLab tag. Done by CI.
 *   5b09e19 -- Merge branch '47-use-v-prefix-for-tags' into 'master'
 |\  
@@ -90,3 +97,117 @@
 * f8927a7 -- Update pom.xml version based on GitLab tag. Done by CI.
 * a3d473a -- Update VERSION.txt
 * fd63d29 -- Update .gitlab-ci.yml
+* d19e89c -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
+* 36b03bb -- Update pom.xml version based on GitLab tag. Done by CI.
+* 8403355 -- Gitlab CI Test
+* 20cbf95 -- Update .gitlab-ci.yml
+* efa4a88 -- Update .gitlab-ci.yml
+* 5ea680b -- Add Security commons Gitlab CI .
+* 1c3d198 -- Update pom.xml
+* e86dce0 -- Update .gitlab-ci.yml
+* b070d91 -- Remove developers tag from pom.xml
+* 478f700 -- Update StartUpRunner.java fix String for new microservice endpoint from serverPort to serverProtocol for HTTP
+* 414c6de -- Update SwaggerConfig.java description for Swagger UI the String Developed by CSIRT team
+* 668c5b3 -- Update pom.xml version based on GitLab tag. Done by CI
+* d39387b -- Update README.md
+* 5d9994d -- Update copyright
+* dade52a -- Add LICENSE
+*   b7aa8cc -- Merge branch '42-remove-author-tags' into 'master'
+|\  
+| * bd595a6 -- author tags removed
+|/  
+* d8a6ec6 -- Update README.md
+* 13dfb93 -- Update README.md
+* fee22a2 -- Update README.md
+* e82e0f2 -- Update pom.xml version based on GitLab tag. Done by CI
+* 855773b -- Update pom.xml version based on GitLab tag. Done by CI
+* b66f61a -- Refactor beans creation.
+* 70d8a43 -- Update pom.xml version based on GitLab tag. Done by CI
+* 4261627 -- Update security-commons PROD and DEV behaviour.
+* 7ad84fe -- Update pom.xml version based on GitLab tag. Done by CI
+*   8f60c97 -- Merge branch '41-add-annotation-qualifier-to-resttemplate' into 'master'
+|\  
+| * f25efb0 -- Annotation added
+|/  
+* 6eb115d -- Update pom.xml version based on GitLab tag. Done by CI
+*   2b53163 -- Merge branch '40-change-profiles-in-customauthoritygranter' into 'master'
+|\  
+| * 3dc7825 -- Removed profiles from CustomAuthorityGranter
+|/  
+* cefd575 -- Update pom.xml version based on GitLab tag. Done by CI
+* dddff9d -- Add distribution management tag.
+* ba6294b -- Update pom.xml version based on GitLab tag. Done by CI
+* e7cb947 -- Add swagger-ui maven dependency to the spring-security commons.
+*   cf98377 -- Merge branch '39-remove-authentication-from-dev-profile' into 'master'
+|\  
+| * 5d27955 -- certificate usage removed from dev profile
+|/  
+*   0b04075 -- Merge branch '38-expose-content-disposition-http-header-in-cors-settings' into 'master'
+|\  
+| * 5d411f6 -- Expose Content-Disposition.
+|/  
+*   85020fd -- Merge branch '37-move-cors-configuration-to-the-separate-class' into 'master'
+|\  
+| * 5e0f58d -- Resolve "Move CORS configuration to the separate class"
+|/  
+* c04af83 -- cors configuration added as primary bean.
+*   96f0ea7 -- Merge branch '36-rename-cors-path-attribute-to-cors-allowed-origins' into 'master'
+|\  
+| * 2e30ff9 -- cors.allowed.origins set
+|/  
+*   9408a38 -- Merge branch '35-common-configuration-for-multiple-oidc-proivders-for-microesrvices' into 'master'
+|\  
+| * 38487f8 -- Changed fields for multiple OIDC providers and README
+|/  
+* 6075863 -- add additional OIDC provider.
+* 1321371 -- OIDC deleted.
+* c1a3cc3 -- Add attribute for oidcidp provider.
+*   5ff2c46 -- Merge branch '33-running-multiple-oidc-providers-in-parallel' into 'master'
+|\  
+| * 4dd2026 -- Resolve "Running multiple OIDC providers in parallel"
+|/  
+*   d21efee -- Merge branch '32-enable-using-x509-certificate' into 'master'
+|\  
+| * 76c4b11 -- x509 certificates enabled in httpsecurity
+|/  
+* ac73d3d -- Edit Deb config files
+* 25a498b -- Fix typo
+* c22f473 -- Add src dir into Deb package
+* b217634 -- Add src dir into Deb package
+* 1b9d952 -- Remove Debian deps, managed in Ansible
+*   8f6ec65 -- Merge branch '31-complete-documentation-of-the-project' into 'master'
+|\  
+| * 5cc86a1 -- Added documentation of project
+|/  
+*   15516ec -- Merge branch '30-add-oidc-json-keys-to-enum-to-prevent-string-mistakes' into 'master'
+|\  
+| * aa55330 -- Enums added.
+|/  
+*   2676003 -- Merge branch '29-add-role-description-when-register-new-microservice' into 'master'
+|\  
+| * 9a6139b -- Resolve "Add role description when register new microservice"
+|/  
+* b379d08 -- removed db migration.
+* 541645b -- Add author tags to all Java classes.
+* 0414194 -- remove inheritable threadlocal.
+*   efbed44 -- Merge branch '28-remove-distributionmanagement-to-be-able-to-deploy-training-and-topology-project' into 'master'
+|\  
+| * bf7ea8e -- Resolve "Remove distributionManagement to be able to deploy training and topology project"
+|/  
+* e3a8ebe -- set strategy security context holder to mode inheritable thread local.
+* 140386d -- Restore original pom.xml version
+* 3a3b3f8 -- Update pom.xml version based on GitLab tag. Done by CI
+* e0a6205 -- Pull master before mvn deploy
+* 86506e4 -- Update pom.xml version based on GitLab tag. Done by CI
+*   65e0135 -- Merge branch '27-finalize-ci-cd' into 'master'
+|\  
+| * fa2bf47 -- Remove git pull command
+| * 690a8a5 -- Fix commands order
+|/  
+* d1b4b6e -- Restore the original pom.xml version
+* 4f909b4 -- Update pom.xml version based on GitLab tag. Done by CI
+* c60b934 -- Try different push within CI approach
+* 0c43e95 -- Ignore .gitlab-ci.yml within CI
+* db0704f -- Checkout change within Origin/master -> master
+* 8deb306 -- Add more debug info
+* 5d17e65 -- Add debug info to CI
