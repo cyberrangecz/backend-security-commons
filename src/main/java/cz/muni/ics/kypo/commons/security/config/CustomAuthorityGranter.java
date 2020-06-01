@@ -1,14 +1,12 @@
 package cz.muni.ics.kypo.commons.security.config;
 
 import com.google.gson.JsonObject;
-import cz.muni.ics.kypo.commons.security.enums.AuthenticatedUserOIDCItems;
 import cz.muni.ics.kypo.commons.security.mapping.UserInfoDTO;
 import org.mitre.oauth2.introspectingfilter.service.IntrospectionAuthorityGranter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;

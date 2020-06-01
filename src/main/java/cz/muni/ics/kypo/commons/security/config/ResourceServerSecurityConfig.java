@@ -1,6 +1,5 @@
 package cz.muni.ics.kypo.commons.security.config;
 
-import cz.muni.ics.kypo.commons.security.enums.SpringProfiles;
 import org.mitre.oauth2.introspectingfilter.IntrospectingTokenService;
 import org.mitre.oauth2.introspectingfilter.service.IntrospectionConfigurationService;
 import org.mitre.oauth2.introspectingfilter.service.impl.JWTParsingIntrospectionConfigurationService;
@@ -44,8 +43,6 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     private List<String> clientSecretResources;
     @Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
     private Set<String> scopes;
-    @Value("${spring.profiles.active}")
-    private String profile;
 
     private CustomAuthorityGranter customAuthorityGranter;
     private CustomCorsFilter corsFilter;
@@ -109,9 +106,6 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
                 .authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.NEVER);
-        if (profile.equals(SpringProfiles.PROD)) {
-            http.x509();
-        }
     }
 
     @Bean
