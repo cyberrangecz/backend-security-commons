@@ -1,1 +1,1 @@
-1.0.32 Security Commoons Path to konfig file config removed.
+1.0.33 Java security removed
