@@ -1,3 +1,6 @@
+* cf6b49e -- Update pom.xml version based on GitLab tag. Done by CI.
+* f230c99 -- Update VERSION.txt
+* 905b91f -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * 78dd963 -- Update pom.xml version based on GitLab tag. Done by CI.
 * c823cf8 -- Update VERSION.txt
 *   c730eb9 -- Merge branch '48-check-the-code-and-remove-profiles-if-not-necessary' into 'master'
