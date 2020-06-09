@@ -1,1 +1,1 @@
-1.0.33 Java security removed
+1.0.34 OpenStack new credentials set in Gitlab CI
