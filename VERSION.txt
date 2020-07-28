@@ -1,1 +1,1 @@
-1.0.34 OpenStack new credentials set in Gitlab CI
+1.0.35 Security-commons changelog generation updated.
