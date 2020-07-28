@@ -1,3 +1,10 @@
+* 5eb8620 -- Update pom.xml version based on GitLab tag. Done by CI.
+* 44d845d -- Update VERSION.txt
+*   87cc2d3 -- Merge branch '50-create-changelog-md-if-it-is-not-present-during-the-change-of-project-version' into 'master'
+|\  
+| * 10f532f -- CHANGELOG.md is added to commit if it is created
+|/  
+* 20f512c -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * cf6b49e -- Update pom.xml version based on GitLab tag. Done by CI.
 * f230c99 -- Update VERSION.txt
 * 905b91f -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
