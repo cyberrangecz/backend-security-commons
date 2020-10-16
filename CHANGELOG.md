@@ -1,3 +1,11 @@
+* a757493 -- Update pom.xml version based on GitLab tag. Done by CI.
+* 2bb936f -- Personal author data removed.
+*   f25bd44 -- Merge branch '51-remove-personal-data-from-project-source-code' into 'master'
+|\  
+| * 2fc8890 -- Personal data have been removed.
+|/  
+* 9311ffe -- Update .gitlab-ci.yml
+* 7a856d7 -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * 5eb8620 -- Update pom.xml version based on GitLab tag. Done by CI.
 * 44d845d -- Update VERSION.txt
 *   87cc2d3 -- Merge branch '50-create-changelog-md-if-it-is-not-present-during-the-change-of-project-version' into 'master'
