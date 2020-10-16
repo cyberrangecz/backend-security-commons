@@ -1,1 +1,1 @@
-1.0.35 Security-commons changelog generation updated.
+1.0.36 Security-commons changelog generation updated.
