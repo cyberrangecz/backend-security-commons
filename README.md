@@ -1,15 +1,6 @@
 # KYPO Security commons
 This project represents the commons project for other back-end projects. This project adds security configuration and manages the roles of groups in other projects.
 
-## Authors
-
-Name          | Email          
-------------- | ------------
-Pavel Šeda    |   441048@mail.muni.cz
-Dominik Pilár |   445537@mail.muni.cz
-Jan Duda      |   394179@mail.muni.cz
-Boris Jaduš   |   445343@mail.muni.cz
-
 ## Content
 
 1.  Usage of This Library
