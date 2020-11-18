@@ -7,7 +7,7 @@ This project represents the commons project for other back-end projects. This pr
 2.  Setting up the Project with Imported Security Commons (Project Configuration)
 
 ## 1. Usage of This Library
-First, install project with command bellow:
+First, install the project with the command bellow:
 ```
 mvn install
 ```
@@ -40,12 +40,5 @@ ROLE{NAME_OF_MICROESERVICE}_{ROLE_TYPE} as an example below. Enum class of roles
 ]
 ```
 
-### OpenID Connect Credentials and Preparation of Property File
-After the previous steps you have to add to the properties file of project which import security-commons all fields as follows:
-* Create a .properties file according to the format shown in the [kypo2 security commons example file](kypo2-security-commons-example.properties). Set the required attributes and save the file.
-
-The tutorials for setting up:
-* [HTTPS and CA](https://gitlab.ics.muni.cz/kypo2/kypo2-project/wikis/Creation-of-Self-Signed-Certificate-and-Import-It-to-CA),
-* [OpenID Connect configuration settings](https://gitlab.ics.muni.cz/kypo2/kypo2-project/wikis/Setting-up-a-Relying-Party-and-Resource-Server-in-OIDC-Provider),
-
-are available at the [KYPO2 project wiki](https://gitlab.ics.muni.cz/kypo2/kypo2-project/wikis/home).
+### Preparation of Property File
+After the previous steps, you have to add to the properties file of the project which imports security-commons library all fields according to the format shown in the [kypo2 security commons example file](kypo2-security-commons-example.properties). Some fields require to set up [OpenID Connect configuration](https://docs.crp.kypo.muni.cz/installation-guide/setting-up-oidc-provider/) and running [kypo2-user-and-group](https://gitlab.ics.muni.cz/muni-kypo-crp/backend-java/kypo2-user-and-group) microservice.
