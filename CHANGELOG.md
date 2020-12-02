@@ -1,3 +1,22 @@
+* 3da09cb -- Update pom.xml version based on GitLab tag. Done by CI.
+* a59957a -- Update VERSION.txt
+*   b968aae -- Merge branch '55-remove-unused-attribute-introspectionuris-from-security-config' into 'master'
+|\  
+| * 142d29c -- Removed unused attribute from security configuration.
+|/  
+*   c77399f -- Merge branch '54-delete-swagger-configuration-and-update-example-config-file' into 'master'
+|\  
+| * 3d9ea98 -- Swagger removed from the project.
+|/  
+*   aff84c5 -- Merge branch '53-update-readme-file' into 'master'
+|\  
+| * c234d21 -- Resolve "Update README file"
+|/  
+*   6167f5b -- Merge branch '52-remove-authors-from-the-readme-file' into 'master'
+|\  
+| * 677c1d8 -- Update README.md
+|/  
+* f2d48aa -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * a757493 -- Update pom.xml version based on GitLab tag. Done by CI.
 * 2bb936f -- Personal author data removed.
 *   f25bd44 -- Merge branch '51-remove-personal-data-from-project-source-code' into 'master'
