@@ -1,1 +1,1 @@
-1.0.36 Security-commons changelog generation updated.
+1.0.37 Removed swagger configuration.
