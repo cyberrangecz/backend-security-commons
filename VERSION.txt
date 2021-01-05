@@ -1,1 +1,1 @@
-1.0.37 Removed swagger configuration.
+1.0.38 CI configured to Gitlab Package Registry.
