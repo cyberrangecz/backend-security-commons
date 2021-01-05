@@ -24,7 +24,7 @@
         <mitre.oidc.version>1.3.2</mitre.oidc.version>
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
 
-        <proprietary-repo-id>kypo-nexus</proprietary-repo-id>
+        <proprietary-repo-id>gitlab-maven</proprietary-repo-id>
     </properties>
 
     <repositories>
@@ -33,6 +33,13 @@
             <url>${proprietary-repo-url}</url>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>${env.ARTIFACT_REPOSITORY_URL}</url>
+        </repository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
