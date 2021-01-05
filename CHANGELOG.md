@@ -1,3 +1,10 @@
+* d732a2e -- Update pom.xml version based on GitLab tag. Done by CI.
+* 785492e -- Update VERSION.txt
+*   9ce703b -- Merge branch '56-deploy-package-to-gitlab-package-registry-on-new-tag' into 'master'
+|\  
+| * dd1f3d2 -- Resolve "Deploy package to Gitlab Package Registry on new tag"
+|/  
+* 9f21d28 -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * 3da09cb -- Update pom.xml version based on GitLab tag. Done by CI.
 * a59957a -- Update VERSION.txt
 *   b968aae -- Merge branch '55-remove-unused-attribute-introspectionuris-from-security-config' into 'master'
