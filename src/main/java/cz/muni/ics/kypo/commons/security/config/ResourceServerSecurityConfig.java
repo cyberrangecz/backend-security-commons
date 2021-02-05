@@ -89,6 +89,7 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
         resources.tokenServices(tokenServices());
+        resources.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
     }
 
     @Override
