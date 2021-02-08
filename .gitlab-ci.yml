@@ -1,9 +1,6 @@
 image: 'maven:3.6.3-jdk-11-slim'
 
 variables:
-  LANG: C.UTF-8
-  LC_ALL: C.UTF-8
-  PROJECT_GROUP_ID: cz/muni/ics/kypo
   PROJECT_ARTIFACT_ID: kypo2-security-commons
   DEPLOYMENT_INFO_VERSION_FILE: VERSION.txt
   
