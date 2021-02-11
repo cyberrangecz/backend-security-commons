@@ -1,3 +1,14 @@
+* 3230c86 -- Update pom.xml version based on GitLab tag. Done by CI.
+* f278876 -- Update VERSION.txt
+*   01cf003 -- Merge branch '58-remove-unused-variables-from-gitlab-ci-yml' into 'master'
+|\  
+| * a936087 -- Update .gitlab-ci.yml
+|/  
+*   94acac7 -- Merge branch '57-use-handlerexceptionresolver-to-resolve-authentication-exception' into 'master'
+|\  
+| * 62ccba5 -- Created custom authentication entry point.
+|/  
+* 8485484 -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * d732a2e -- Update pom.xml version based on GitLab tag. Done by CI.
 * 785492e -- Update VERSION.txt
 *   9ce703b -- Merge branch '56-deploy-package-to-gitlab-package-registry-on-new-tag' into 'master'
