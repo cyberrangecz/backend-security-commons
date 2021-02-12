@@ -1,3 +1,10 @@
+* 0cfd583 -- Update pom.xml version based on GitLab tag. Done by CI.
+* 8558bb0 -- Update VERSION.txt
+*   4add58e -- Merge branch '59-refactoring-of-the-dependencies-and-imports' into 'master'
+|\  
+| * d8445dc -- Resolve "Refactoring of the dependencies and imports"
+|/  
+* b4cfa84 -- CHANGELOG.md file updated with commits between the current and previous tag. Done by CI.
 * 3230c86 -- Update pom.xml version based on GitLab tag. Done by CI.
 * f278876 -- Update VERSION.txt
 *   01cf003 -- Merge branch '58-remove-unused-variables-from-gitlab-ci-yml' into 'master'
