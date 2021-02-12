@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.commons.security.mapping;
+package cz.muni.ics.kypo.commons.startup.mapping;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

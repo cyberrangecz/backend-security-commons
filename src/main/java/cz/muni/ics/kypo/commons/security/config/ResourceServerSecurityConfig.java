@@ -1,5 +1,7 @@
 package cz.muni.ics.kypo.commons.security.config;
 
+import cz.muni.ics.kypo.commons.security.CustomAuthenticationEntryPoint;
+import cz.muni.ics.kypo.commons.webclient.config.WebClientConfigSecurityCommons;
 import org.mitre.oauth2.introspectingfilter.IntrospectingTokenService;
 import org.mitre.oauth2.introspectingfilter.service.IntrospectionConfigurationService;
 import org.mitre.oauth2.introspectingfilter.service.impl.JWTParsingIntrospectionConfigurationService;
@@ -27,10 +29,10 @@ import java.util.stream.Collectors;
  * Configuration of Spring Security beans in production and developer mode.
  */
 @Configuration
-@Import(BeansConfig.class)
+@Import(WebClientConfigSecurityCommons.class)
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.security"})
+@ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.security.config"})
 public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
 
     @Value("#{'${kypo.idp.4oauth.issuers}'.split(',')}")
@@ -42,8 +44,8 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     @Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
     private Set<String> scopes;
 
-    private CustomAuthorityGranter customAuthorityGranter;
-    private CustomCorsFilter corsFilter;
+    private final CustomAuthorityGranter customAuthorityGranter;
+    private final CustomCorsFilter corsFilter;
 
     /**
      * Instantiates a new ResourceServerSecurityConfig.

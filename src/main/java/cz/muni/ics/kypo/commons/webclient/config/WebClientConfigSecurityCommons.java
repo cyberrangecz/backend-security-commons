@@ -1,5 +1,6 @@
-package cz.muni.ics.kypo.commons.security.config;
+package cz.muni.ics.kypo.commons.webclient.config;
 
+import cz.muni.ics.kypo.commons.BeansConfiguration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-@Import({BeansConfig.class, ObjectMapperConfigSecurityCommons.class})
+@Import({BeansConfiguration.class})
 public class WebClientConfigSecurityCommons {
 
     @Value("${user-and-group-server.uri}")

@@ -1,8 +1,8 @@
 package cz.muni.ics.kypo.commons.startup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.muni.ics.kypo.commons.security.mapping.RegisterMicroserviceDTO;
-import cz.muni.ics.kypo.commons.security.mapping.RegisterRoleDTO;
+import cz.muni.ics.kypo.commons.startup.mapping.RegisterMicroserviceDTO;
+import cz.muni.ics.kypo.commons.startup.mapping.RegisterRoleDTO;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

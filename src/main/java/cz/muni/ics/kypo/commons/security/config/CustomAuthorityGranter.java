@@ -26,8 +26,8 @@ public class CustomAuthorityGranter implements IntrospectionAuthorityGranter {
 
     private final Logger LOG = LoggerFactory.getLogger(CustomAuthorityGranter.class);
 
-    private HttpServletRequest servletRequest;
-    private WebClient webClient;
+    private final HttpServletRequest servletRequest;
+    private final WebClient webClient;
 
     /**
      * Instantiates a new ProductionCustomAuthorityGranter.
