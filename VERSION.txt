@@ -1,1 +1,1 @@
-1.0.39 Custom handling of the unauthorized exception.
+1.0.40 Refactoring of imports, dependencies and packages.
