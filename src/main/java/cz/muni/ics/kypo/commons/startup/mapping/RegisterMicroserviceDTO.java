@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.commons.security.mapping;
+package cz.muni.ics.kypo.commons.startup.mapping;
 
 import java.util.HashSet;
 import java.util.Set;

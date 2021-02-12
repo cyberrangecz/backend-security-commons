@@ -1,4 +1,4 @@
-package cz.muni.ics.kypo.commons.security.config;
+package cz.muni.ics.kypo.commons.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
