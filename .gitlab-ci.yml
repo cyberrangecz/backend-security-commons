@@ -37,7 +37,7 @@ createTag:
   - git commit -am "Update pom.xml version based on GitLab tag. Done by CI."
   # create new tag
   - git tag -a v$VERSION -m "$TAG_MESSAGE"
-  - git push
+  - git push -o ci.skip
   rules:
   - if: '$CI_COMMIT_BRANCH == "master"'
     changes:
