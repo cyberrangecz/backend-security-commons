@@ -33,7 +33,7 @@ createTag:
   - export VERSION=$(grep -oP '^([^\s]*)' $DEPLOYMENT_INFO_VERSION_FILE)
   - export TAG_MESSAGE=$(grep -oP '(?<=\s)[^\s].*' $DEPLOYMENT_INFO_VERSION_FILE)
   # update project version
-  - mvn versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false -Dproprietary-repo-url=$PROPRIETARY_REPO_URL
+  - mvn versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false
   - git commit -am "Update pom.xml version based on GitLab tag. Done by CI."
   # create new tag
   - git tag -a v$VERSION -m "$TAG_MESSAGE"
