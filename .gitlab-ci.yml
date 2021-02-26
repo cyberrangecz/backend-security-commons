@@ -5,13 +5,13 @@ variables:
   DEPLOYMENT_INFO_VERSION_FILE: VERSION.txt
   
 stages:
-  - createTag
+  - create_tag
   - build
   - tests
   - deploy
   
-createTag:
-  stage: createTag
+create_tag:
+  stage: create_tag
   before_script:
   # ssh config
   - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
