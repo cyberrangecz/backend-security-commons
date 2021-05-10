@@ -6,7 +6,7 @@
 
     <groupId>cz.muni.ics.kypo</groupId>
     <artifactId>kypo-security-commons</artifactId>
-    <version>1.0.41</version>
+    <version>1.0.42</version>
     <packaging>jar</packaging>
 
     <parent>
