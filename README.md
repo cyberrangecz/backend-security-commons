@@ -16,8 +16,8 @@ Add this Maven dependency to your `pom.xml`:
 ```        
 <dependency>
     <groupId>cz.muni.ics.kypo</groupId>
-    <artifactId>kypo2-security-commons</artifactId>
-    <version>${kypo2-security-commons-actual-version}</version>
+    <artifactId>kypo-security-commons</artifactId>
+    <version>${kypo-security-commons-actual-version}</version>
 </dependency>
 ```
 **NOTE:** Change version to currently released version of kypo2-security-commons.
@@ -50,4 +50,4 @@ To add OAuth2 security configuration add the following import to your configurat
 ```
 
 ## 2. Setting up the Project with Imported Security Commons (Project Configuration)
-After the previous steps, you have to add to the properties file of the project which imports security-commons library all fields according to the format shown in the [kypo2 security commons example file](kypo2-security-commons-example.properties). Some fields require to set up [OpenID Connect configuration](https://docs.crp.kypo.muni.cz/installation-guide/setting-up-oidc-provider/) and running [kypo2-user-and-group](https://gitlab.ics.muni.cz/muni-kypo-crp/backend-java/kypo2-user-and-group) microservice.
+After the previous steps, you have to add to the properties file of the project which imports security-commons library all fields according to the format shown in the [kypo security commons example file](kypo-security-commons-example.properties). Some fields require to set up [OpenID Connect configuration](https://docs.crp.kypo.muni.cz/installation-guide/setting-up-oidc-provider/) and running [kypo2-user-and-group](https://gitlab.ics.muni.cz/muni-kypo-crp/backend-java/kypo2-user-and-group) microservice.
