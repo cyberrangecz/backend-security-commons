@@ -1,1 +1,1 @@
-1.0.41 Integration of Gitlab CI Commons.
+1.0.42 Rename kypo2-security-commons to kypo-security-commons
