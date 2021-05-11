@@ -1,1 +1,1 @@
-1.0.43 Rename kypo2-security-commons to kypo-security-commons
+1.0.44 Gitlab CI bugfix
