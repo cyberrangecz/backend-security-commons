@@ -30,20 +30,20 @@ public class StartUpRunner implements ApplicationRunner {
 
     private static Logger LOG = LoggerFactory.getLogger(StartUpRunner.class);
 
-    @Value("${server.protocol}")
-    private String serverProtocol;
-    @Value("${server.ipaddress}")
-    private String serverIpAddress;
     @Value("${server.port}")
-    private String serverPort;
-    @Value("${server.servlet.context}")
-    private String servletContext;
+    private String servicePort;
+
+    @Value("${server.servlet.context-path}")
+    private String serviceContextPath;
+
     @Value("${microservice.name}")
-    private String microserviceName;
+    private String serviceName;
+
     @Value("classpath:roles.json")
     private Resource rolesFile;
-    private WebClient webClient;
-    private ObjectMapper objectMapper;
+
+    private final WebClient webClient;
+    private final ObjectMapper objectMapper;
 
     /**
      * Instantiates a new StartUpRunner.
@@ -63,8 +63,8 @@ public class StartUpRunner implements ApplicationRunner {
 
     private void registerMicroserviceWithRoles(String roles) {
         RegisterMicroserviceDTO newMicroservice = new RegisterMicroserviceDTO();
-        newMicroservice.setName(microserviceName);
-        String endpoint = serverProtocol + "://" + serverIpAddress + ":" + serverPort + "/" + servletContext;
+        newMicroservice.setName(serviceName);
+        String endpoint = "BASE_URL:" + servicePort + serviceContextPath;
         newMicroservice.setEndpoint(endpoint);
         try {
             newMicroservice.setRoles(
