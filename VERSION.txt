@@ -1,1 +1,2 @@
+1.0.45 Deploy the package to the GitLab repository instead of the Nexus, changed the required parameters for microservices.
 1.0.44 Gitlab CI bugfix
