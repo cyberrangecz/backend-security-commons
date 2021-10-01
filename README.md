@@ -17,10 +17,9 @@ Add this Maven dependency to your `pom.xml`:
 <dependency>
     <groupId>cz.muni.ics.kypo</groupId>
     <artifactId>kypo-security-commons</artifactId>
-    <version>${kypo-security-commons-actual-version}</version>
+    <version>${kypo-security-commons-version}</version>
 </dependency>
 ```
-**NOTE:** Change version to currently released version of kypo2-security-commons.
 
 ### Register microservice
 To automatically register microservice in the kypo2-user-and-group service add the following import 
