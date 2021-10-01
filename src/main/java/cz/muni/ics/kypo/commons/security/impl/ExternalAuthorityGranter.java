@@ -1,8 +1,7 @@
-package cz.muni.ics.kypo.commons.security.config;
+package cz.muni.ics.kypo.commons.security.impl;
 
-import com.google.gson.JsonObject;
+import cz.muni.ics.kypo.commons.security.AuthorityGranter;
 import cz.muni.ics.kypo.commons.security.mapping.UserInfoDTO;
-import org.mitre.oauth2.introspectingfilter.service.IntrospectionAuthorityGranter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +21,9 @@ import java.util.stream.Collectors;
  * This class is responsible for returning a set of Spring Security GrantedAuthority objects to be assigned to the token service's resulting <i>Authentication</i> object.
  */
 @Component
-public class CustomAuthorityGranter implements IntrospectionAuthorityGranter {
+public class ExternalAuthorityGranter implements AuthorityGranter {
 
-    private final Logger LOG = LoggerFactory.getLogger(CustomAuthorityGranter.class);
+    private final Logger LOG = LoggerFactory.getLogger(ExternalAuthorityGranter.class);
 
     private final HttpServletRequest servletRequest;
     private final WebClient webClient;
@@ -35,14 +34,14 @@ public class CustomAuthorityGranter implements IntrospectionAuthorityGranter {
      * @param webClient the rest template
      */
     @Autowired
-    public CustomAuthorityGranter(@Qualifier(value = "userManagementServiceWebClientSecurityCommons") WebClient webClient,
-                                  HttpServletRequest httpServletRequest) {
+    public ExternalAuthorityGranter(@Qualifier(value = "userManagementServiceWebClientSecurityCommons") WebClient webClient,
+                                    HttpServletRequest httpServletRequest) {
         this.webClient = webClient;
         this.servletRequest = httpServletRequest;
     }
 
     @Override
-    public List<GrantedAuthority> getAuthorities(JsonObject introspectionResponse) {
+    public List<GrantedAuthority> getAuthorities(Object introspectionResponse) {
         String oidcToken = servletRequest.getHeader("Authorization");
         try {
             UserInfoDTO userInfoResponse = webClient
@@ -61,4 +60,3 @@ public class CustomAuthorityGranter implements IntrospectionAuthorityGranter {
         }
     }
 }
-
