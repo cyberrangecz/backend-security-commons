@@ -18,6 +18,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -57,7 +58,7 @@ public class StartUpRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        registerMicroserviceWithRoles(IOUtils.toString(rolesFile.getInputStream()));
+        registerMicroserviceWithRoles(IOUtils.toString(rolesFile.getInputStream(), StandardCharsets.UTF_8));
         LOG.debug("Microservice with roles has been registered.");
     }
 

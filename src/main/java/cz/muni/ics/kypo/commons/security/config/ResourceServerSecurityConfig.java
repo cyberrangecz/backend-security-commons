@@ -1,18 +1,16 @@
 package cz.muni.ics.kypo.commons.security.config;
 
-import cz.muni.ics.kypo.commons.security.CustomAuthenticationEntryPoint;
+import cz.muni.ics.kypo.commons.security.AuthorityGranter;
+import cz.muni.ics.kypo.commons.security.impl.CustomAuthenticationEntryPoint;
+import cz.muni.ics.kypo.commons.security.impl.CustomCorsFilter;
+import cz.muni.ics.kypo.commons.security.impl.DynamicServerConfigurationService;
+import cz.muni.ics.kypo.commons.security.impl.UserInfoTokenService;
 import cz.muni.ics.kypo.commons.webclient.config.WebClientConfigSecurityCommons;
-import org.mitre.oauth2.introspectingfilter.IntrospectingTokenService;
-import org.mitre.oauth2.introspectingfilter.service.IntrospectionConfigurationService;
-import org.mitre.oauth2.introspectingfilter.service.impl.JWTParsingIntrospectionConfigurationService;
-import org.mitre.oauth2.model.RegisteredClient;
-import org.mitre.openid.connect.client.service.ClientConfigurationService;
-import org.mitre.openid.connect.client.service.ServerConfigurationService;
-import org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationService;
-import org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,9 +19,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-import java.util.*;
-import java.util.stream.Collectors;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 /**
  * Configuration of Spring Security beans in production and developer mode.
@@ -32,60 +28,23 @@ import java.util.stream.Collectors;
 @Import(WebClientConfigSecurityCommons.class)
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.security.config"})
+@ComponentScan(basePackages = {"cz.muni.ics.kypo.commons.security.config", "cz.muni.ics.kypo.commons.security.impl"})
 public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
 
-    @Value("#{'${kypo.idp.4oauth.issuers}'.split(',')}")
-    private List<String> issuers;
-    @Value("#{'${kypo.idp.4oauth.resource.clientIds}'.split(',')}")
-    private List<String> clientIdsOfResources;
-    @Value("#{'${kypo.idp.4oauth.resource.clientSecrets}'.split(',')}")
-    private List<String> clientSecretResources;
-    @Value("#{'${kypo.idp.4oauth.scopes}'.split(',')}")
-    private Set<String> scopes;
-
-    private final CustomAuthorityGranter customAuthorityGranter;
     private final CustomCorsFilter corsFilter;
+    private final AuthorityGranter authorityGranter;
+    private final IdentityProvidersConfig providersConfig;
 
     /**
      * Instantiates a new ResourceServerSecurityConfig.
      */
     @Autowired
-    public ResourceServerSecurityConfig(CustomCorsFilter customCorsFilter, CustomAuthorityGranter customAuthorityGranter) {
-        this.corsFilter = customCorsFilter;
-        this.customAuthorityGranter = customAuthorityGranter;
-    }
-
-    @Bean
-    public IntrospectionConfigurationService introspectionConfigurationService() {
-        JWTParsingIntrospectionConfigurationService introspectionConfigurationService = new JWTParsingIntrospectionConfigurationService();
-        introspectionConfigurationService.setServerConfigurationService(serverConfigurationService());
-        introspectionConfigurationService.setClientConfigurationService(clientConfigurationService());
-        return introspectionConfigurationService;
-    }
-
-    @Bean
-    public ServerConfigurationService serverConfigurationService() {
-        DynamicServerConfigurationService serverConfigurationService = new DynamicServerConfigurationService();
-        serverConfigurationService.setWhitelist(issuers.stream()
-                .map(String::trim)
-                .collect(Collectors.toSet()));
-        return serverConfigurationService;
-    }
-
-    @Bean
-    public ClientConfigurationService clientConfigurationService() {
-        Map<String, RegisteredClient> clients = new HashMap<>();
-        for (int i = 0; i < issuers.size(); i++) {
-            RegisteredClient client = new RegisteredClient();
-            client.setClientId(clientIdsOfResources.get(i).trim());
-            client.setClientSecret(clientSecretResources.get(i).trim());
-            client.setScope(scopes);
-            clients.put(issuers.get(i).trim(), client);
-        }
-        StaticClientConfigurationService clientConfigurationService = new StaticClientConfigurationService();
-        clientConfigurationService.setClients(clients);
-        return clientConfigurationService;
+    public ResourceServerSecurityConfig(CustomCorsFilter corsFilter,
+                                        AuthorityGranter authorityGranter,
+                                        IdentityProvidersConfig identityProvidersConfig) {
+        this.corsFilter = corsFilter;
+        this.authorityGranter = authorityGranter;
+        this.providersConfig = identityProvidersConfig;
     }
 
     @Override
@@ -101,21 +60,33 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
                 .and()
                 .addFilterBefore(corsFilter, BasicAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs/**", "/webjars/**")
+                .antMatchers("/webjars/**", "/microservices")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
-                .and().sessionManagement()
+                .and()
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.NEVER);
     }
 
     @Bean
+    public DynamicServerConfigurationService serverConfigurationService() {
+        DynamicServerConfigurationService serverConfigurationService = new DynamicServerConfigurationService(providersConfig.getUserInfoEndpointsMapping());
+        serverConfigurationService.setWhitelist(providersConfig.getSetOfIssuers());
+        return serverConfigurationService;
+    }
+
+    @Bean
     public ResourceServerTokenServices tokenServices() {
-        IntrospectingTokenService tokenService = new IntrospectingTokenService();
-        tokenService.setIntrospectionConfigurationService(introspectionConfigurationService());
+        UserInfoTokenService tokenService = new UserInfoTokenService();
+        tokenService.setServerConfigurationService(serverConfigurationService());
         tokenService.setCacheTokens(true);
-        tokenService.setIntrospectionAuthorityGranter(customAuthorityGranter);
+        tokenService.setAuthorityGranter(authorityGranter);
         return tokenService;
     }
 
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
 }
