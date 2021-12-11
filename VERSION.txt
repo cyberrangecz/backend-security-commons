@@ -1,3 +1,4 @@
+1.0.48 Update log4j2 dependency to 2.15.0 to avoid CVE-2021-44228 vulnerability.
 1.0.47 Prefix kypo.idp.identityProviders renamed to kypo.identity.providers. Added validation of the OIDC config during startup.
 1.0.46 Configuration of OIDC supporting Microsoft ecosystem
 1.0.45 Deploy the package to the GitLab repository instead of the Nexus, changed the required parameters for microservices.
