@@ -42,8 +42,8 @@ public class JsonUtils {
 
     public static List<String> getAsStringList(JsonObject o, String member) throws JsonSyntaxException {
         if (o.has(member)) {
-            return o.get(member).isJsonArray() ? (List) gson.fromJson(o.get(member), (new TypeToken<List<String>>() {
-            }).getType()) : Lists.newArrayList(new String[]{o.get(member).getAsString()});
+            return o.get(member).isJsonArray() ? gson.fromJson(o.get(member), (new TypeToken<List<String>>() {
+            }).getType()) : Lists.newArrayList(o.get(member).getAsString());
         } else {
             return null;
         }

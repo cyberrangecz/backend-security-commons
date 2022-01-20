@@ -7,71 +7,52 @@ import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import cz.muni.ics.kypo.commons.security.ServerConfigurationService;
+import cz.muni.ics.kypo.commons.security.IdentityProvidersService;
+import cz.muni.ics.kypo.commons.security.config.IdentityProvidersConfig;
 import cz.muni.ics.kypo.commons.security.model.WellKnownOpenIDConfiguration;
 import cz.muni.ics.kypo.commons.security.util.JsonUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import static cz.muni.ics.kypo.commons.security.util.JsonUtils.getAsString;
 import static cz.muni.ics.kypo.commons.security.util.JsonUtils.getAsStringList;
 
 
-public class DynamicServerConfigurationService implements ServerConfigurationService {
-    private static final Logger logger = LoggerFactory.getLogger(DynamicServerConfigurationService.class);
-    private final LoadingCache<String, WellKnownOpenIDConfiguration> issuers;
-    private Set<String> whitelist;
-    private Set<String> blacklist;
+@Component
+public class IdentityProvidersServiceImpl implements IdentityProvidersService {
+    private static final Logger logger = LoggerFactory.getLogger(IdentityProvidersServiceImpl.class);
+    private final LoadingCache<String, WellKnownOpenIDConfiguration> providersConfiguration;
+    private final Set<String> providersList;
 
-    public DynamicServerConfigurationService() {
-        this(HttpClientBuilder.create().useSystemProperties().build(), new HashMap<>());
+    @Autowired
+    public IdentityProvidersServiceImpl(IdentityProvidersConfig identityProvidersConfig) {
+        this.providersList = identityProvidersConfig.getSetOfIssuers();
+        HttpClient httpClient = HttpClientBuilder.create().useSystemProperties().build();
+        this.providersConfiguration = CacheBuilder.newBuilder()
+                .build(new OpenIDConnectServiceConfigurationFetcher(httpClient, identityProvidersConfig.getUserInfoEndpointsMapping()));
     }
 
-    public DynamicServerConfigurationService(Map<String, String> userInfoEndpointsMap) {
-        this(HttpClientBuilder.create().useSystemProperties().build(), userInfoEndpointsMap);
-    }
-
-    public DynamicServerConfigurationService(HttpClient httpClient, Map<String, String> userInfoEndpointsMap) {
-        this.whitelist = new HashSet<>();
-        this.blacklist = new HashSet<>();
-        this.issuers = CacheBuilder.newBuilder().build(new OpenIDConnectServiceConfigurationFetcher(httpClient, userInfoEndpointsMap));
-    }
-
-    public Set<String> getWhitelist() {
-        return this.whitelist;
-    }
-
-    public void setWhitelist(Set<String> whitelist) {
-        this.whitelist = whitelist;
-    }
-
-    public Set<String> getBlacklist() {
-        return this.blacklist;
-    }
-
-    public void setBlacklist(Set<String> blacklist) {
-        this.blacklist = blacklist;
-    }
-
-    public WellKnownOpenIDConfiguration getServerConfiguration(String issuer) {
+    public WellKnownOpenIDConfiguration getIdentityProviderConfiguration(String provider) {
         try {
-            if (!this.whitelist.isEmpty() && !this.whitelist.contains(issuer)) {
-                throw new AuthenticationServiceException("Whitelist was nonempty, issuer was not in whitelist: " + issuer);
-            } else if (this.blacklist.contains(issuer)) {
-                throw new AuthenticationServiceException("Issuer was in blacklist: " + issuer);
+            if (!this.providersList.isEmpty() && !this.providersList.contains(provider)) {
+                throw new AuthenticationServiceException("Identity provider: " + provider + " is not recognized.");
             } else {
-                return this.issuers.get(issuer);
+                return this.providersConfiguration.get(provider);
             }
         } catch (ExecutionException | UncheckedExecutionException var3) {
-            logger.warn("Couldn't load configuration for " + issuer + ": " + var3);
+            logger.warn("Couldn't load configuration for " + provider + ": " + var3);
             return null;
         }
     }
@@ -97,26 +78,26 @@ public class DynamicServerConfigurationService implements ServerConfigurationSer
             this.userInfoEndpointsMap = userInfoEndpointsMap;
         }
 
-        public WellKnownOpenIDConfiguration load(String issuer) {
+        public WellKnownOpenIDConfiguration load(String provider) {
             RestTemplate restTemplate = new RestTemplate(this.httpFactory);
             WellKnownOpenIDConfiguration conf = new WellKnownOpenIDConfiguration();
-            String url = issuer + "/.well-known/openid-configuration";
-            String jsonString = restTemplate.getForObject(url, String.class, new Object[0]);
+            String url = provider + "/.well-known/openid-configuration";
+            String jsonString = restTemplate.getForObject(url, String.class);
             JsonElement parsed = JsonParser.parseString(jsonString);
             if (parsed.isJsonObject()) {
                 JsonObject o = parsed.getAsJsonObject();
                 if (!o.has("issuer")) {
                     throw new IllegalStateException("Returned object did not have an 'issuer' field");
                 } else {
-                    if (!issuer.equals(o.get("issuer").getAsString())) {
-                        DynamicServerConfigurationService.logger.info("Issuer used for discover was " + issuer + " but final issuer is " + o.get("issuer").getAsString());
+                    if (!provider.equals(o.get("issuer").getAsString())) {
+                        IdentityProvidersServiceImpl.logger.info("Issuer used for discover was " + provider + " but final issuer is " + o.get("issuer").getAsString());
                     }
 
                     conf.setIssuer(o.get("issuer").getAsString());
                     conf.setAuthorizationEndpointUri(getAsString(o, "authorization_endpoint"));
                     conf.setTokenEndpointUri(getAsString(o, "token_endpoint"));
                     conf.setJwksUri(getAsString(o, "jwks_uri"));
-                    conf.setUserInfoUri(userInfoEndpointsMap.getOrDefault(issuer, getAsString(o, "userinfo_endpoint")));
+                    conf.setUserInfoUri(userInfoEndpointsMap.getOrDefault(provider, getAsString(o, "userinfo_endpoint")));
                     conf.setRegistrationEndpointUri(getAsString(o, "registration_endpoint"));
                     conf.setIntrospectionEndpointUri(getAsString(o, "introspection_endpoint"));
                     conf.setCheckSessionIframe(getAsString(o, "check_session_iframe"));
