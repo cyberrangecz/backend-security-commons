@@ -1,4 +1,4 @@
-image: 'maven:3.6.3-jdk-11-slim'
+image: 'maven:3.8.4-openjdk-17-slim'
 
 cache:
   paths:
@@ -65,7 +65,6 @@ tests:
   
 deploy:
   stage: deploy
-  image: maven:3.6-jdk-11
   script:
     - 'mvn deploy $MAVEN_CLI_OPTS -s etc/ci_settings.xml'
   rules:
