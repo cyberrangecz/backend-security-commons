@@ -39,7 +39,7 @@
 
     <distributionManagement>
         <repository>
-            <id>github-maven</id>
+            <id>github</id>
             <name>GitHub Packages</name>
             <url>${env.ARTIFACT_REPOSITORY_URL}</url>
         </repository>
