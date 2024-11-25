@@ -41,7 +41,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>${vars.ARTIFACT_REPOSITORY_URL}</url>
+            <url>${env.ARTIFACT_REPOSITORY_URL}</url>
         </repository>
     </distributionManagement>
 

@@ -60,3 +60,4 @@ jobs:
           mvn deploy $MAVEN_CLI_OPTS
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARTIFACT_REPOSITORY_URL: ${{ vars.ARTIFACT_REPOSITORY_URL }}
