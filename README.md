@@ -1,4 +1,4 @@
-# KYPO Security commons
+# CyberRangeCZ Security commons
 This project represents the commons project for other back-end projects. This project adds security configuration and manages the roles of groups in other projects.
 
 ## Content
@@ -15,14 +15,14 @@ mvn install
 Add this Maven dependency to your `pom.xml`: 
 ```        
 <dependency>
-    <groupId>cz.muni.ics.kypo</groupId>
-    <artifactId>kypo-security-commons</artifactId>
-    <version>${kypo-security-commons-version}</version>
+    <groupId>cz.cyberrange.platform</groupId>
+    <artifactId>security-commons</artifactId>
+    <version>${security-commons-version}</version>
 </dependency>
 ```
 
 ### Register microservice
-To automatically register microservice in the kypo-user-and-group service add the following import 
+To automatically register microservice in the user-and-group service add the following import 
 to your configuration file: 
 ```
 @Import(value = MicroserviceRegistrationConfiguration.class)
@@ -49,4 +49,4 @@ To add OAuth2 security configuration add the following import to your configurat
 ```
 
 ## 2. Setting up the Project with Imported Security Commons (Project Configuration)
-After the previous steps, you have to add to the properties file of the project which imports security-commons library all fields according to the format shown in the [kypo security commons example file](kypo-security-commons-example.properties). Some fields require to set up [OpenID Connect configuration](https://docs.crp.kypo.muni.cz/installation-guide/setting-up-oidc-provider/) and running [kypo-user-and-group](https://gitlab.ics.muni.cz/muni-kypo-crp/backend-java/kypo-user-and-group) microservice.
+After the previous steps, you have to add to the properties file of the project which imports security-commons library all fields according to the format shown in the [crczp security commons example file](https://github.com/cyberrangecz/backend-security-commons/blob/master/security-commons-example.properties). Some fields require to set up [OpenID Connect configuration](https://docs.platform.cyberrange.cz/installation-guide/setting-up-oidc-provider/) and running [user-and-group](https://github.com/cyberrangecz/backend-user-and-group) microservice.
