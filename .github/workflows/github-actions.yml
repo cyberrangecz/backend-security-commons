@@ -1,0 +1,62 @@
+name: Security сommons CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - ak/actions-config 
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+env:
+  MAVEN_CLI_OPTS: "-Dmaven.repo.local=${{ github.workspace }}/.m2/repository"
+
+jobs:
+  create_tag:
+    uses: cyberrangecz/actions-templates/.github/workflows/tag_template.yml@master
+    with:
+      VERSION: ${{ vars.VERSION }}
+
+  build_maven:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: |
+          mvn clean install $MAVEN_CLI_OPTS -Dproprietary-repo-url=${{ vars.PROPRIETARY_REPO_URL }}
+        env:
+          PROPRIETARY_REPO_URL: ${{ vars.PROPRIETARY_REPO_URL }}
+
+  deploy_maven:
+    needs: build_maven
+    # if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: 'maven'
+
+      - name: Deploy with Maven
+        run: |
+          mvn deploy $MAVEN_CLI_OPTS
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
