@@ -57,7 +57,7 @@ jobs:
 
       - name: Deploy with Maven
         run: |
-          mvn deploy $MAVEN_CLI_OPTS -s etc/ci_settings.xml
+          mvn --batch-mode deploy $MAVEN_CLI_OPTS
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
