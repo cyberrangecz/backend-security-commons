@@ -41,7 +41,7 @@
         <repository>
             <id>github-maven</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/cyberrangecz/backend-security-commons</url>
+            <url>${env.ARTIFACT_REPOSITORY_URL}</url>
         </repository>
     </distributionManagement>
 
