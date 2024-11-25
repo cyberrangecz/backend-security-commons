@@ -57,8 +57,7 @@ jobs:
 
       - name: Deploy with Maven
         run: |
-          mvn deploy $MAVEN_CLI_OPTS -s etc/ci_settings.xml
+          mvn deploy $MAVEN_CLI_OPTS
         env:
-          GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ARTIFACT_REPOSITORY_URL: ${{ vars.ARTIFACT_REPOSITORY_URL }}
