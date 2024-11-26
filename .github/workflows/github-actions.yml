@@ -59,5 +59,5 @@ jobs:
         run: |
           mvn --batch-mode deploy $MAVEN_CLI_OPTS
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ALL_REPOS_ACCESS_TOKEN }}
           ARTIFACT_REPOSITORY_URL: ${{ vars.ARTIFACT_REPOSITORY_URL }}
