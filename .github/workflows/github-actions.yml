@@ -57,7 +57,7 @@ jobs:
 
       - name: Deploy with Maven
         run: |
-          mvn --batch-mode deploy $MAVEN_CLI_OPTS
+          mvn --batch-mode -X deploy $MAVEN_CLI_OPTS
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.ALL_REPOS_ACCESS_TOKEN }}
