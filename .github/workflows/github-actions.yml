@@ -58,6 +58,7 @@ jobs:
       - name: Deploy with Maven
         run: |
           mvn --batch-mode deploy $MAVEN_CLI_OPTS
+          echo $ARTIFACT_REPOSITORY_URL
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ARTIFACT_REPOSITORY_URL: https://maven.pkg.github.com/${{ vars.GITHUB_REPOSITORY }}
