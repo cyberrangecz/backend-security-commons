@@ -27,11 +27,12 @@
         <google-guava.version>31.0.1-jre</google-guava.version>
         <!-- added to avoid log4j2 vulnerability CVE-2021-44228 -->
         <log4j2.version>2.15.0</log4j2.version>
+        <proprietary-repo-id>gitlab-maven</proprietary-repo-id>
     </properties>
 
     <distributionManagement>
         <repository>
-            <id>github</id>
+            <id>github-maven</id>
             <name>GitHub Packages</name>
             <url>${env.ARTIFACT_REPOSITORY_URL}</url>
         </repository>
