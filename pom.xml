@@ -6,9 +6,9 @@
 
     <groupId>cz.cyberrange.platform</groupId>
     <artifactId>security-commons</artifactId>
-    <name>CyberrangeCZ Platform Security Commons</name>
+    <name>CyberRangeCZ Platform Security Commons</name>
     <description>Common definitions and utilities for CyberRangeCZ Platform auth</description>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <parent>
