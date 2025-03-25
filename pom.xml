@@ -11,6 +11,14 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://github.com/cyberrangecz/backend-elasticsearch-documents/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
