@@ -2,23 +2,26 @@ name: Security сommons CI
 
 on:
   push:
-    branches:
+    branches-ignore:
       - master
-      - develop
-      - ak/actions-config 
   pull_request:
     branches:
       - master
   workflow_dispatch:
+    inputs:
+      confirm_action:
+        description: "Type 'yes' if you want to publish and create a new tag"
+        required: true
+        default: "no"
 
 env:
   MAVEN_CLI_OPTS: "-Dmaven.repo.local=${{ github.workspace }}/.m2/repository"
 
 jobs:
-  create_tag:
-    uses: cyberrangecz/actions-templates/.github/workflows/tag_template.yml@master
+  get_current_version:
+    uses: cyberrangecz/actions-templates/.github/workflows/get_version.yml@master
     with:
-      VERSION: ${{ vars.VERSION }}
+      file_path: "pom.xml"
 
   build_maven:
     if: github.event_name != 'pull_request'
@@ -42,7 +45,7 @@ jobs:
 
   deploy_maven:
     needs: build_maven
-    # if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -61,3 +64,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ARTIFACT_REPOSITORY_URL: https://maven.pkg.github.com/${{ github.repository }}
+
+
+  # Controls if version consistent with semver and higner than last git tag.
+  control_tag:
+    if: github.event.pull_request.base.ref == 'master' || github.ref == 'refs/heads/master'
+    needs: get_current_version
+    uses: cyberrangecz/actions-templates/.github/workflows/tag_control_template.yml@master
+    with:
+      VERSION: ${{ needs.get_current_version.outputs.version }}
+
+  # Push tag only from manual workflow_dispatch with confirmed tag creation
+  push_tag:
+    needs: [get_current_version, control_tag, deploy_maven]
+    uses: cyberrangecz/actions-templates/.github/workflows/tag_push_template.yml@master
+    with:
+      VERSION: ${{ needs.get_current_version.outputs.version }}
