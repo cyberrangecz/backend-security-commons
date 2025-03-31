@@ -45,7 +45,7 @@ jobs:
 
   deploy_maven:
     needs: build_maven
-    # if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
