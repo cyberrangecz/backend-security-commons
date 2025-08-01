@@ -15,7 +15,9 @@ on:
         default: "no"
 
 env:
-  MAVEN_CLI_OPTS: "-Dmaven.repo.local=${{ github.workspace }}/.m2/repository"
+  MAVEN_CLI_OPTS: "-s etc/ci_settings.xml -Dmaven.repo.local=${{ github.workspace }}/.m2/repository"
+  MAVEN_PUSH_USER: ${{ vars.MAVEN_PUSH_USER}}
+  MAVEN_PUSH_TOKEN: ${{ secrets.MAVEN_PUSH_TOKEN }}
 
 jobs:
   get_current_version:
@@ -25,7 +27,7 @@ jobs:
 
   build_maven:
     if: github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -35,18 +37,17 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           cache: 'maven'
 
       - name: Build with Maven
         run: |
-          mvn clean install $MAVEN_CLI_OPTS -Dproprietary-repo-url=${{ vars.PROPRIETARY_REPO_URL }}
-        env:
-          PROPRIETARY_REPO_URL: ${{ vars.PROPRIETARY_REPO_URL }}
+          mvn clean install $MAVEN_CLI_OPTS
 
   deploy_maven:
     needs: build_maven
     if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -56,15 +57,12 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           cache: 'maven'
 
       - name: Deploy with Maven
         run: |
           mvn --batch-mode deploy $MAVEN_CLI_OPTS
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ARTIFACT_REPOSITORY_URL: https://maven.pkg.github.com/${{ github.repository }}
-
 
   # Controls if version consistent with semver and higner than last git tag.
   control_tag:
