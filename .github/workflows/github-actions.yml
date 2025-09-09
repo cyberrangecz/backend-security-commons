@@ -18,6 +18,7 @@ env:
   MAVEN_CLI_OPTS: "-s etc/ci_settings.xml -Dmaven.repo.local=${{ github.workspace }}/.m2/repository"
   MAVEN_PUSH_USER: ${{ vars.MAVEN_PUSH_USER}}
   MAVEN_PUSH_TOKEN: ${{ secrets.MAVEN_PUSH_TOKEN }}
+  NVD_API_TOKEN: ${{ secrets.NVD_API }}
 
 jobs:
   get_current_version:
@@ -42,7 +43,7 @@ jobs:
 
       - name: Build with Maven
         run: |
-          mvn clean install $MAVEN_CLI_OPTS
+          mvn -ntp clean install $MAVEN_CLI_OPTS
 
   deploy_maven:
     needs: build_maven
@@ -62,7 +63,7 @@ jobs:
 
       - name: Deploy with Maven
         run: |
-          mvn --batch-mode deploy $MAVEN_CLI_OPTS
+          mvn -ntp deploy $MAVEN_CLI_OPTS
 
   # Controls if version consistent with semver and higner than last git tag.
   control_tag:
