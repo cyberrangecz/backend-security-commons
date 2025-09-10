@@ -14,19 +14,19 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Import({BeansConfiguration.class})
 public class WebClientConfigSecurityCommons {
 
-    @Value("${user-and-group-server.uri}")
-    private String userAndGroupEndpoint;
+  @Value("${user-and-group-server.uri}")
+  private String userAndGroupEndpoint;
 
-    @Bean
-    @Qualifier("userManagementServiceWebClientSecurityCommons")
-    public WebClient userManagementServiceWebClientSecurityCommons() {
-        return WebClient.builder()
-                .baseUrl(userAndGroupEndpoint)
-                .defaultHeaders(headers -> {
-                    headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-                    headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-                })
-                .build();
-    }
-
+  @Bean
+  @Qualifier("userManagementServiceWebClientSecurityCommons")
+  public WebClient userManagementServiceWebClientSecurityCommons() {
+    return WebClient.builder()
+        .baseUrl(userAndGroupEndpoint)
+        .defaultHeaders(
+            headers -> {
+              headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+              headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            })
+        .build();
+  }
 }

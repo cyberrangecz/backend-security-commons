@@ -56,7 +56,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'adopt'
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           cache: 'maven'
@@ -75,7 +75,7 @@ jobs:
 
   # Push tag only from manual workflow_dispatch with confirmed tag creation
   push_tag:
-    needs: [get_current_version, control_tag, deploy_maven]
+    needs: [ get_current_version, control_tag, deploy_maven ]
     uses: cyberrangecz/actions-templates/.github/workflows/tag_push_template.yml@master
     with:
       VERSION: ${{ needs.get_current_version.outputs.version }}

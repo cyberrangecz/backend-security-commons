@@ -12,14 +12,18 @@ First, install the project with the command bellow:
 mvn install
 ```
 
-Add this Maven dependency to your `pom.xml`: 
-```        
+Add this Maven dependency to your `pom.xml`:
+```
 <dependency>
-    <groupId>cz.cyberrange.platform</groupId>
-    <artifactId>security-commons</artifactId>
+    <groupId>cz.cybersecurityhub.maven</groupId>
+    <artifactId>crczp-security-commons</artifactId>
     <version>${security-commons-version}</version>
 </dependency>
 ```
+
+**Requirements:**
+- Java 21 or higher
+- Spring Boot 3.x (compatible with Spring Boot 3.5.3)
 
 ### Register microservice
 To automatically register microservice in the user-and-group service add the following import 

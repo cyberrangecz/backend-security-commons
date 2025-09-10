@@ -2,77 +2,42 @@ package cz.cyberrange.platform.commons.startup.mapping;
 
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Encapsulates information about microservice to be registered in <i>User-and-group</i>.
- *
- */
+/** Encapsulates information about microservice to be registered in <i>User-and-group</i>. */
+@Getter
 public class RegisterMicroserviceDTO {
 
-    private String name;
-    private String endpoint;
-    private Set<RegisterRoleDTO> roles;
+  /** Name of microservice. */
+  @Setter private String name;
 
-    /**
-     * Gets name of microservice.
-     *
-     * @return the name of microservice.
-     */
-    public String getName() {
-        return name;
-    }
+  /** Endpoint of microservice. */
+  @Setter private String endpoint;
 
-    /**
-     * Sets name of microservice.
-     *
-     * @param name the name of microservice.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+  /** Roles which will be used in microservice. */
+  private Set<RegisterRoleDTO> roles;
 
-    /**
-     * Gets endpoint of microservice.
-     *
-     * @return the endpoint of microservice.
-     */
-    public String getEndpoint() {
-        return endpoint;
-    }
+  /**
+   * Sets {@link RegisterRoleDTO}s which will be used in microservice.
+   *
+   * @param roles the roles of microservice.
+   */
+  public void setRoles(Set<RegisterRoleDTO> roles) {
+    this.roles = new HashSet<>(roles);
+  }
 
-    /**
-     * Sets endpoint of microservice.
-     *
-     * @param endpoint the endpoint of microservice.
-     */
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
-
-    /**
-     * Gets {@link RegisterRoleDTO}s which will be used in microservice.
-     *
-     * @return the roles of microservice.
-     */
-    public Set<RegisterRoleDTO> getRoles() {
-        return roles;
-    }
-
-    /**
-     * Sets {@link RegisterRoleDTO}s which will be used in microservice.
-     *
-     * @param roles the roles of microservice.
-     */
-    public void setRoles(Set<RegisterRoleDTO> roles) {
-        this.roles = new HashSet<>(roles);
-    }
-
-    @Override
-    public String toString() {
-        return "RegisterMicroserviceDTO{" +
-                "name='" + name + '\'' +
-                ", endpoint='" + endpoint + '\'' +
-                ", roles=" + roles +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "RegisterMicroserviceDTO{"
+        + "name='"
+        + name
+        + '\''
+        + ", endpoint='"
+        + endpoint
+        + '\''
+        + ", roles="
+        + roles
+        + '}';
+  }
 }

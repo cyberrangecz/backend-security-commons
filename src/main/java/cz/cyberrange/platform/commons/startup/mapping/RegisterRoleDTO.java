@@ -1,96 +1,54 @@
 package cz.cyberrange.platform.commons.startup.mapping;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Encapsulates information about role used in microservice to be registered in <i>User-and-group</i>.
- *
+ * Encapsulates information about role used in microservice to be registered in
+ * <i>User-and-group</i>.
  */
+@Setter
+@Getter
 public class RegisterRoleDTO {
 
-    @JsonProperty(value = "role_type")
-    private String roleType;
-    @JsonProperty(value = "default")
-    private boolean isDefault;
-    @JsonProperty(value = "description")
-    private String description;
+  /** Role type of the role. */
+  @JsonProperty(value = "role_type")
+  private String roleType;
 
-    /**
-     * Gets role type of the role.
-     *
-     * @return the role type of the role.
-     */
-    public String getRoleType() {
-        return roleType;
-    }
+  /** Whether role is default or not. */
+  @JsonProperty(value = "default")
+  private boolean isDefault;
 
-    /**
-     * Sets role type of the role.
-     *
-     * @param roleType the role type of the role.
-     */
-    public void setRoleType(String roleType) {
-        this.roleType = roleType;
-    }
+  /** Description of the role. */
+  @JsonProperty(value = "description")
+  private String description;
 
-    /**
-     * Mark if role is default or not.
-     *
-     * @return true if role is default, false otherwise.
-     */
-    public boolean isDefault() {
-        return isDefault;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    RegisterRoleDTO that = (RegisterRoleDTO) o;
+    return isDefault == that.isDefault && Objects.equals(roleType, that.roleType);
+  }
 
-    /**
-     * Sets mark if role is default or not.
-     *
-     * @param aDefault true if role is default, false otherwise.
-     */
-    public void setDefault(boolean aDefault) {
-        isDefault = aDefault;
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(roleType, isDefault);
+  }
 
-    /**
-     * Gets description of the role.
-     *
-     * @return the description of the role.
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets description of the role.
-     *
-     * @param description the description of the role.
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RegisterRoleDTO that = (RegisterRoleDTO) o;
-        return isDefault == that.isDefault &&
-                Objects.equals(roleType, that.roleType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(roleType, isDefault);
-    }
-
-    @Override
-    public String toString() {
-        return "RegisterRoleDTO{" +
-                "roleType='" + roleType + '\'' +
-                ", isDefault=" + isDefault +
-                ", description='" + description + '\'' +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "RegisterRoleDTO{"
+        + "roleType='"
+        + roleType
+        + '\''
+        + ", isDefault="
+        + isDefault
+        + ", description='"
+        + description
+        + '\''
+        + '}';
+  }
 }
