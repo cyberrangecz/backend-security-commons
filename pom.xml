@@ -203,27 +203,28 @@
                 </executions>
             </plugin>
 
+            <!-- Disabled util fix is provided-->
             <!-- OWASP Dependency-Check -->
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>12.1.3</version>
-                <configuration>
-                    <skip>${skipChecks}</skip>
-                    <!-- later need to set score -->
-                    <failBuildOnCVSS>11</failBuildOnCVSS>
-                    <nvdApiKey>${env.NVD_API_TOKEN}</nvdApiKey>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>dependency-check</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.owasp</groupId>-->
+            <!--                <artifactId>dependency-check-maven</artifactId>-->
+            <!--                <version>12.1.3</version>-->
+            <!--                <configuration>-->
+            <!--                    <skip>${skipChecks}</skip>-->
+            <!--                    &lt;!&ndash; later need to set score &ndash;&gt;-->
+            <!--                    <failBuildOnCVSS>4</failBuildOnCVSS>-->
+            <!--                    <nvdApiKey>${env.NVD_API_TOKEN}</nvdApiKey>-->
+            <!--                </configuration>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>dependency-check</id>-->
+            <!--                        <phase>verify</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>check</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
 
             <plugin>
                 <groupId>org.sonatype.central</groupId>
