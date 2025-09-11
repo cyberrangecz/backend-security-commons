@@ -6,29 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 
 public class TokenCache {
 
   private final Map<String, TokenCacheItem> cache = new HashMap<>();
-  private int defaultExpireTime = 300000;
-  private boolean cacheTokens = true;
-  private boolean cacheNonExpiringTokens = false;
-  private boolean forceCacheExpireTime = false;
-
-  public TokenCache() {}
-
-  public TokenCache(
-      int defaultExpireTime,
-      boolean cacheTokens,
-      boolean cacheNonExpiringTokens,
-      boolean forceCacheExpireTime) {
-    this.defaultExpireTime = defaultExpireTime;
-    this.cacheTokens = cacheTokens;
-    this.cacheNonExpiringTokens = cacheNonExpiringTokens;
-    this.forceCacheExpireTime = forceCacheExpireTime;
-  }
+  @Setter @Getter private int defaultExpireTime = 300000;
+  @Setter @Getter private boolean cacheTokens = true;
+  @Setter @Getter private boolean cacheNonExpiringTokens = false;
+  @Setter @Getter private boolean forceCacheExpireTime = false;
 
   public TokenCacheItem get(String key) {
     if (this.cacheTokens && this.cache.containsKey(key)) {
@@ -41,7 +29,8 @@ public class TokenCache {
     return null;
   }
 
-  public TokenCacheItem put(OAuth2AccessToken accessToken, AbstractAuthenticationToken authToken) {
+  public TokenCacheItem put(
+      @NonNull OAuth2AccessToken accessToken, @NonNull AbstractAuthenticationToken authToken) {
     if (accessToken.getExpiresAt() == null || accessToken.getExpiresAt().isAfter(Instant.now())) {
       TokenCacheItem tco = new TokenCacheItem(accessToken, authToken);
       if (this.cacheTokens && (this.cacheNonExpiringTokens || accessToken.getExpiresAt() != null)) {

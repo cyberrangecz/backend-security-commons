@@ -15,8 +15,10 @@
 
     <scm>
         <url>https://github.com/cyberrangecz/backend-security-commons</url>
-        <connection>scm:git:https://github.com/cyberrangecz/backend-security-commons.git</connection>
-        <developerConnection>scm:git:git@github.com:cyberrangecz/backend-security-commons.git</developerConnection>
+        <connection>scm:git:https://github.com/cyberrangecz/backend-security-commons.git
+        </connection>
+        <developerConnection>scm:git:git@github.com:cyberrangecz/backend-security-commons.git
+        </developerConnection>
         <tag>HEAD</tag>
     </scm>
 
@@ -59,6 +61,10 @@
         <!-- code quality -->
         <error-prone.version>2.41.0</error-prone.version>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <spotbugs.version>4.9.4.0</spotbugs.version>
+
+        <!-- overriden by pipeline-->
+        <skipChecks>false</skipChecks>
     </properties>
 
     <dependencies>
@@ -66,6 +72,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>3.5.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -117,8 +124,47 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>annotationProcessor</scope>
+            <scope>provided</scope>
         </dependency>
+
+        <!-- Dependency overrides for CVE patches -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-http2</artifactId>
+            <version>4.1.125.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport</artifactId>
+            <version>4.1.125.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty-http</artifactId>
+            <version>1.2.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>6.2.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>11.0.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>6.2.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>6.2.10</version>
+        </dependency>
+
     </dependencies>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
@@ -185,7 +231,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.9.4.0</version>
+                <version>${spotbugs.version}</version>
                 <configuration>
                     <skip>${skipChecks}</skip>
                     <effort>Max</effort>
@@ -204,7 +250,7 @@
             </plugin>
 
             <!-- Disabled util fix is provided-->
-            <!-- OWASP Dependency-Check -->
+            <!-- OWASP Dependency-Check-->
             <!--            <plugin>-->
             <!--                <groupId>org.owasp</groupId>-->
             <!--                <artifactId>dependency-check-maven</artifactId>-->
@@ -245,7 +291,7 @@
                     <compilerArgs>
                         <arg>-XDcompilePolicy=simple</arg>
                         <arg>--should-stop=ifError=FLOW</arg>
-                        <arg>${skipChecks?:"-Xplugin:ErrorProne"}</arg>
+                        <arg>-Xplugin:ErrorProne</arg>
                     </compilerArgs>
                     <release>${java.version}</release>
                     <annotationProcessorPaths>

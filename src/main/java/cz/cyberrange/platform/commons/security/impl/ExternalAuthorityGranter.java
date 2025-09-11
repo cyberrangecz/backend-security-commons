@@ -56,8 +56,7 @@ public class ExternalAuthorityGranter implements AuthorityGranter {
               .header("Authorization", oidcToken)
               .retrieve()
               .bodyToMono(UserInfoDTO.class)
-              .block(); // Note: .block() is acceptable in Servlet context but consider async if
-      // needed
+              .block();
 
       if (userInfoResponse == null) {
         throw new SecurityException(

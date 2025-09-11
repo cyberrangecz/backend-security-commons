@@ -15,8 +15,6 @@ import java.util.List;
 public class JsonUtils {
   private static final Gson gson = new Gson();
 
-  public JsonUtils() {}
-
   public static String getAsString(JsonObject jsonObject, String member) {
     if (jsonObject.has(member)) {
       JsonElement e = jsonObject.get(member);

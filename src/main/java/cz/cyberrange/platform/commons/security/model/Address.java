@@ -20,12 +20,12 @@ public class Address implements Cloneable {
   public Address clone() {
     try {
       Address clone = (Address) super.clone();
-      clone.setFormatted(this.getFormatted());
-      clone.setStreetAddress(this.getStreetAddress());
-      clone.setLocality(this.getLocality());
-      clone.setRegion(this.getRegion());
-      clone.setPostalCode(this.getPostalCode());
-      clone.setCountry(this.getCountry());
+      clone.setFormatted(this.formatted);
+      clone.setStreetAddress(this.streetAddress);
+      clone.setLocality(this.locality);
+      clone.setRegion(this.region);
+      clone.setPostalCode(this.postalCode);
+      clone.setCountry(this.country);
       return clone;
     } catch (CloneNotSupportedException e) {
       throw new AssertionError();

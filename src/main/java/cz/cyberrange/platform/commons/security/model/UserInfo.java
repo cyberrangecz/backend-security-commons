@@ -7,6 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.Assert;
 
+/**
+ * The UserInfo class.
+ *
+ * <p>Matches the object received from auth provider.
+ */
 @Setter
 @Getter
 public class UserInfo {

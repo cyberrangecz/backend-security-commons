@@ -8,19 +8,26 @@ public enum OIDCItems {
   ISS("iss", "Specifies the issuing authority.", "https://oidc.provider.cz/oidc/"),
   PREFERRED_USERNAME(
       "preferred_username",
-      "Shorthand name by which the End-User wishes to be referred to at the RP, such as janedoe or j.doe.",
+      "Shorthand name by which the End-User wishes to be referred to at the RP, "
+          + "such as janedoe or j.doe.",
       "999999"),
   GIVEN_NAME(
       "given_name",
-      "Given name(s) or first name(s) of the End-User. Note that in some cultures, people can have multiple given names; all can be present, with the names being separated by space characters.",
+      "Given name(s) or first name(s) of the End-User. "
+          + "Note that in some cultures, people can have multiple given names; all can be present, "
+          + "with the names being separated by space characters.",
       "John"),
   FAMILY_NAME(
       "family_name",
-      "Surname(s) or last name(s) of the End-User. Note that in some cultures, people can have multiple family names or no family name; all can be present, with the names being separated by space characters.",
+      "Surname(s) or last name(s) of the End-User. "
+          + "Note that in some cultures, people can have multiple family names or no family name; "
+          + "all can be present, with the names being separated by space characters.",
       "Doe"),
   NAME(
       "name",
-      "End-User's full name in displayable form including all name parts, possibly including titles and suffixes, ordered according to the End-User's locale and preferences.",
+      "End-User's full name in displayable form including all name parts, "
+          + "possibly including titles and suffixes, "
+          + "ordered according to the End-User's locale and preferences.",
       "Mgr. Ing. John Doe"),
   EMAIL("email", "End-User's preferred e-mail address.", "999999@mail.example.cz"),
   SCOPE("scope", "A space-separated list of scopes.", "openid profile email"),
@@ -32,7 +39,8 @@ public enum OIDCItems {
       "b53f2660-8fa0-4d32-94e4-23a59d7e7888"),
   KID(
       "kid",
-      "The kid (key ID) claim is an optional header claim, used to specify the key for validating the signature.",
+      "The kid (key ID) claim is an optional header claim, "
+          + "used to specify the key for validating the signature.",
       "sxcxzczxaqwEQW5saqQwq645"),
   EXPIRES_AT(
       "expires_at",
@@ -44,7 +52,8 @@ public enum OIDCItems {
       "1560265317"),
   TOKEN_TYPE(
       "token_type",
-      "OAuth 2.0 Token Type value. The value MUST be Bearer or another token_type value that the Client has negotiated with the Authorization Server.",
+      "OAuth 2.0 Token Type value. The value MUST be Bearer or another token_type value "
+          + "that the Client has negotiated with the Authorization Server.",
       "Bearer");
 
   private final String name;

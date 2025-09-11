@@ -12,10 +12,12 @@ public class DefaultExceptionResolverConfig {
   /**
    * Provides a default HandlerExceptionResolver that can be overridden by projects by defining
    * their own HandlerExceptionResolver bean.
+   *
+   * @return default Spring exception resolver
    */
   @Bean
   @ConditionalOnMissingBean(HandlerExceptionResolver.class)
   public HandlerExceptionResolver defaultHandlerExceptionResolver() {
-    return new DefaultHandlerExceptionResolver() {};
+    return new DefaultHandlerExceptionResolver();
   }
 }
