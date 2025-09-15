@@ -5,94 +5,115 @@ import cz.cyberrange.platform.commons.security.impl.CustomAuthenticationEntryPoi
 import cz.cyberrange.platform.commons.security.impl.UserInfoAuthenticationProvider;
 import cz.cyberrange.platform.commons.security.impl.UserInfoValidator;
 import cz.cyberrange.platform.commons.webclient.config.WebClientConfigSecurityCommons;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import java.util.Collections;
-import java.util.List;
-
-/**
- * Configuration of Spring Security beans in production and developer mode.
- */
+/** Configuration of Spring Security beans in production and developer mode. */
 @Configuration
 @Import(WebClientConfigSecurityCommons.class)
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@ComponentScan(basePackages = {"cz.cyberrange.platform.commons.security.config", "cz.cyberrange.platform.commons.security.impl"})
-public class ResourceServerSecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableMethodSecurity
+@EnableWebSecurity
+@ComponentScan(
+    basePackages = {
+      "cz.cyberrange.platform.commons.security.config",
+      "cz.cyberrange.platform.commons.security.impl"
+    })
+public class ResourceServerSecurityConfig {
 
-    @Value("#{'${cors.allowed.origins:#{*}}'.split(',')}")
-    private List<String> corsAllowedOrigins;
-    private final UserInfoValidator userInfoValidator;
-    private final AuthorityGranter authorityGranter;
+  private final UserInfoValidator userInfoValidator;
+  private final AuthorityGranter authorityGranter;
 
-    /**
-     * Instantiates a new ResourceServerSecurityConfig.
-     */
-    @Autowired
-    public ResourceServerSecurityConfig(UserInfoValidator userInfoValidator,
-                                        AuthorityGranter authorityGranter) {
-        this.userInfoValidator = userInfoValidator;
-        this.authorityGranter = authorityGranter;
-    }
+  @Value("#{'${cors.allowed.origins:#{*}}'.split(',')}")
+  private List<String> corsAllowedOrigins;
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(userInfoAuthenticationProvider());
-    }
+  /** Instantiates a new ResourceServerSecurityConfig. */
+  public ResourceServerSecurityConfig(
+      UserInfoValidator userInfoValidator, AuthorityGranter authorityGranter) {
+    this.userInfoValidator = userInfoValidator;
+    this.authorityGranter = authorityGranter;
+  }
 
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-        http
-                .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                    .cors()
-                .and()
-                    .csrf().disable()
-                .addFilterBefore(new BearerTokenAuthenticationFilter(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                    .antMatchers("/webjars/**", "/microservices").permitAll()
-                    .anyRequest().authenticated()
-                .and()
-                    .exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint());
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+      throws Exception {
+    return config.getAuthenticationManager();
+  }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(false);
-        config.setMaxAge(3600L);
-        config.setExposedHeaders(List.of("authorization"));
-        config.setAllowedOrigins(Collections.unmodifiableList(corsAllowedOrigins));
-        config.setAllowedHeaders(List.of("content-type", "authorization", "x-auth-token"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
+  @Bean
+  public UserInfoAuthenticationProvider userInfoAuthenticationProvider() {
+    return new UserInfoAuthenticationProvider(authorityGranter, userInfoValidator);
+  }
 
-    @Bean
-    public UserInfoAuthenticationProvider userInfoAuthenticationProvider() {
-        return new UserInfoAuthenticationProvider(authorityGranter, userInfoValidator);
-    }
+  @Bean
+  public SecurityFilterChain filterChain(
+      HttpSecurity http,
+      AuthenticationManager authenticationManager,
+      HandlerExceptionResolver handlerExceptionResolver)
+      throws Exception {
+    http.sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .cors(cors -> cors.configure(http))
+        .csrf(
+            csrf ->
+                csrf.ignoringRequestMatchers(
+                    request -> {
+                      String auth = request.getHeader("Authorization");
+                      return auth != null && auth.startsWith("Bearer ");
+                    }))
+        .addFilterBefore(
+            new BearerTokenAuthenticationFilter(authenticationManager),
+            UsernamePasswordAuthenticationFilter.class)
+        .authorizeHttpRequests(
+            authz ->
+                authz
+                    .requestMatchers("/webjars/**", "/microservices")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .exceptionHandling(
+            ex ->
+                ex.authenticationEntryPoint(
+                    customAuthenticationEntryPoint(handlerExceptionResolver)));
 
-    @Bean
-    public AuthenticationEntryPoint customAuthenticationEntryPoint() {
-        return new CustomAuthenticationEntryPoint();
-    }
+    return http.build();
+  }
+
+  @Bean
+  public CorsFilter corsFilter() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(false);
+    config.setMaxAge(3600L);
+    config.setExposedHeaders(List.of("authorization"));
+    config.setAllowedOrigins(Collections.unmodifiableList(corsAllowedOrigins));
+    config.setAllowedHeaders(List.of("content-type", "authorization", "x-auth-token"));
+    config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+    source.registerCorsConfiguration("/**", config);
+    return new CorsFilter(source);
+  }
+
+  @Bean
+  public AuthenticationEntryPoint customAuthenticationEntryPoint(
+      HandlerExceptionResolver handlerExceptionResolver) {
+    return new CustomAuthenticationEntryPoint(handlerExceptionResolver);
+  }
 }

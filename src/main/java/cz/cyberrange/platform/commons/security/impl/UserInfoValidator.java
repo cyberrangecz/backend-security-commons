@@ -19,41 +19,43 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class UserInfoValidator {
 
-    private final IdentityProvidersService identityProvidersService;
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
+  private final IdentityProvidersService identityProvidersService;
+  private final RestTemplate restTemplate;
+  private final ObjectMapper objectMapper;
 
-    @Autowired
-    public UserInfoValidator(IdentityProvidersService identityProvidersService) {
-        this.identityProvidersService = identityProvidersService;
-        this.restTemplate = new RestTemplate();
-        this.objectMapper = new ObjectMapper().setPropertyNamingStrategy(new PropertyNamingStrategies.SnakeCaseStrategy());
+  @Autowired
+  public UserInfoValidator(IdentityProvidersService identityProvidersService) {
+    this.identityProvidersService = identityProvidersService;
+    this.restTemplate = new RestTemplate();
+    this.objectMapper =
+        new ObjectMapper()
+            .setPropertyNamingStrategy(new PropertyNamingStrategies.SnakeCaseStrategy());
+  }
+
+  public UserInfo validate(String accessToken, String issuerUrl) {
+    String userInfoUrl =
+        this.identityProvidersService.getIdentityProviderConfiguration(issuerUrl).getUserInfoUri();
+
+    HttpEntity<String> request = new HttpEntity<>(headersWithBearerAuthorization(accessToken));
+    try {
+      String userInfoSrc =
+          restTemplate.exchange(userInfoUrl, HttpMethod.GET, request, String.class).getBody();
+      UserInfo userInfo = objectMapper.readValue(userInfoSrc, UserInfo.class);
+      userInfo.setIssuer(issuerUrl);
+      return userInfo;
+    } catch (JsonProcessingException e) {
+      throw new InternalAuthenticationServiceException("Unable to parse user info response.");
+    } catch (HttpClientErrorException e) {
+      if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+        throw new AuthenticationServiceException("Invalid access token: " + accessToken);
+      }
+      throw new AuthenticationServiceException(e.getMessage());
     }
+  }
 
-    public UserInfo validate(String accessToken, String issuerUrl) {
-        String userInfoUrl = this.identityProvidersService.getIdentityProviderConfiguration(issuerUrl).getUserInfoUri();
-
-        HttpEntity<String> request = new HttpEntity<>(headersWithBearerAuthorization(accessToken));
-        try {
-            String userInfoSrc = restTemplate.exchange(userInfoUrl, HttpMethod.GET, request, String.class).getBody();
-            UserInfo userInfo = objectMapper.readValue(userInfoSrc, UserInfo.class);
-            userInfo.setIssuer(issuerUrl);
-            return userInfo;
-        } catch (JsonProcessingException e) {
-            throw new InternalAuthenticationServiceException("Unable to parse user info response.");
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                throw new AuthenticationServiceException("Invalid access token: " + accessToken);
-            }
-            throw new AuthenticationServiceException(e.getMessage());
-        }
-    }
-
-    private HttpHeaders headersWithBearerAuthorization(String bearerToken) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", String.format("Bearer %s", bearerToken));
-        return headers;
-    }
-
-
+  private HttpHeaders headersWithBearerAuthorization(String bearerToken) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", String.format("Bearer %s", bearerToken));
+    return headers;
+  }
 }

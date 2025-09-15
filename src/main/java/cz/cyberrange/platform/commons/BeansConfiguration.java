@@ -12,29 +12,29 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 @Configuration
 public class BeansConfiguration {
 
-    /**
-     * Bean creates property sources placeholder configurer that resolves ${...} placeholders within bean definition
-     * property values and @Value annotations against the current Spring Environment and its set of PropertySources.
-     *
-     * @return the property sources placeholder configurer
-     */
-    @Bean
-    @Primary
-    public static PropertySourcesPlaceholderConfigurer propertyConfigValues() {
-        PropertySourcesPlaceholderConfigurer confPropertyPlaceholder = new PropertySourcesPlaceholderConfigurer();
-        confPropertyPlaceholder.setIgnoreUnresolvablePlaceholders(true);
-        return confPropertyPlaceholder;
-    }
+  /**
+   * Bean creates a property sources placeholder configurer that resolves ${...} placeholders within
+   * bean definition property values and @Value annotations against the current Spring Environment
+   * and its set of PropertySources.
+   *
+   * @return the property sources placeholder configurer
+   */
+  @Bean
+  @Primary
+  public static PropertySourcesPlaceholderConfigurer propertyConfigValues() {
+    PropertySourcesPlaceholderConfigurer confPropertyPlaceholder =
+        new PropertySourcesPlaceholderConfigurer();
+    confPropertyPlaceholder.setIgnoreUnresolvablePlaceholders(true);
+    return confPropertyPlaceholder;
+  }
 
-    @Bean("crczpSecurityCommonsObjectMapper")
-    public ObjectMapper crczpSecurityCommonsObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setPropertyNamingStrategy(new PropertyNamingStrategies.SnakeCaseStrategy());
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        return objectMapper;
-    }
-
-
+  @Bean("crczpSecurityCommonsObjectMapper")
+  public ObjectMapper crczpSecurityCommonsObjectMapper() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.setPropertyNamingStrategy(new PropertyNamingStrategies.SnakeCaseStrategy());
+    objectMapper.registerModule(new JavaTimeModule());
+    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    return objectMapper;
+  }
 }

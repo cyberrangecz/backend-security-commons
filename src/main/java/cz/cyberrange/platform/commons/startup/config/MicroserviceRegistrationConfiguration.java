@@ -7,5 +7,4 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import({WebClientConfigSecurityCommons.class, StartUpRunner.class})
-public class MicroserviceRegistrationConfiguration {
-}
+public class MicroserviceRegistrationConfiguration {}
