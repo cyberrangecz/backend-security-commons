@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cz.cybersecurityhub.maven</groupId>
-    <artifactId>crczp-security-commons</artifactId>
+    <artifactId>security-commons</artifactId>
     <name>CyberRangeCZ Platform Security Commons</name>
     <description>Common definitions and utilities for CyberRangeCZ Platform auth</description>
     <version>2.0.0</version>
@@ -291,7 +291,7 @@
                     <compilerArgs>
                         <arg>-XDcompilePolicy=simple</arg>
                         <arg>--should-stop=ifError=FLOW</arg>
-                        <arg>-Xplugin:ErrorProne</arg>
+                        <arg>${skipChecks?:"-Xplugin:ErrorProne"}</arg>
                     </compilerArgs>
                     <release>${java.version}</release>
                     <annotationProcessorPaths>
