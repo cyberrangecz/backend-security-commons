@@ -65,7 +65,7 @@ jobs:
         run: |
           mvn -ntp deploy $MAVEN_CLI_OPTS
 
-  # Controls if version consistent with semver and higner than last git tag.
+  # Controls if version consistent with server and higher than last git tag.
   control_tag:
     if: github.event.pull_request.base.ref == 'master' || github.ref == 'refs/heads/master'
     needs: get_current_version

@@ -26,8 +26,25 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-/** Configuration of Spring Security beans in production and developer mode. */
+/**
+ * Configuration of Spring Security beans for resource server, supporting both production and
+ * developer modes.
+ *
+ * <p>This class sets up authentication, authorization, CORS, CSRF, and exception handling for the
+ * application. It also configures WebSocket security and integrates with custom authentication
+ * providers and entry points.
+ *
+ * <ul>
+ *   <li>Configures stateless session management and CORS policies.
+ *   <li>Defines beans for authentication manager, authentication provider, and security filter
+ *       chain.
+ *   <li>Handles CSRF for Bearer token requests and exposes custom authentication entry point.
+ *   <li>Sets up allowed origins, headers, and methods for CORS.
+ *   <li>Integrates WebSocket security configuration.
+ * </ul>
+ */
 @Configuration
 @Import(WebClientConfigSecurityCommons.class)
 @EnableMethodSecurity
@@ -39,30 +56,60 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
     })
 public class ResourceServerSecurityConfig {
 
+  /** Validator for user information used in authentication. */
   private final UserInfoValidator userInfoValidator;
+
+  /** Grants authorities to authenticated users. */
   private final AuthorityGranter authorityGranter;
 
+  /** List of allowed origins for CORS configuration, injected from properties. */
   @Value("#{'${cors.allowed.origins:#{*}}'.split(',')}")
   private List<String> corsAllowedOrigins;
 
-  /** Instantiates a new ResourceServerSecurityConfig. */
+  /**
+   * Instantiates a new ResourceServerSecurityConfig.
+   *
+   * @param userInfoValidator Validator for user information used in authentication.
+   * @param authorityGranter Grants authorities to authenticated users.
+   */
   public ResourceServerSecurityConfig(
       UserInfoValidator userInfoValidator, AuthorityGranter authorityGranter) {
     this.userInfoValidator = userInfoValidator;
     this.authorityGranter = authorityGranter;
   }
 
+  /**
+   * Provides the authentication manager bean.
+   *
+   * @param config Spring authentication configuration
+   * @return AuthenticationManager instance
+   * @throws Exception if authentication manager cannot be created
+   */
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
       throws Exception {
     return config.getAuthenticationManager();
   }
 
+  /**
+   * Provides the custom authentication provider bean.
+   *
+   * @return UserInfoAuthenticationProvider instance
+   */
   @Bean
   public UserInfoAuthenticationProvider userInfoAuthenticationProvider() {
     return new UserInfoAuthenticationProvider(authorityGranter, userInfoValidator);
   }
 
+  /**
+   * Configures the security filter chain for HTTP requests.
+   *
+   * @param http HttpSecurity configuration
+   * @param authenticationManager Authentication manager bean
+   * @param handlerExceptionResolver Exception resolver for authentication entry point
+   * @return SecurityFilterChain instance
+   * @throws Exception if filter chain cannot be built
+   */
   @Bean
   public SecurityFilterChain filterChain(
       HttpSecurity http,
@@ -92,11 +139,16 @@ public class ResourceServerSecurityConfig {
         .exceptionHandling(
             ex ->
                 ex.authenticationEntryPoint(
-                    customAuthenticationEntryPoint(handlerExceptionResolver)));
+                    this.customAuthenticationEntryPoint(handlerExceptionResolver)));
 
     return http.build();
   }
 
+  /**
+   * Provides the CORS filter bean for HTTP requests.
+   *
+   * @return CorsFilter instance
+   */
   @Bean
   public CorsFilter corsFilter() {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -111,9 +163,28 @@ public class ResourceServerSecurityConfig {
     return new CorsFilter(source);
   }
 
+  /**
+   * Provides the custom authentication entry point bean.
+   *
+   * @param handlerExceptionResolver Exception resolver for authentication failures
+   * @return AuthenticationEntryPoint instance
+   */
   @Bean
   public AuthenticationEntryPoint customAuthenticationEntryPoint(
       HandlerExceptionResolver handlerExceptionResolver) {
     return new CustomAuthenticationEntryPoint(handlerExceptionResolver);
+  }
+
+  /**
+   * Provides the WebSocket security configurer bean.
+   *
+   * @param userInfoAuthenticationProvider Provider for authenticating users based on Bearer tokens
+   * @return WebSocketMessageBrokerConfigurer instance with {@link
+   *     ChannelUserInfoAuthenticationInterceptor} configured
+   */
+  @Bean
+  public WebSocketMessageBrokerConfigurer webSocketSecurityConfigurer(
+      UserInfoAuthenticationProvider userInfoAuthenticationProvider) {
+    return new MessageBrokerUserInfoAuthenticationConfigurer(userInfoAuthenticationProvider);
   }
 }
