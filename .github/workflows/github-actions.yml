@@ -46,8 +46,7 @@ jobs:
           mvn -ntp clean install $MAVEN_CLI_OPTS
 
   deploy_maven:
-    needs: build_maven
-    if: github.ref == 'refs/heads/master'
+    needs: [build_maven, get_current_version]
     runs-on: ubuntu-24.04
     steps:
       - name: Check out code
@@ -61,9 +60,16 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           cache: 'maven'
 
+      - name: Set dev version
+        if: github.ref != 'refs/heads/master'
+        env:
+          DEV_VERSION: ${{ format('{0}-dev', needs.get_current_version.outputs.version) }}
+        run: |
+          mvn -ntp versions:set -DnewVersion="${DEV_VERSION}"
+
       - name: Deploy with Maven
         run: |
-          mvn -ntp deploy $MAVEN_CLI_OPTS
+          mvn -ntp clean deploy -DskipTests -DskipChecks=true $MAVEN_CLI_OPTS
 
   # Controls if version consistent with server and higher than last git tag.
   control_tag:
