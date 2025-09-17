@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cz.cybersecurityhub.maven</groupId>
-    <artifactId>security-commons</artifactId>
+    <artifactId>crczp-security-commons</artifactId>
     <name>CyberRangeCZ Platform Security Commons</name>
     <description>Common definitions and utilities for CyberRangeCZ Platform auth</description>
     <version>2.1.0</version>
