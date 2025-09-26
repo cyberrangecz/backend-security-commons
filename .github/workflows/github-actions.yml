@@ -19,6 +19,8 @@ env:
   MAVEN_PUSH_USER: ${{ vars.MAVEN_PUSH_USER}}
   MAVEN_PUSH_TOKEN: ${{ secrets.MAVEN_PUSH_TOKEN }}
   NVD_API_TOKEN: ${{ secrets.NVD_API }}
+  OSS_INDEX_USER: ${{ secrets.OSS_INDEX_USER }}
+  OSS_INDEX_TOKEN: ${{ secrets.OSS_INDEX_TOKEN }}
 
 jobs:
   get_current_version:
@@ -41,6 +43,14 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           cache: 'maven'
 
+      - name: Cache NVD
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.m2/repository/org/owasp/dependency-check-data
+          key: check-nvd-stable
+          restore-keys: |
+            check-nvd-stable
+
       - name: Build with Maven
         run: |
           mvn -ntp clean install $MAVEN_CLI_OPTS
@@ -60,10 +70,15 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           cache: 'maven'
 
+      - name: Get the short SHA
+        if: github.ref != 'refs/heads/master'
+        id: short_sha
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Set dev version
         if: github.ref != 'refs/heads/master'
         env:
-          DEV_VERSION: ${{ format('{0}-dev', needs.get_current_version.outputs.version) }}
+          DEV_VERSION: ${{ format('{0}-dev-{1}', needs.get_current_version.outputs.version, steps.short_sha.outputs.sha_short) }}
         run: |
           mvn -ntp versions:set -DnewVersion="${DEV_VERSION}"
 
