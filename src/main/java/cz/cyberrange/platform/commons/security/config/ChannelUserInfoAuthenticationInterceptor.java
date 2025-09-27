@@ -40,11 +40,13 @@ record ChannelUserInfoAuthenticationInterceptor(
   }
 
   private static Optional<String> extractTokenFromParams(StompHeaderAccessor accessor) {
-    Object authTokenParam =
-        accessor.getSessionAttributes() != null
-            ? accessor.getSessionAttributes().get(StringConstants.WS_AUTH_TOKEN_PARAM_KEY)
-            : null;
-    return authTokenParam instanceof String authString && !authString.isEmpty()
+    var paramsMap = accessor.getSessionAttributes();
+    if (paramsMap == null || !paramsMap.containsKey(StringConstants.BEARER_TOKEN_PREFIX)) {
+      return Optional.empty();
+    }
+
+    return paramsMap.get(StringConstants.WS_AUTH_TOKEN_PARAM_KEY) instanceof String authString
+            && !authString.isEmpty()
         ? Optional.of(authString)
         : Optional.empty();
   }
