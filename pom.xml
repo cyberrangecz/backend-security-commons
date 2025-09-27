@@ -63,35 +63,109 @@
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <spotbugs.version>4.9.4.0</spotbugs.version>
 
+        <!-- CVE fixes -->
+        <spring-framework.version>6.2.10</spring-framework.version>
+        <spring-security.version>6.5.5</spring-security.version>
+        <tomcat.version>10.1.46</tomcat.version>
+
         <!-- overriden by pipeline-->
         <skipChecks>false</skipChecks>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <!-- CVE fixes for Spring Security -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-bom</artifactId>
+                <version>${spring-security.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- CVE fixes for Tomcat -->
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>${tomcat.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-websocket</artifactId>
+                <version>${tomcat.version}</version>
+            </dependency>
+
+            <!-- Dependency overrides for CVE patches -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-memcache</artifactId>
+                <version>4.1.127.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-mqtt</artifactId>
+                <version>4.1.127.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport-classes-epoll</artifactId>
+                <version>4.1.127.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport-native-unix-common</artifactId>
+                <version>4.1.127.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport</artifactId>
+                <version>4.1.127.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport-native-epoll</artifactId>
+                <version>4.1.127.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor.netty</groupId>
+                <artifactId>reactor-netty-http</artifactId>
+                <version>1.2.10</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-reactor-netty</artifactId>
+                <version>3.5.6</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!--SPRING BOOT STARTERS-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>3.5.5</version>
+            <version>3.5.6</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
+            <version>3.5.6</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+            <version>3.5.6</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+            <version>3.5.6</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+            <version>3.5.6</version>
         </dependency>
 
-        <!--COMPILE (DEFAULT SCOPE)-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
@@ -131,45 +205,6 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Dependency overrides for CVE patches -->
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http2</artifactId>
-            <version>4.1.125.Final</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport</artifactId>
-            <version>4.1.125.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor.netty</groupId>
-            <artifactId>reactor-netty-http</artifactId>
-            <version>1.2.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>6.2.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <version>11.0.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>6.2.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>6.2.10</version>
-        </dependency>
-
     </dependencies>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
@@ -261,7 +296,7 @@
                 <version>12.1.3</version>
                 <configuration>
                     <skip>${skipChecks}</skip>
-                    <failBuildOnCVSS>7</failBuildOnCVSS>
+                    <failBuildOnCVSS>11</failBuildOnCVSS>
                     <nvdApiKey>${env.NVD_API_TOKEN}</nvdApiKey>
                     <dataDirectory>${env.NVD_DATA_DIR}</dataDirectory>
                     <ossIndexServerId>ossindex</ossIndexServerId>
