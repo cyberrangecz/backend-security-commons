@@ -1,6 +1,7 @@
 package cz.cyberrange.platform.commons.security.impl;
 
 import cz.cyberrange.platform.commons.security.AuthorityGranter;
+import cz.cyberrange.platform.commons.security.config.constants.StringConstants;
 import cz.cyberrange.platform.commons.security.mapping.UserInfoDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ExternalAuthorityGranter implements AuthorityGranter {
     ServletRequestAttributes attributes =
         (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
     HttpServletRequest request = attributes.getRequest();
-    String oidcToken = request.getHeader("Authorization");
+    String oidcToken = request.getHeader(StringConstants.AUTH_HEADER_KEY);
 
     if (oidcToken == null || oidcToken.isEmpty()) {
       throw new SecurityException("Authorization header is missing or empty");
@@ -53,7 +54,7 @@ public class ExternalAuthorityGranter implements AuthorityGranter {
           webClient
               .get()
               .uri("/users/info")
-              .header("Authorization", oidcToken)
+              .header(StringConstants.AUTH_HEADER_KEY, oidcToken)
               .retrieve()
               .bodyToMono(UserInfoDTO.class)
               .block();

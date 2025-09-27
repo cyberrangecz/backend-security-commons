@@ -1,6 +1,7 @@
 package cz.cyberrange.platform.commons.security.config;
 
 import cz.cyberrange.platform.commons.security.AuthorityGranter;
+import cz.cyberrange.platform.commons.security.config.constants.StringConstants;
 import cz.cyberrange.platform.commons.security.impl.CustomAuthenticationEntryPoint;
 import cz.cyberrange.platform.commons.security.impl.UserInfoAuthenticationProvider;
 import cz.cyberrange.platform.commons.security.impl.UserInfoValidator;
@@ -56,6 +57,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
     })
 public class ResourceServerSecurityConfig {
 
+  private static final List<String> ALLOWED_METHODS =
+      List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
+
+  private static final List<String> ALLOWED_HEADERS =
+      List.of("content-type", "authorization", "x-auth-token");
+
+  private static final List<String> EXPOSED_HEADERS = List.of("authorization");
+
   /** Validator for user information used in authentication. */
   private final UserInfoValidator userInfoValidator;
 
@@ -72,7 +81,7 @@ public class ResourceServerSecurityConfig {
    * @param userInfoValidator Validator for user information used in authentication.
    * @param authorityGranter Grants authorities to authenticated users.
    */
-  public ResourceServerSecurityConfig(
+  private ResourceServerSecurityConfig(
       UserInfoValidator userInfoValidator, AuthorityGranter authorityGranter) {
     this.userInfoValidator = userInfoValidator;
     this.authorityGranter = authorityGranter;
@@ -123,8 +132,8 @@ public class ResourceServerSecurityConfig {
             csrf ->
                 csrf.ignoringRequestMatchers(
                     request -> {
-                      String auth = request.getHeader("Authorization");
-                      return auth != null && auth.startsWith("Bearer ");
+                      String auth = request.getHeader(StringConstants.AUTH_HEADER_KEY);
+                      return auth != null && auth.startsWith(StringConstants.BEARER_TOKEN_PREFIX);
                     }))
         .addFilterBefore(
             new BearerTokenAuthenticationFilter(authenticationManager),
@@ -155,10 +164,10 @@ public class ResourceServerSecurityConfig {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(false);
     config.setMaxAge(3600L);
-    config.setExposedHeaders(List.of("authorization"));
+    config.setExposedHeaders(EXPOSED_HEADERS);
     config.setAllowedOrigins(Collections.unmodifiableList(corsAllowedOrigins));
-    config.setAllowedHeaders(List.of("content-type", "authorization", "x-auth-token"));
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+    config.setAllowedHeaders(ALLOWED_HEADERS);
+    config.setAllowedMethods(ALLOWED_METHODS);
     source.registerCorsConfiguration("/**", config);
     return new CorsFilter(source);
   }

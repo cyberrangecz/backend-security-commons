@@ -5,7 +5,11 @@ import cz.cyberrange.platform.commons.security.AuthorityGranter;
 import cz.cyberrange.platform.commons.security.model.UserInfo;
 import java.text.ParseException;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -36,6 +40,10 @@ public class UserInfoAuthenticationProvider implements AuthenticationProvider {
   public UserInfoAuthenticationProvider(
       AuthorityGranter authorityGranter, UserInfoValidator userInfoValidator) {
     this(authorityGranter, userInfoValidator, new TokenCache());
+  }
+
+  private static String buildJWTErrorMessage(String e) {
+    return String.format("An error occurred while attempting to decode the Jwt: %s", e);
   }
 
   @Override
@@ -88,11 +96,8 @@ public class UserInfoAuthenticationProvider implements AuthenticationProvider {
   private com.nimbusds.jwt.JWT parse(String token) {
     try {
       return JWTParser.parse(token);
-    } catch (Exception var3) {
-      throw new JwtException(
-          String.format(
-              "An error occurred while attempting to decode the Jwt: %s", var3.getMessage()),
-          var3);
+    } catch (Exception e) {
+      throw new JwtException(buildJWTErrorMessage(e.getMessage()), e);
     }
   }
 
@@ -106,14 +111,9 @@ public class UserInfoAuthenticationProvider implements AuthenticationProvider {
           .build();
     } catch (Exception e) {
       if (e.getCause() instanceof ParseException) {
-        throw new JwtException(
-            String.format(
-                "An error occurred while attempting to decode the Jwt: %s", "Malformed payload"));
+        throw new JwtException(buildJWTErrorMessage("Malformed payload"), e);
       } else {
-        throw new JwtException(
-            String.format(
-                "An error occurred while attempting to decode the Jwt: %s", e.getMessage()),
-            e);
+        throw new JwtException(buildJWTErrorMessage(e.getMessage()), e);
       }
     }
   }

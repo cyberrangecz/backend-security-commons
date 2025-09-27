@@ -8,7 +8,7 @@
     <artifactId>crczp-security-commons</artifactId>
     <name>CyberRangeCZ Platform Security Commons</name>
     <description>Common definitions and utilities for CyberRangeCZ Platform auth</description>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
     <packaging>jar</packaging>
 
     <url>https://github.com/cyberrangecz/backend-security-commons</url>

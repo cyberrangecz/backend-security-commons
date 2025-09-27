@@ -1,6 +1,8 @@
 package cz.cyberrange.platform.commons.security.config;
 
+import cz.cyberrange.platform.commons.security.config.constants.StringConstants;
 import cz.cyberrange.platform.commons.security.impl.UserInfoAuthenticationProvider;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
@@ -29,6 +31,24 @@ record ChannelUserInfoAuthenticationInterceptor(
    */
   ChannelUserInfoAuthenticationInterceptor {}
 
+  private static Optional<String> extractTokenFromHeader(StompHeaderAccessor accessor) {
+    String authHeader = accessor.getFirstNativeHeader(StringConstants.AUTH_HEADER_KEY);
+
+    return authHeader != null && authHeader.startsWith(StringConstants.BEARER_TOKEN_PREFIX)
+        ? Optional.of(authHeader.substring(7))
+        : Optional.empty();
+  }
+
+  private static Optional<String> extractTokenFromParams(StompHeaderAccessor accessor) {
+    Object authTokenParam =
+        accessor.getSessionAttributes() != null
+            ? accessor.getSessionAttributes().get(StringConstants.WS_AUTH_TOKEN_PARAM_KEY)
+            : null;
+    return authTokenParam instanceof String authString && !authString.isEmpty()
+        ? Optional.of(authString)
+        : Optional.empty();
+  }
+
   /**
    * @param message authorized message
    * @param channel communication channel
@@ -38,18 +58,19 @@ record ChannelUserInfoAuthenticationInterceptor(
   @Override
   public Message<?> preSend(@NonNull Message<?> message, @NonNull MessageChannel channel) {
     StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-    String authHeader = accessor.getFirstNativeHeader("Authorization");
-    if (authHeader != null && authHeader.startsWith("Bearer ")) {
-      String token = authHeader.substring(7);
+    String token =
+        extractTokenFromHeader(accessor)
+            .or(() -> extractTokenFromParams(accessor))
+            .orElseThrow(
+                () ->
+                    new InternalAuthenticationServiceException(
+                        "Unable to parse user info response."));
 
-      Authentication authentication =
-          userInfoAuthenticationProvider.authenticate(
-              new org.springframework.security.oauth2.server.resource.authentication
-                  .BearerTokenAuthenticationToken(token));
-      accessor.setUser(authentication);
-    } else {
-      throw new InternalAuthenticationServiceException("Unable to parse user info response.");
-    }
+    Authentication authentication =
+        userInfoAuthenticationProvider.authenticate(
+            new org.springframework.security.oauth2.server.resource.authentication
+                .BearerTokenAuthenticationToken(token));
+    accessor.setUser(authentication);
 
     return message;
   }
