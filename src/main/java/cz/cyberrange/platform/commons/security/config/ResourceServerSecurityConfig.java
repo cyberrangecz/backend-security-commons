@@ -27,7 +27,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /**
  * Configuration of Spring Security beans for resource server, supporting both production and
@@ -81,7 +80,7 @@ public class ResourceServerSecurityConfig {
    * @param userInfoValidator Validator for user information used in authentication.
    * @param authorityGranter Grants authorities to authenticated users.
    */
-  private ResourceServerSecurityConfig(
+  public ResourceServerSecurityConfig(
       UserInfoValidator userInfoValidator, AuthorityGranter authorityGranter) {
     this.userInfoValidator = userInfoValidator;
     this.authorityGranter = authorityGranter;
@@ -143,6 +142,8 @@ public class ResourceServerSecurityConfig {
                 authz
                     .requestMatchers("/webjars/**", "/microservices")
                     .permitAll()
+                    .requestMatchers("/websocket/**")
+                    .permitAll()
                     .anyRequest()
                     .authenticated())
         .exceptionHandling(
@@ -182,18 +183,5 @@ public class ResourceServerSecurityConfig {
   public AuthenticationEntryPoint customAuthenticationEntryPoint(
       HandlerExceptionResolver handlerExceptionResolver) {
     return new CustomAuthenticationEntryPoint(handlerExceptionResolver);
-  }
-
-  /**
-   * Provides the WebSocket security configurer bean.
-   *
-   * @param userInfoAuthenticationProvider Provider for authenticating users based on Bearer tokens
-   * @return WebSocketMessageBrokerConfigurer instance with {@link
-   *     ChannelUserInfoAuthenticationInterceptor} configured
-   */
-  @Bean
-  public WebSocketMessageBrokerConfigurer webSocketSecurityConfigurer(
-      UserInfoAuthenticationProvider userInfoAuthenticationProvider) {
-    return new MessageBrokerUserInfoAuthenticationConfigurer(userInfoAuthenticationProvider);
   }
 }

@@ -64,7 +64,6 @@
         <spotbugs.version>4.9.4.0</spotbugs.version>
 
         <!-- CVE fixes -->
-        <spring-framework.version>6.2.10</spring-framework.version>
         <spring-security.version>6.5.5</spring-security.version>
         <tomcat.version>10.1.46</tomcat.version>
 
