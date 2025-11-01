@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -74,6 +75,10 @@ public class ResourceServerSecurityConfig {
   @Value("#{'${cors.allowed.origins:#{*}}'.split(',')}")
   private List<String> corsAllowedOrigins;
 
+  /** Server servlet context path, injected from properties. */
+  @Value("${server.servlet.context-path:}")
+  private String contextPath;
+
   /**
    * Instantiates a new ResourceServerSecurityConfig.
    *
@@ -107,6 +112,19 @@ public class ResourceServerSecurityConfig {
   @Bean
   public UserInfoAuthenticationProvider userInfoAuthenticationProvider() {
     return new UserInfoAuthenticationProvider(authorityGranter, userInfoValidator);
+  }
+
+  /**
+   * Completely bypass Spring Security for WebSocket endpoints. This allows the WebSocket handshake
+   * to proceed without interference.
+   *
+   * @return WebSecurityCustomizer that ignores WebSocket paths
+   */
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer() {
+    String websocketPath =
+        (contextPath.isEmpty() ? "" : contextPath) + "/guacamole/api/v1/websocket/**";
+    return (web) -> web.ignoring().requestMatchers(websocketPath);
   }
 
   /**

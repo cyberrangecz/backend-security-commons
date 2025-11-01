@@ -68,7 +68,7 @@ public class UserInfoAuthenticationProvider implements AuthenticationProvider {
     Jwt jwt = this.getJwt(bearerToken);
     UserInfo userInfo = this.userInfoValidator.validate(bearerToken, jwt.getIssuer().toString());
     AbstractAuthenticationToken authToken =
-        this.convertToAuthenticationToken(jwt, userInfo, authentication);
+        this.convertToAuthenticationToken(jwt, userInfo, authentication, bearerToken);
     OAuth2AccessToken accessToken =
         new OAuth2AccessToken(
             OAuth2AccessToken.TokenType.BEARER, bearerToken, jwt.getIssuedAt(), jwt.getExpiresAt());
@@ -76,8 +76,8 @@ public class UserInfoAuthenticationProvider implements AuthenticationProvider {
   }
 
   private AbstractAuthenticationToken convertToAuthenticationToken(
-      Jwt jwt, UserInfo userInfo, Authentication authentication) {
-    Collection<GrantedAuthority> authorities = this.authorityGranter.getAuthorities(userInfo);
+      Jwt jwt, UserInfo userInfo, Authentication authentication, String bearerToken) {
+    Collection<GrantedAuthority> authorities = this.authorityGranter.getAuthorities(bearerToken);
     JwtAuthenticationToken jwtAuthenticationToken =
         new JwtAuthenticationToken(jwt, authorities, userInfo.getSub());
     jwtAuthenticationToken.setDetails(authentication.getDetails());
