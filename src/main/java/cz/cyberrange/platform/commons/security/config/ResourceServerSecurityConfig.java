@@ -1,6 +1,7 @@
 package cz.cyberrange.platform.commons.security.config;
 
 import cz.cyberrange.platform.commons.security.AuthorityGranter;
+import cz.cyberrange.platform.commons.security.config.constants.StringConstants;
 import cz.cyberrange.platform.commons.security.impl.CustomAuthenticationEntryPoint;
 import cz.cyberrange.platform.commons.security.impl.UserInfoAuthenticationProvider;
 import cz.cyberrange.platform.commons.security.impl.UserInfoValidator;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -26,7 +28,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /**
  * Configuration of Spring Security beans for resource server, supporting both production and
@@ -56,6 +57,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
     })
 public class ResourceServerSecurityConfig {
 
+  private static final List<String> ALLOWED_METHODS =
+      List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
+
+  private static final List<String> ALLOWED_HEADERS =
+      List.of("content-type", "authorization", "x-auth-token");
+
+  private static final List<String> EXPOSED_HEADERS = List.of("authorization");
+
   /** Validator for user information used in authentication. */
   private final UserInfoValidator userInfoValidator;
 
@@ -65,6 +74,10 @@ public class ResourceServerSecurityConfig {
   /** List of allowed origins for CORS configuration, injected from properties. */
   @Value("#{'${cors.allowed.origins:#{*}}'.split(',')}")
   private List<String> corsAllowedOrigins;
+
+  /** Server servlet context path, injected from properties. */
+  @Value("${server.servlet.context-path:}")
+  private String contextPath;
 
   /**
    * Instantiates a new ResourceServerSecurityConfig.
@@ -102,6 +115,19 @@ public class ResourceServerSecurityConfig {
   }
 
   /**
+   * Completely bypass Spring Security for WebSocket endpoints. This allows the WebSocket handshake
+   * to proceed without interference.
+   *
+   * @return WebSecurityCustomizer that ignores WebSocket paths
+   */
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer() {
+    String websocketPath =
+        (contextPath.isEmpty() ? "" : contextPath) + "/guacamole/api/v1/websocket/**";
+    return (web) -> web.ignoring().requestMatchers(websocketPath);
+  }
+
+  /**
    * Configures the security filter chain for HTTP requests.
    *
    * @param http HttpSecurity configuration
@@ -123,8 +149,8 @@ public class ResourceServerSecurityConfig {
             csrf ->
                 csrf.ignoringRequestMatchers(
                     request -> {
-                      String auth = request.getHeader("Authorization");
-                      return auth != null && auth.startsWith("Bearer ");
+                      String auth = request.getHeader(StringConstants.AUTH_HEADER_KEY);
+                      return auth != null && auth.startsWith(StringConstants.BEARER_TOKEN_PREFIX);
                     }))
         .addFilterBefore(
             new BearerTokenAuthenticationFilter(authenticationManager),
@@ -133,6 +159,8 @@ public class ResourceServerSecurityConfig {
             authz ->
                 authz
                     .requestMatchers("/webjars/**", "/microservices")
+                    .permitAll()
+                    .requestMatchers("/websocket/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
@@ -155,10 +183,10 @@ public class ResourceServerSecurityConfig {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(false);
     config.setMaxAge(3600L);
-    config.setExposedHeaders(List.of("authorization"));
+    config.setExposedHeaders(EXPOSED_HEADERS);
     config.setAllowedOrigins(Collections.unmodifiableList(corsAllowedOrigins));
-    config.setAllowedHeaders(List.of("content-type", "authorization", "x-auth-token"));
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+    config.setAllowedHeaders(ALLOWED_HEADERS);
+    config.setAllowedMethods(ALLOWED_METHODS);
     source.registerCorsConfiguration("/**", config);
     return new CorsFilter(source);
   }
@@ -173,18 +201,5 @@ public class ResourceServerSecurityConfig {
   public AuthenticationEntryPoint customAuthenticationEntryPoint(
       HandlerExceptionResolver handlerExceptionResolver) {
     return new CustomAuthenticationEntryPoint(handlerExceptionResolver);
-  }
-
-  /**
-   * Provides the WebSocket security configurer bean.
-   *
-   * @param userInfoAuthenticationProvider Provider for authenticating users based on Bearer tokens
-   * @return WebSocketMessageBrokerConfigurer instance with {@link
-   *     ChannelUserInfoAuthenticationInterceptor} configured
-   */
-  @Bean
-  public WebSocketMessageBrokerConfigurer webSocketSecurityConfigurer(
-      UserInfoAuthenticationProvider userInfoAuthenticationProvider) {
-    return new MessageBrokerUserInfoAuthenticationConfigurer(userInfoAuthenticationProvider);
   }
 }

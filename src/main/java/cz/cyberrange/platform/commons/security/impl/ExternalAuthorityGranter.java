@@ -1,17 +1,17 @@
 package cz.cyberrange.platform.commons.security.impl;
 
 import cz.cyberrange.platform.commons.security.AuthorityGranter;
+import cz.cyberrange.platform.commons.security.config.constants.StringConstants;
 import cz.cyberrange.platform.commons.security.mapping.UserInfoDTO;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
@@ -22,6 +22,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
  * resulting <i>Authentication</i> object.
  */
 @Component
+@Slf4j
 public class ExternalAuthorityGranter implements AuthorityGranter {
 
   private final WebClient webClient;
@@ -38,14 +39,9 @@ public class ExternalAuthorityGranter implements AuthorityGranter {
   }
 
   @Override
-  public List<GrantedAuthority> getAuthorities(Object introspectionResponse) {
-    ServletRequestAttributes attributes =
-        (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-    HttpServletRequest request = attributes.getRequest();
-    String oidcToken = request.getHeader("Authorization");
-
+  public List<GrantedAuthority> getAuthorities(@Nullable String oidcToken) {
     if (oidcToken == null || oidcToken.isEmpty()) {
-      throw new SecurityException("Authorization header is missing or empty");
+      throw new SecurityException("Authorization token is missing or empty");
     }
 
     try {
@@ -53,7 +49,7 @@ public class ExternalAuthorityGranter implements AuthorityGranter {
           webClient
               .get()
               .uri("/users/info")
-              .header("Authorization", oidcToken)
+              .header(StringConstants.AUTH_HEADER_KEY, "Bearer " + oidcToken)
               .retrieve()
               .bodyToMono(UserInfoDTO.class)
               .block();

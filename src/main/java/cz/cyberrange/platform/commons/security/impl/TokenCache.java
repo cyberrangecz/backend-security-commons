@@ -31,6 +31,7 @@ public class TokenCache {
 
   public TokenCacheItem put(
       @NonNull OAuth2AccessToken accessToken, @NonNull AbstractAuthenticationToken authToken) {
+
     if (accessToken.getExpiresAt() == null || accessToken.getExpiresAt().isAfter(Instant.now())) {
       TokenCacheItem tco = new TokenCacheItem(accessToken, authToken);
       if (this.cacheTokens && (this.cacheNonExpiringTokens || accessToken.getExpiresAt() != null)) {
@@ -46,7 +47,8 @@ public class TokenCache {
     @Setter @Getter private OAuth2AccessToken token;
     @Setter @Getter private AbstractAuthenticationToken auth;
 
-    private TokenCacheItem(OAuth2AccessToken token, AbstractAuthenticationToken auth) {
+    private TokenCacheItem(
+        @NonNull OAuth2AccessToken token, @NonNull AbstractAuthenticationToken auth) {
       this.token = token;
       this.auth = auth;
       if (this.token.getExpiresAt() == null

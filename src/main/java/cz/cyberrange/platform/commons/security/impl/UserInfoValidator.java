@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import cz.cyberrange.platform.commons.security.IdentityProvidersService;
+import cz.cyberrange.platform.commons.security.config.constants.StringConstants;
 import cz.cyberrange.platform.commons.security.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -55,7 +56,7 @@ public class UserInfoValidator {
 
   private HttpHeaders headersWithBearerAuthorization(String bearerToken) {
     HttpHeaders headers = new HttpHeaders();
-    headers.add("Authorization", String.format("Bearer %s", bearerToken));
+    headers.add(StringConstants.AUTH_HEADER_KEY, String.format("Bearer %s", bearerToken));
     return headers;
   }
 }

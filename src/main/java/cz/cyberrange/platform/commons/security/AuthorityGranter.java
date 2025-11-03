@@ -4,5 +4,5 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 
 public interface AuthorityGranter {
-  List<GrantedAuthority> getAuthorities(Object userInfo);
+  List<GrantedAuthority> getAuthorities(String token);
 }

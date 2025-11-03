@@ -27,6 +27,15 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class IdentityProvidersConfig {
 
+  private static final String ERROR_CREATING_BEAN_MESSAGE =
+      "Error creating configuration bean with name 'identityProvidersConfig':";
+
+  private static final String ERROR_CREATING_BEAN_MESSAGE_REASON_NO_PROVIDERS =
+      " At least one identity provider must be configured.";
+
+  private static final String ERROR_CREATING_BEAN_MESSAGE_REASON_PROVIDER_BLANK =
+      " Property 'issuer' of the identity provider cannot be blank.";
+
   /**
    * List of configured identity providers. Must contain at least one provider after initialization.
    */
@@ -42,14 +51,12 @@ public class IdentityProvidersConfig {
   private void checkProviders() {
     if (providers.isEmpty()) {
       throw new BeanCreationException(
-          "Error creating configuration bean with name 'identityProvidersConfig':"
-              + " At least one identity provider must be configured.");
+          ERROR_CREATING_BEAN_MESSAGE + ERROR_CREATING_BEAN_MESSAGE_REASON_NO_PROVIDERS);
     }
     for (final IdentityProvider provider : providers) {
       if (provider.getIssuer().isBlank()) {
         throw new BeanCreationException(
-            "Error creating configuration bean with name 'identityProvidersConfig':"
-                + " Property 'issuer' of the identity provider cannot be blank.");
+            ERROR_CREATING_BEAN_MESSAGE + ERROR_CREATING_BEAN_MESSAGE_REASON_PROVIDER_BLANK);
       }
     }
   }
