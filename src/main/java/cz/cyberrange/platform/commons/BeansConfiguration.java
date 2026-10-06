@@ -1,9 +1,5 @@
 package cz.cyberrange.platform.commons;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -26,15 +22,5 @@ public class BeansConfiguration {
         new PropertySourcesPlaceholderConfigurer();
     confPropertyPlaceholder.setIgnoreUnresolvablePlaceholders(true);
     return confPropertyPlaceholder;
-  }
-
-  @Bean("crczpSecurityCommonsObjectMapper")
-  public ObjectMapper crczpSecurityCommonsObjectMapper() {
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.setPropertyNamingStrategy(new PropertyNamingStrategies.SnakeCaseStrategy());
-    objectMapper.registerModule(new JavaTimeModule());
-    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    return objectMapper;
   }
 }

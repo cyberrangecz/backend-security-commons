@@ -1,8 +1,5 @@
 package cz.cyberrange.platform.commons.security.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import cz.cyberrange.platform.commons.security.IdentityProvidersService;
 import cz.cyberrange.platform.commons.security.config.constants.StringConstants;
 import cz.cyberrange.platform.commons.security.model.UserInfo;
@@ -16,21 +13,23 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.json.JsonMapper;
 
 @Component
 public class UserInfoValidator {
 
   private final IdentityProvidersService identityProvidersService;
   private final RestTemplate restTemplate;
-  private final ObjectMapper objectMapper;
+  private final JsonMapper objectMapper;
 
   @Autowired
   public UserInfoValidator(IdentityProvidersService identityProvidersService) {
     this.identityProvidersService = identityProvidersService;
     this.restTemplate = new RestTemplate();
     this.objectMapper =
-        new ObjectMapper()
-            .setPropertyNamingStrategy(new PropertyNamingStrategies.SnakeCaseStrategy());
+        JsonMapper.builder().propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE).build();
   }
 
   public UserInfo validate(String accessToken, String issuerUrl) {
@@ -44,7 +43,7 @@ public class UserInfoValidator {
       UserInfo userInfo = objectMapper.readValue(userInfoSrc, UserInfo.class);
       userInfo.setIssuer(issuerUrl);
       return userInfo;
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new InternalAuthenticationServiceException("Unable to parse user info response.");
     } catch (HttpClientErrorException e) {
       if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
