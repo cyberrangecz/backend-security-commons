@@ -15,8 +15,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.PropertyNamingStrategies;
@@ -83,7 +83,7 @@ public class StartUpRunner implements ApplicationRunner {
           .block();
     } catch (JacksonException ex) {
       throw new SecurityException("Error while parsing roles for microservices", ex);
-    } catch (HttpClientErrorException ex) {
+    } catch (WebClientResponseException ex) {
       throw new SecurityException(
           "Error while register microservice in user and group microservice. Message: "
               + System.lineSeparator()

@@ -21,15 +21,15 @@ Add this Maven dependency to your `pom.xml`:
 ```
 <dependency>
     <groupId>cz.cybersecurityhub.maven</groupId>
-    <artifactId>security-commons</artifactId>
+    <artifactId>crczp-security-commons</artifactId>
     <version>${security-commons-version}</version>
 </dependency>
 ```
 
 **Requirements:**
 
-- Java 21 or higher
-- Spring Boot 3.x (compatible with Spring Boot 3.5.3)
+- Java 25 or higher
+- Spring Boot 4.1.1
 
 ### Register microservice
 

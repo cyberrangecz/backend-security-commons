@@ -45,9 +45,9 @@
 
     <properties>
         <java.version>25</java.version>
-        <central.publishing.maven.plugin>0.8.0</central.publishing.maven.plugin>
-        <maven.source.plugin>3.3.1</maven.source.plugin>
-        <maven.javadoc.plugin>3.11.2</maven.javadoc.plugin>
+        <central.publishing.maven.plugin>0.11.0</central.publishing.maven.plugin>
+        <maven.source.plugin>3.4.0</maven.source.plugin>
+        <maven.javadoc.plugin>3.12.0</maven.javadoc.plugin>
         <maven.gpg.plugin>3.2.8</maven.gpg.plugin>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -55,7 +55,8 @@
         <google-guava.version>33.7.2-jre</google-guava.version>
         <!-- code quality -->
         <error-prone.version>2.50.0</error-prone.version>
-        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
+        <checkstyle.version>14.3.0</checkstyle.version>
         <spotbugs.version>4.10.4.1</spotbugs.version>
 
         <!-- overriden by pipeline-->
@@ -112,15 +113,14 @@
             <artifactId>guava</artifactId>
             <version>${google-guava.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
 
             <!-- Spotless: auto-formatting check -->
@@ -149,7 +149,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.6</version>
+                <version>3.6.0</version>
             </plugin>
 
             <!-- Checkstyle: style & lint rules -->
@@ -157,6 +157,13 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.6.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <skip>${skipChecks}</skip>
                     <configLocation>google_checks.xml</configLocation>
