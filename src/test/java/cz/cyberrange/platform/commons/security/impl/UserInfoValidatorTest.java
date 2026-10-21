@@ -13,6 +13,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 import cz.cyberrange.platform.commons.security.IdentityProvidersService;
 import cz.cyberrange.platform.commons.security.model.UserInfo;
 import cz.cyberrange.platform.commons.security.model.WellKnownOpenIDConfiguration;
+import java.net.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,8 +37,12 @@ class UserInfoValidatorTest {
 
   @BeforeEach
   void setUp() {
+    bindValidatorTo(USER_INFO_URL);
+  }
+
+  private void bindValidatorTo(String userInfoUrl) {
     WellKnownOpenIDConfiguration configuration = new WellKnownOpenIDConfiguration();
-    configuration.setUserInfoUri(USER_INFO_URL);
+    configuration.setUserInfoUri(userInfoUrl);
     IdentityProvidersService identityProvidersService = mock(IdentityProvidersService.class);
     when(identityProvidersService.getIdentityProviderConfiguration(ISSUER))
         .thenReturn(configuration);
@@ -111,5 +116,20 @@ class UserInfoValidatorTest {
         .hasMessageContaining(ISSUER)
         .hasCauseInstanceOf(tools.jackson.core.JacksonException.class)
         .satisfies(UserInfoValidatorTest::assertNoTokenInChain);
+  }
+
+  @Test
+  @DisplayName("validate_userInfoUrlWithEscapedCharacters_requestsConfiguredUrlVerbatim")
+  void validate_userInfoUrlWithEscapedCharacters_requestsConfiguredUrlVerbatim() {
+    String escapedUrl = USER_INFO_URL + "?scope=a%20b&next=%2Fhome";
+    bindValidatorTo(escapedUrl);
+    server
+        .expect(requestTo(URI.create(escapedUrl)))
+        .andRespond(withSuccess("{\"sub\":\"subject-1\"}", MediaType.APPLICATION_JSON));
+
+    UserInfo userInfo = validator.validate(SECRET_TOKEN, ISSUER);
+
+    assertThat(userInfo.getSub()).isEqualTo("subject-1");
+    server.verify();
   }
 }
