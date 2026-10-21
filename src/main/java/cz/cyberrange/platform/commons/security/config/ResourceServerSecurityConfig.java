@@ -62,7 +62,8 @@ public class ResourceServerSecurityConfig {
   private static final List<String> ALLOWED_HEADERS =
       List.of("content-type", "authorization", "x-auth-token");
 
-  private static final List<String> EXPOSED_HEADERS = List.of("authorization");
+  private static final List<String> EXPOSED_HEADERS =
+      List.of("authorization", "content-disposition");
 
   /** Validator for user information used in authentication. */
   private final UserInfoValidator userInfoValidator;
