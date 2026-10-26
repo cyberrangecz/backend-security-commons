@@ -1,9 +1,7 @@
 package cz.cyberrange.platform.commons.startup;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cyberrange.platform.commons.startup.mapping.RegisterMicroserviceDTO;
 import cz.cyberrange.platform.commons.startup.mapping.RegisterRoleDTO;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -17,9 +15,13 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * The StartUpRunner provides control over methods executed during start of application
@@ -30,7 +32,11 @@ import reactor.core.publisher.Mono;
 public class StartUpRunner implements ApplicationRunner {
 
   private final WebClient webClient;
-  private final ObjectMapper objectMapper;
+  private final JsonMapper objectMapper =
+      JsonMapper.builder()
+          .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+          .enable(SerializationFeature.INDENT_OUTPUT)
+          .build();
 
   @Value("${server.port}")
   private String servicePort;
@@ -47,10 +53,8 @@ public class StartUpRunner implements ApplicationRunner {
   /** Instantiates a new StartUpRunner. */
   @Autowired
   public StartUpRunner(
-      @Qualifier(value = "userManagementServiceWebClientSecurityCommons") WebClient webClient,
-      @Qualifier("crczpSecurityCommonsObjectMapper") ObjectMapper objectMapper) {
+      @Qualifier(value = "userManagementServiceWebClientSecurityCommons") WebClient webClient) {
     this.webClient = webClient;
-    this.objectMapper = objectMapper;
   }
 
   @Override
@@ -77,9 +81,9 @@ public class StartUpRunner implements ApplicationRunner {
           .retrieve()
           .bodyToMono(Void.class)
           .block();
-    } catch (IOException ex) {
+    } catch (JacksonException ex) {
       throw new SecurityException("Error while parsing roles for microservices", ex);
-    } catch (HttpClientErrorException ex) {
+    } catch (WebClientResponseException ex) {
       throw new SecurityException(
           "Error while register microservice in user and group microservice. Message: "
               + System.lineSeparator()

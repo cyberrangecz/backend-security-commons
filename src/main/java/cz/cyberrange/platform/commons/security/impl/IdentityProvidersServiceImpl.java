@@ -11,6 +11,7 @@ import cz.cyberrange.platform.commons.security.IdentityProvidersService;
 import cz.cyberrange.platform.commons.security.config.IdentityProvidersConfig;
 import cz.cyberrange.platform.commons.security.model.WellKnownOpenIDConfiguration;
 import cz.cyberrange.platform.commons.security.util.JsonUtils;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,9 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -78,7 +79,8 @@ public class IdentityProvidersServiceImpl implements IdentityProvidersService {
 
     private static List<Map<String, Object>> getJwks(String jwksUri) {
       if (jwksUri != null) {
-        JwksResponse issuerKeys = new RestTemplate().getForObject(jwksUri, JwksResponse.class);
+        JwksResponse issuerKeys =
+            new RestTemplate().getForObject(URI.create(jwksUri), JwksResponse.class);
         if (issuerKeys != null) {
           return issuerKeys.getKeys();
         }
@@ -91,7 +93,7 @@ public class IdentityProvidersServiceImpl implements IdentityProvidersService {
       RestTemplate restTemplate = new RestTemplate(this.httpFactory);
       WellKnownOpenIDConfiguration conf = new WellKnownOpenIDConfiguration();
       String url = provider + "/.well-known/openid-configuration";
-      String jsonString = restTemplate.getForObject(url, String.class);
+      String jsonString = restTemplate.getForObject(URI.create(url), String.class);
       if (jsonString == null) {
         throw new IllegalStateException("Failed to parse openid-configuration.");
       }
