@@ -19,6 +19,7 @@ env:
   MAVEN_PUSH_USER: ${{ vars.MAVEN_PUSH_USER}}
   MAVEN_PUSH_TOKEN: ${{ secrets.MAVEN_PUSH_TOKEN }}
   NVD_API_TOKEN: ${{ secrets.NVD_API }}
+  FAIL_BUILD_ON_CVSS: "9"
   OSS_INDEX_USER: ${{ secrets.OSS_INDEX_USER }}
   OSS_INDEX_TOKEN: ${{ secrets.OSS_INDEX_TOKEN }}
 
