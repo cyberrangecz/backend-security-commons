@@ -15,10 +15,11 @@ on:
         default: "no"
 
 env:
-  MAVEN_CLI_OPTS: "-s etc/ci_settings.xml -Dmaven.repo.local=${{ github.workspace }}/.m2/repository"
+  MAVEN_CLI_OPTS: "-s etc/ci_settings.xml"
   MAVEN_PUSH_USER: ${{ vars.MAVEN_PUSH_USER}}
   MAVEN_PUSH_TOKEN: ${{ secrets.MAVEN_PUSH_TOKEN }}
   NVD_API_TOKEN: ${{ secrets.NVD_API }}
+  NVD_DATA_DIR: ${{ github.workspace }}/.nvd-data
   FAIL_BUILD_ON_CVSS: "9"
   OSS_INDEX_USER: ${{ secrets.OSS_INDEX_USER }}
   OSS_INDEX_TOKEN: ${{ secrets.OSS_INDEX_TOKEN }}
@@ -32,6 +33,7 @@ jobs:
   build_maven:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -44,15 +46,18 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           cache: 'maven'
 
-      - name: Cache NVD
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/.m2/repository/org/owasp/dependency-check-data
-          key: check-nvd-stable
-          restore-keys: |
-            check-nvd-stable
+      - name: Restore NVD snapshot
+        run: |
+          mkdir -p "$NVD_DATA_DIR"
+          if docker create --name nvd ghcr.io/cyberrangecz/nvd-db:13 noop; then
+            docker cp nvd:/data/. "$NVD_DATA_DIR"
+            docker rm nvd
+          else
+            echo "::warning::No NVD snapshot found, falling back to full download"
+          fi
 
       - name: Build with Maven
+        timeout-minutes: 25
         run: |
           mvn -ntp clean install $MAVEN_CLI_OPTS
 
