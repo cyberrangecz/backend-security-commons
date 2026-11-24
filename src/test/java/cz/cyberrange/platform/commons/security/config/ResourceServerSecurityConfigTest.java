@@ -42,4 +42,41 @@ class ResourceServerSecurityConfigTest {
         .containsIgnoringCase("content-disposition")
         .containsIgnoringCase("authorization");
   }
+
+  @Test
+  @DisplayName("corsFilter_additionalExposedHeaders_exposedBesideDefaults")
+  void corsFilter_additionalExposedHeaders_exposedBesideDefaults()
+      throws ServletException, IOException {
+    ResourceServerSecurityConfig config =
+        new ResourceServerSecurityConfig(
+            mock(UserInfoValidator.class), mock(AuthorityGranter.class));
+    ReflectionTestUtils.setField(config, "corsAllowedOrigins", List.of(ALLOWED_ORIGIN));
+    ReflectionTestUtils.setField(
+        config, "corsAdditionalExposedHeaders", List.of("Content-Length", "X-Attachment-Width"));
+    MockHttpServletRequest request = new MockHttpServletRequest("GET", "/attachments/1");
+    request.addHeader("Origin", ALLOWED_ORIGIN);
+    MockHttpServletResponse response = new MockHttpServletResponse();
+
+    config.corsFilter().doFilter(request, response, new MockFilterChain());
+
+    assertThat(response.getHeader("Access-Control-Expose-Headers"))
+        .containsIgnoringCase("content-disposition")
+        .containsIgnoringCase("authorization")
+        .containsIgnoringCase("Content-Length")
+        .containsIgnoringCase("X-Attachment-Width");
+  }
+
+  @Test
+  @DisplayName("corsFilter_headPreflight_allowed")
+  void corsFilter_headPreflight_allowed() throws ServletException, IOException {
+    MockHttpServletRequest request = new MockHttpServletRequest("OPTIONS", "/attachments/1");
+    request.addHeader("Origin", ALLOWED_ORIGIN);
+    request.addHeader("Access-Control-Request-Method", "HEAD");
+    MockHttpServletResponse response = new MockHttpServletResponse();
+
+    corsFilterAllowing(ALLOWED_ORIGIN).doFilter(request, response, new MockFilterChain());
+
+    assertThat(response.getStatus()).isEqualTo(200);
+    assertThat(response.getHeader("Access-Control-Allow-Methods")).containsIgnoringCase("HEAD");
+  }
 }

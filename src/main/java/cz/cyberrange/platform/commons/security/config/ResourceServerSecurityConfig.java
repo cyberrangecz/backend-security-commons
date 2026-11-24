@@ -8,6 +8,7 @@ import cz.cyberrange.platform.commons.security.impl.UserInfoValidator;
 import cz.cyberrange.platform.commons.webclient.config.WebClientConfigSecurityCommons;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -57,12 +58,12 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 public class ResourceServerSecurityConfig {
 
   private static final List<String> ALLOWED_METHODS =
-      List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
+      List.of("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
 
   private static final List<String> ALLOWED_HEADERS =
       List.of("content-type", "authorization", "x-auth-token");
 
-  private static final List<String> EXPOSED_HEADERS =
+  private static final List<String> DEFAULT_EXPOSED_HEADERS =
       List.of("authorization", "content-disposition");
 
   /** Validator for user information used in authentication. */
@@ -74,6 +75,12 @@ public class ResourceServerSecurityConfig {
   /** List of allowed origins for CORS configuration, injected from properties. */
   @Value("#{'${cors.allowed.origins:#{*}}'.split(',')}")
   private List<String> corsAllowedOrigins;
+
+  /**
+   * Response headers exposed to CORS clients on top of the default ones, injected from properties.
+   */
+  @Value("${cors.exposed.headers:}")
+  private List<String> corsAdditionalExposedHeaders = List.of();
 
   /**
    * Instantiates a new ResourceServerSecurityConfig.
@@ -166,7 +173,9 @@ public class ResourceServerSecurityConfig {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(false);
     config.setMaxAge(3600L);
-    config.setExposedHeaders(EXPOSED_HEADERS);
+    config.setExposedHeaders(
+        Stream.concat(DEFAULT_EXPOSED_HEADERS.stream(), corsAdditionalExposedHeaders.stream())
+            .toList());
     config.setAllowedOrigins(Collections.unmodifiableList(corsAllowedOrigins));
     config.setAllowedHeaders(ALLOWED_HEADERS);
     config.setAllowedMethods(ALLOWED_METHODS);
